@@ -1,0 +1,56 @@
+{
+  "_meta": {
+    "country": "KE",
+    "description": "Scenario -> legal statement, condition, forum, citation. The recourse router reads the LAW from here; AI only classifies the scenario and phrases the output. No legal conclusion is AI-generated. Not legal advice.",
+    "disclaimer": "This information is not legal advice. Recourse depends on the specific facts. Statements are conditional.",
+    "last_updated": "2026-09-14"
+  },
+  "scenarios": [
+    {
+      "key": "harassment_contacts",
+      "title": "Lender is harassing you or contacting your phonebook / shaming you",
+      "law_statement": "Using your personal data and contacts to harass or shame you is governed by the Data Protection Act 2019 (giving effect to Article 31 of the Constitution). Scraping and messaging your contacts, and abusive collection, can be a data-protection offence.",
+      "condition": "Applies where the lender accessed or used your contacts/personal data for collection without a lawful basis, or used threats/shaming.",
+      "forum_key": "odpc",
+      "citation": "https://www.odpc.go.ke/data-protection-laws-kenya/",
+      "citation_date": "2019 Act; ODPC has audited digital lenders and admitted complaints (2022)",
+      "also": ["cbk"]
+    },
+    {
+      "key": "repossession",
+      "title": "They are taking / threatening to take your financed asset",
+      "law_statement": "A financier generally cannot seize a financed asset by self-help without following lawful process (valid default, proper notice, and lawful seizure — often via licensed auctioneers or a court). Kenyan courts have declared repossessions 'illegal, null and void' where done without proper notice or process.",
+      "condition": "Your repossession MAY be unlawful IF no proper default notice was served, or the seizure did not follow lawful process. This depends on your contract and the facts — verify before acting.",
+      "forum_key": "court",
+      "citation": "https://new.kenyalaw.org/akn/ke/judgment/kehc/2024/13055/eng@2024-10-22/source.pdf",
+      "citation_date": "2024 High Court rulings"
+    },
+    {
+      "key": "misleading_terms",
+      "title": "The lender misled you or hid the true cost / terms",
+      "law_statement": "False or misleading representations and unconscionable conduct in a loan product can violate the Competition Act's consumer-protection provisions and the Article 46 consumer right to information. The Competition Authority of Kenya (CAK) has found an asset financier (Mogo) in violation on these grounds.",
+      "condition": "Applies where the cost, obligations, or terms were misrepresented or not adequately disclosed to you before signing.",
+      "forum_key": "cak",
+      "citation": "https://www.dawan.africa/news/mogo-faces-fresh-scrutiny-as-parliament-turns-spotlight-on-kenyas-asset-financing-industry",
+      "citation_date": "2024-10"
+    },
+    {
+      "key": "unlicensed_chasing",
+      "title": "An unlicensed lender is chasing you for repayment",
+      "law_statement": "A digital lender must be licensed by the CBK (CBK Act s.33S / Digital Credit Providers Regulations 2022). A Kenyan court has blocked unlicensed digital lenders from enforcing repayment — an unlicensed lender may not be able to lawfully pursue you.",
+      "condition": "Applies IF the lender is not on the CBK licensed DCP list. Confirm licence status first (Deni checks this).",
+      "forum_key": "cbk",
+      "citation": "https://weetracker.com/2026/07/27/kenyan-court-delivers-blow-to-unlicensed-loan-apps-seeking-debt-repayment/",
+      "citation_date": "2026-07-27"
+    },
+    {
+      "key": "wrongful_crb",
+      "title": "You were wrongly listed with a credit bureau (CRB)",
+      "law_statement": "You can dispute a CRB listing with the bureau under the Banking (Credit Reference Bureau) Regulations 2020 (Legal Notice 55 of 2020). If the debt is disputed or the lender was unlicensed, the basis for listing is challengeable.",
+      "condition": "Applies where the listing is wrong, based on a disputed/unlawful debt, or was made without proper notice.",
+      "forum_key": "crb",
+      "citation": "https://new.kenyalaw.org/akn/ke/act/ln/2020/55/eng@2020-04-17/source",
+      "citation_date": "2020 (LN 55/2020)"
+    }
+  ]
+}

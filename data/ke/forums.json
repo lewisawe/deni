@@ -1,0 +1,54 @@
+{
+  "_meta": {
+    "country": "KE",
+    "description": "Public bodies Deni routes citizens to. Each is a real institution with a documented mandate. Verify current contact details at demo/use time.",
+    "last_updated": "2026-09-14"
+  },
+  "forums": [
+    {
+      "key": "odpc",
+      "name": "Office of the Data Protection Commissioner (ODPC)",
+      "handles": "Misuse of personal data, contact-scraping, abusive data-driven collection.",
+      "channel": "Complaint to ODPC (odpc.go.ke). Data Protection (Complaints Handling) Regulations, LN 264/2021.",
+      "what_to_include": ["Your name and contact", "Lender name", "What data was used and how (screenshots of messages to your contacts)", "Dates and times", "What you want stopped"],
+      "template_id": "odpc_data_complaint",
+      "source": "https://www.odpc.go.ke/data-protection-laws-kenya/"
+    },
+    {
+      "key": "cbk",
+      "name": "Central Bank of Kenya (CBK)",
+      "handles": "Digital Credit Provider licensing and conduct; unlicensed lenders.",
+      "channel": "Report to CBK (Digital Credit Providers supervision).",
+      "what_to_include": ["Lender name and app", "Whether they are on the licensed DCP list", "The conduct (rates, collection, disclosure)", "Evidence"],
+      "template_id": "cbk_conduct_complaint",
+      "source": "https://www.centralbank.go.ke/"
+    },
+    {
+      "key": "cak",
+      "name": "Competition Authority of Kenya (CAK)",
+      "handles": "False/misleading representations, unconscionable conduct, non-disclosure of terms.",
+      "channel": "Consumer complaint to CAK.",
+      "what_to_include": ["Lender name", "What you were told vs the actual terms", "The loan agreement/offer", "How the cost was hidden or misrepresented"],
+      "template_id": "cak_consumer_complaint",
+      "source": "https://www.dawan.africa/news/mogo-faces-fresh-scrutiny-as-parliament-turns-spotlight-on-kenyas-asset-financing-industry"
+    },
+    {
+      "key": "court",
+      "name": "Court (with a demand letter first)",
+      "handles": "Wrongful repossession, return of asset, damages.",
+      "channel": "A demand letter to the financier; if unresolved, a suit. Consider a lawyer or legal aid.",
+      "what_to_include": ["Loan agreement", "Payment record", "Any default notice received (or proof none was served)", "How/when the asset was taken", "Photos"],
+      "template_id": "repossession_demand",
+      "source": "https://new.kenyalaw.org/akn/ke/judgment/kehc/2024/13055/eng@2024-10-22/source.pdf"
+    },
+    {
+      "key": "crb",
+      "name": "Credit Reference Bureau (TransUnion / Metropol / Creditinfo)",
+      "handles": "Disputing a wrongful credit listing.",
+      "channel": "Dispute with the licensed bureau under CRB Regulations 2020 (LN 55/2020).",
+      "what_to_include": ["Your name and ID", "The lender and listing", "Why it is wrong (paid / disputed / unlicensed lender)", "Evidence"],
+      "template_id": "crb_dispute",
+      "source": "https://new.kenyalaw.org/akn/ke/act/ln/2020/55/eng@2020-04-17/source"
+    }
+  ]
+}
