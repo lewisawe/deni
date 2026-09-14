@@ -1,65 +1,90 @@
 # Deni
 
-> Know the real cost before you borrow.
+**Know the real cost before you borrow.**
 
-Deni tells a Kenyan borrower what a loan will really cost, what the lender can take if
-they miss a payment, and whether what they were told is legal — before they sign —
-over USSD/WhatsApp. Covers app cash loans, PAYG devices (M-KOPA-type), motorbike/car
-financing (Watu/Mogo-type), and secured microfinance (KWFT-type). When the lender is
-unlicensed, misled them, or is collecting abusively, it prepares a filed complaint to
-the right regulator with a receipt.
+Deni tells a Kenyan borrower what a loan will really cost, whether the lender is
+legally allowed to lend to or pursue them, and what they can do about harassment or
+repossession — over a WhatsApp-style chat and USSD, in English, Kiswahili, and Sheng.
 
-Built for the OSF × Andela "Information you can trust" hackathon (cross-track:
-Transparency + Stability + Safety). Deadline 21 Sep 2026.
+Built for the OSF × Andela "Information you can trust" hackathon.
+Cross-track: **Transparency & Accountability** (primary) + **Safety, Reporting &
+Protection** + **Stability & Social Cohesion**.
 
-## Status: concept frozen, pre-build
+## What it does
 
-## Docs
+Deni covers the whole loan lifecycle:
 
-| File | What |
-|------|------|
-| `idea-scorecard.md` | Evidence-backed validation vs alternatives. Verdict: BUILD. |
-| `concept.md` | Full concept: mechanisms, cross-track fit, 7-constraint fit, honest limits, scope. |
-| `scope-asset-financing.md` | The four harm categories (PAYG devices, moto/car, microfinance, solar), named examples, sources. |
-| `lifecycle-and-recourse.md` | Before/during/after coverage + Kenyan legal recourse per scenario, forum router, sources. |
-| `pre-build-audit.md` | Final pass against the brief: gaps, resolutions, what's solid. |
-| `architecture.md` | Stack, data model, AI task split, verified AWS/Nova facts. |
-| `build-plan.md` | 7-day demo-first plan. |
-| `specs/requirements.md` | Spec 1: EARS requirements (R1–R14). |
-| `specs/design.md` | Spec 2: architecture, components, data models, req→component trace. |
-| `specs/tasks.md` | Spec 3: ordered demo-first task list (T1–T13). |
-| `specs/ui.md` | UI/UX: split-surface use of the Timescale design system + a11y overrides. |
+- **Before** — Pick a loan or paste the lender's SMS. Deni computes the **true cost**
+  (total paid vs value received, markup %, and APR), shows the working, checks whether
+  the lender is on **CBK's licensed list**, states **what they can take** if you
+  default (device lock, repossession, seized collateral, group liability), and offers a
+  **cheaper licensed alternative**.
+- **During** — Describe a problem (harassment, contacts scraped, repossession,
+  misleading terms, an unlicensed lender chasing you). Deni tells you **what Kenyan law
+  says**, **which public body** handles it (ODPC, CBK, CAK, courts, CRB), and drafts a
+  **complaint with a case reference**.
+- **After** — Wrongful CRB listing or seized asset: Deni prepares the dispute/demand
+  and the evidence checklist.
 
-Research that led here lives one level up: `../lending-direction.md` (friction +
-regulatory evidence), `../winner-patterns.md` (what wins African/Asia/LatAm civic
-hackathons), `../github-rescan.md` + `../devpost-scan.md` (prior art),
-`../selection-constraints.md`, `../prevention-check.md`.
+Covers app cash loans and asset financing: PAYG devices (M-KOPA-type), motorbike/car
+financing (Watu/Mogo-type), and secured microfinance (KWFT-type).
 
-## The pitch in 10 seconds (two blades: cost + rights)
+## How it works
 
-Cost: "This M-KOPA phone is KSh 60/day for a year — that's KSh 21,900 for a handset
-that costs KSh 12,000 cash. An 82% markup the daily price hides."
+- **The money math is deterministic** — computed in code and shown, never by AI. The
+  number is the whole point, so it is provably correct (see `backend/cost_engine.py`
+  + tests).
+- **AI (AWS Bedrock, Amazon Nova) assists only** — it reads a pasted SMS or screenshot
+  into offer fields (you confirm before compute), explains the result in your language,
+  classifies a described problem into a known scenario, and fills a fixed complaint
+  template. **AI never states the law or a number on its own** — legal statements and
+  citations are read from a data file.
+- **Per-country data pack** (`data/ke/`) holds lenders, products, legal rules, forums,
+  and complaint templates — each fact sourced and dated. Adding a country is swapping
+  the pack.
 
-Rights: "Miss one daily payment and it locks. Default on the KWFT loan and the car
-registered in your name can be taken. This app isn't on CBK's licensed list — which
-means it may not even be legal for them to chase you."
+## Run it (under a minute)
 
-## Open decisions (blockers for the build plan)
+```bash
+bash run.sh
+# open http://127.0.0.1:8000
+```
 
-1. **Primary demo channel** — WhatsApp-style web chat (fast, demos well) + a
-   simulated USSD screen for the basic-phone story? 
-2. **AI scope** — deterministic APR math + AI for (a) parsing pasted SMS/screenshots,
-   (b) Kiswahili plain-language explanation, (c) drafting the regulator complaint?
-3. **Data** — confirm the 3–5 named lender products to model for the demo, and that
-   we hand-build a dated CBK licensed-DCP list with sources.
+`run.sh` creates a venv, installs deps, and starts the server. AI features use AWS
+Bedrock — set `AWS_PROFILE` and `AWS_REGION` (defaults: `simi-ops`, `us-east-1`). If
+Bedrock is unreachable, the deterministic core (cost + licence + recourse via keyword
+fallback) still works.
 
-Answer these three and the next docs are: `build-plan.md` (7-day, demo-first) and
-`architecture.md` (stack + data model), then code.
+Run tests:
+```bash
+source .venv/bin/activate && python -m pytest backend/ -q
+```
 
-## Non-negotiables (from the research)
+## Honesty (what Deni does NOT do)
 
-- Never pitch as "a calculator." Lead with the shock APR + the licence/legal hook.
-- Never call a named lender a "scam." State "not on CBK's licensed list as of <date>."
-- Basic-phone reachable (USSD/WhatsApp), English + Kiswahili, no login, local-only
-  data. These are scored constraints, not nice-to-haves.
-- Every number is shown math; every claim links to a source.
+- It **does not lend, block, freeze, or erase** anything, and cannot remove a CRB
+  listing — it prepares the paperwork and points you to the body with the power.
+- It is **not legal or financial advice.** Recourse is stated conditionally ("this may
+  be unlawful if…") with a citation; it never promises an outcome.
+- It **never calls a named lender a "scam."** It states verifiable facts: "not on
+  CBK's licensed list as of <date>," or a regulator/court finding with its source.
+- The **USSD** channel runs on the **Africa's Talking sandbox** (a shared test
+  shortcode + simulator), not a paid production shortcode.
+- Product figures are **representative** of publicly advertised structures and carry a
+  data date; the cost engine computes from the shown inputs.
+
+## Structure
+
+```
+backend/    FastAPI + cost engine + data loader + AI (Bedrock Nova) + recourse
+frontend/   SPA (chat surface) + Timescale design tokens
+data/ke/    Kenya pack: lenders, products, rules, forums, templates (sourced)
+specs/      requirements → design → tasks → ui
+```
+
+## AI usage summary
+
+AWS Bedrock Amazon Nova (Nova 2 Lite for parsing/explanation, Nova Pro for scenario
+classification and complaint drafting), via the Converse API. The capstone idea comes
+from the builder's lived experience of predatory lending in Kenya; AI supported the
+build only.
