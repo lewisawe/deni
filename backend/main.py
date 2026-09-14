@@ -1,13 +1,19 @@
 """FastAPI application entrypoint for Deni."""
 from pathlib import Path
 
+try:  # load .env if present (AT key, AWS profile); optional
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+except Exception:  # noqa: BLE001
+    pass
+
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from . import __version__
-from . import ai, before_flow, parse_explain, recourse as recourse_mod
+from . import ai, before_flow, parse_explain, recourse as recourse_mod, ussd
 from .data_pack import load_pack
 
 app = FastAPI(title="Deni", version=__version__)
@@ -97,6 +103,13 @@ class RecourseIn(BaseModel):
 def recourse(payload: RecourseIn) -> dict:
     """DURING/AFTER: classify a problem -> law + forum + prepared complaint (R6,R13)."""
     return recourse_mod.recourse(payload.text, payload.lang)
+
+
+@app.post("/ussd", response_class=PlainTextResponse)
+async def ussd_callback(text: str = Form(""), sessionId: str = Form(""),
+                        phoneNumber: str = Form(""), serviceCode: str = Form("")) -> str:
+    """Africa's Talking USSD callback (R8). Returns CON/END plain text."""
+    return ussd.handle(text)
 
 
 # Serve the SPA. Mounted last so API routes take precedence.
