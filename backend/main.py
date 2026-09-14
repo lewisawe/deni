@@ -13,7 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from . import __version__
-from . import ai, before_flow, parse_explain, recourse as recourse_mod, ussd
+from . import ai, before_flow, parse_explain, receipt as receipt_mod, recourse as recourse_mod, ussd, whatsapp
 from .data_pack import load_pack
 
 app = FastAPI(title="Deni", version=__version__)
@@ -105,11 +105,39 @@ def recourse(payload: RecourseIn) -> dict:
     return recourse_mod.recourse(payload.text, payload.lang)
 
 
+class ReceiptIn(BaseModel):
+    kind: str  # "cost" | "recourse"
+    data: dict
+    lang: str = "en"
+
+
+@app.post("/api/receipt")
+def make_receipt(payload: ReceiptIn) -> dict:
+    """Build a shareable Deni report (the action+receipt the user keeps)."""
+    if payload.kind == "cost":
+        return receipt_mod.cost_receipt(payload.data, payload.lang)
+    if payload.kind == "recourse":
+        return receipt_mod.recourse_receipt(payload.data)
+    raise HTTPException(status_code=400, detail="kind must be 'cost' or 'recourse'")
+
+
 @app.post("/ussd", response_class=PlainTextResponse)
 async def ussd_callback(text: str = Form(""), sessionId: str = Form(""),
                         phoneNumber: str = Form(""), serviceCode: str = Form("")) -> str:
     """Africa's Talking USSD callback (R8). Returns CON/END plain text."""
     return ussd.handle(text)
+
+
+class WhatsAppIn(BaseModel):
+    sender: str
+    message: str
+
+
+@app.post("/webhook/whatsapp")
+def whatsapp_webhook(payload: WhatsAppIn) -> dict:
+    """WhatsApp inbound webhook (R8) — same menu engine as USSD, turn-based.
+    A provider (AT WhatsApp / Meta Cloud API / Twilio) would POST here; we reply."""
+    return {"reply": whatsapp.handle_message(payload.sender, payload.message)}
 
 
 # Serve the SPA. Mounted last so API routes take precedence.
