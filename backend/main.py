@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from . import __version__
-from . import ai, before_flow, parse_explain
+from . import ai, before_flow, parse_explain, recourse as recourse_mod
 from .data_pack import load_pack
 
 app = FastAPI(title="Deni", version=__version__)
@@ -86,6 +86,17 @@ def explain(payload: ExplainIn) -> dict:
 def ai_status() -> dict:
     """Whether AI features are available (for graceful UI degradation)."""
     return {"available": ai.available()}
+
+
+class RecourseIn(BaseModel):
+    text: str
+    lang: str = "en"
+
+
+@app.post("/api/recourse")
+def recourse(payload: RecourseIn) -> dict:
+    """DURING/AFTER: classify a problem -> law + forum + prepared complaint (R6,R13)."""
+    return recourse_mod.recourse(payload.text, payload.lang)
 
 
 # Serve the SPA. Mounted last so API routes take precedence.
