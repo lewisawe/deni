@@ -53,9 +53,12 @@
   --page-max-width: 1200px;
 
   /* Deni a11y overrides (specs/ui.md): body text must hold WCAG AA >= 4.5:1.
-     Steel (#6c6c6c) is ~4.0:1 on paper-white — reserve for large text only. */
+     Steel (#6c6c6c) is ~5:1 on paper-white (ok). Signal Orange #ff5b29 is only
+     ~3:1 — fine as a large-display accent, but small orange text needs a darker
+     shade. --color-orange-text passes AA for small text. */
   --text-body-color: var(--color-carbon-black);
-  --text-muted-color: var(--color-graphite); /* darker than Steel for small text */
+  --text-muted-color: var(--color-graphite);
+  --color-orange-text: #c23c12; /* darkened Signal Orange, ~4.9:1 on paper-white */
 }
 
 * { box-sizing: border-box; }
@@ -81,6 +84,12 @@ html, body {
   color: var(--color-signal-orange);
   font-weight: var(--fw-bold);
   letter-spacing: -0.02em;
+}
+/* Small inline stat: darker orange so it passes WCAG AA for small text. */
+.stat-inline {
+  font-family: var(--font-geist-mono);
+  color: var(--color-orange-text);
+  font-weight: var(--fw-bold);
 }
 
 /* Hard-shadow card (judge-facing Surface A). */

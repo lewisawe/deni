@@ -25,6 +25,20 @@ function licenceBadge(l) {
     font-family:var(--font-geist-mono);font-size:var(--text-caption);text-transform:uppercase;font-weight:500;">${txt}</span>`;
 }
 
+/* ---------- audio output (R9 accessibility) ----------
+   Browser TTS: offline, zero-latency, supports sw/en voices where installed.
+   Chosen over Nova Sonic (speech-to-speech) which would need audio-streaming infra
+   beyond a lightweight web demo. */
+const LANG_BCP = { en: "en-KE", sw: "sw-KE", sheng: "sw-KE" };
+function speak(text) {
+  if (!("speechSynthesis" in window) || !text) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = LANG_BCP[LANG] || "en-KE";
+  u.rate = 0.95;
+  window.speechSynthesis.speak(u);
+}
+
 async function explainInto(el, cost) {
   try {
     const e = await (await fetch("/api/explain", {
@@ -32,7 +46,9 @@ async function explainInto(el, cost) {
       body: JSON.stringify({ cost, lang: LANG }),
     })).json();
     if (e.available && e.text) {
-      el.innerHTML = `<p style="margin:var(--spacing-8) 0 0;font-style:italic;">${e.text}</p>`;
+      el.innerHTML = `<p style="margin:var(--spacing-8) 0 0;font-style:italic;">${e.text}</p>
+        <button class="btn-primary" style="margin-top:8px;padding:6px 16px;" aria-label="Listen to this explanation">Listen</button>`;
+      el.querySelector("button").addEventListener("click", () => speak(e.text));
     }
   } catch (_) { /* AI optional — silent */ }
 }
@@ -45,7 +61,7 @@ function renderResult(r) {
       <p class="stat-number" style="font-size:50px;margin:0;line-height:1;">${c.apr_pct}% <span style="font-size:24px;">APR</span></p>
       <p style="margin:var(--spacing-16) 0 0;font-size:var(--text-subheading);">
         You pay <strong>KES ${fmt(c.total_paid)}</strong> for <strong>KES ${fmt(c.principal)}</strong> of value —
-        <span class="stat-number" style="font-size:var(--text-subheading);">${c.markup_pct}%</span> more.
+        <span class="stat-inline" style="font-size:var(--text-subheading);">${c.markup_pct}%</span> more.
       </p>
       <div id="explain"></div>
       <details style="margin-top:var(--spacing-16);">
@@ -63,7 +79,7 @@ function renderResult(r) {
       <p style="margin:0;">${r.at_risk.note}</p></div>` : ""}
     ${alt ? `<div class="card-hard" style="margin-top:var(--spacing-16);background:var(--color-chartreuse-highlight);">
       <p style="margin:0 0 var(--spacing-8);font-weight:600;">A cheaper licensed option</p>
-      <p style="margin:0;">${alt.label} — <span class="stat-number" style="color:var(--color-carbon-black);">${alt.cost.apr_pct}% APR</span> instead of ${c.apr_pct}%.</p></div>` : ""}
+      <p style="margin:0;">${alt.label} — <span class="stat-inline" style="color:var(--color-carbon-black);">${alt.cost.apr_pct}% APR</span> instead of ${c.apr_pct}%.</p></div>` : ""}
     <p style="margin-top:var(--spacing-16);font-size:var(--text-caption);color:var(--color-graphite);">${r.disclaimer}</p>`;
   explainInto($("explain"), c);
 }
@@ -147,7 +163,7 @@ function renderRecourse(r) {
     </div>
     ${r.complaint ? `<div class="card-hard" style="margin-top:var(--spacing-16);">
       <p style="margin:0 0 var(--spacing-8);font-weight:600;">Your prepared complaint</p>
-      <p style="font-family:var(--font-geist-mono);font-size:var(--text-caption);margin:0 0 var(--spacing-8);">Case ref: <span class="stat-number" style="color:var(--color-carbon-black);">${r.case_ref}</span></p>
+      <p style="font-family:var(--font-geist-mono);font-size:var(--text-caption);margin:0 0 var(--spacing-8);">Case ref: <span class="stat-inline" style="color:var(--color-carbon-black);">${r.case_ref}</span></p>
       <pre style="white-space:pre-wrap;font-family:var(--font-geist);font-size:var(--text-caption);background:var(--color-paper-white);border:1px solid var(--color-ash);border-radius:var(--radius-smallbuttons);padding:12px;">${r.complaint}</pre>
     </div>` : ""}
     <p style="margin-top:var(--spacing-16);font-size:var(--text-caption);color:var(--color-graphite);">${r.disclaimer}</p>`;
