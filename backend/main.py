@@ -1,13 +1,13 @@
 """FastAPI application entrypoint for Deni."""
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from . import __version__
-from . import before_flow
+from . import ai, before_flow, parse_explain
 from .data_pack import load_pack
 
 app = FastAPI(title="Deni", version=__version__)
@@ -58,6 +58,34 @@ def cost(offer: OfferIn) -> dict:
         return before_flow.evaluate_offer(**offer.model_dump())
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/api/parse")
+async def parse(text: str = Form(""), image: UploadFile | None = File(None)) -> dict:
+    """AI-extract offer fields from a pasted SMS or an uploaded screenshot (R2)."""
+    img_bytes = await image.read() if image is not None else None
+    img_fmt = "png"
+    if image is not None and image.filename and "." in image.filename:
+        img_fmt = image.filename.rsplit(".", 1)[-1].lower()
+        img_fmt = {"jpg": "jpeg"}.get(img_fmt, img_fmt)
+    return parse_explain.parse_offer(text=text, image_bytes=img_bytes, image_format=img_fmt)
+
+
+class ExplainIn(BaseModel):
+    cost: dict
+    lang: str = "en"
+
+
+@app.post("/api/explain")
+def explain(payload: ExplainIn) -> dict:
+    """Phrase computed cost figures in EN/SW/Sheng (R11). Numbers unchanged."""
+    return parse_explain.explain_cost(payload.cost, payload.lang)
+
+
+@app.get("/api/ai-status")
+def ai_status() -> dict:
+    """Whether AI features are available (for graceful UI degradation)."""
+    return {"available": ai.available()}
 
 
 # Serve the SPA. Mounted last so API routes take precedence.
