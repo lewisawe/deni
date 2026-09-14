@@ -1,0 +1,134 @@
+{
+  "_meta": {
+    "country": "KE",
+    "description": "Modelled products for the demo. Figures are representative of publicly advertised structures; exact terms change, so each product names its data date. The cost engine computes the markup/APR from these inputs — no figure is asserted without its inputs shown.",
+    "note": "amounts in KES. principal = value received today (cash received, or cash price of the asset).",
+    "last_updated": "2026-09-14"
+  },
+  "products": [
+    {
+      "id": "mkopa-x10-phone",
+      "lender_id": "mkopa",
+      "category": "payg-device",
+      "label": "M-KOPA smartphone (representative)",
+      "principal": 12000,
+      "cash_price": 12000,
+      "deposit": 2000,
+      "instalment_amount": 60,
+      "instalment_frequency": "daily",
+      "num_instalments": 365,
+      "term_days": 365,
+      "extra_fees": 0,
+      "security_type": "device-lock",
+      "security_note": "The phone is locked remotely if a daily payment is missed, until arrears are cleared.",
+      "sources": [
+        "https://www.tuko.co.ke/facts-lifehacks/guides/509959-how-m-kopa-phones-qualifications-daily-repayments/",
+        "https://mjengohub.co.ke/articles/finance/state-interventions-loom-as-mobile-phone-credit-schemes-face-regulatory-scrutiny-over-hidden-costs"
+      ],
+      "figures_note": "Representative deposit + daily-rate structure; verify current pricing at demo time."
+    },
+    {
+      "id": "watu-boda",
+      "lender_id": "watu",
+      "category": "moto-car",
+      "label": "Watu boda-boda financing (representative)",
+      "principal": 180000,
+      "cash_price": 180000,
+      "deposit": 30000,
+      "instalment_amount": 3500,
+      "instalment_frequency": "weekly",
+      "num_instalments": 104,
+      "term_days": 728,
+      "extra_fees": 0,
+      "security_type": "repossession-tracker",
+      "security_note": "Bike is fitted with a tracker and can be repossessed on default; wrongful repossession without due process has been challenged in court.",
+      "sources": [
+        "https://watuafrica.com/country/kenya/",
+        "https://restofworld.org/2023/bike-theft-kenya-bnpl/"
+      ],
+      "figures_note": "Representative deposit + weekly-instalment structure; verify current pricing at demo time."
+    },
+    {
+      "id": "mogo-logbook",
+      "lender_id": "mogo",
+      "category": "moto-car",
+      "label": "Mogo logbook / car financing (representative)",
+      "principal": 400000,
+      "cash_price": 400000,
+      "deposit": 0,
+      "instalment_amount": 22000,
+      "instalment_frequency": "monthly",
+      "num_instalments": 30,
+      "term_days": 900,
+      "extra_fees": 15000,
+      "security_type": "repossession-tracker",
+      "security_note": "Logbook held; CAK found Mogo made false/misleading representations and engaged in unconscionable conduct in its loan products.",
+      "sources": [
+        "https://www.dawan.africa/news/mogo-faces-fresh-scrutiny-as-parliament-turns-spotlight-on-kenyas-asset-financing-industry"
+      ],
+      "figures_note": "Representative structure for demo; verify current pricing at demo time."
+    },
+    {
+      "id": "kwft-group-loan",
+      "lender_id": "kwft",
+      "category": "microfinance",
+      "label": "KWFT secured group loan (representative)",
+      "principal": 100000,
+      "cash_price": null,
+      "deposit": 0,
+      "instalment_amount": 10000,
+      "instalment_frequency": "monthly",
+      "num_instalments": 12,
+      "term_days": 365,
+      "extra_fees": 5000,
+      "security_type": "collateral-joint-registration",
+      "security_note": "Secured on household assets/a vehicle registered in the lender's joint name, and group-guaranteed — a fellow group member's default can expose your assets.",
+      "sources": [
+        "https://new.kenyalaw.org/akn/ke/judgment/kehc/2026/5105/eng@2026-04-22/source.pdf"
+      ],
+      "figures_note": "Representative structure for demo; verify current terms at demo time."
+    },
+    {
+      "id": "quickcash-30d",
+      "lender_id": "quickcash_demo",
+      "category": "app-cash",
+      "label": "QuickCash 30-day app loan (unlicensed — demo)",
+      "principal": 1000,
+      "cash_price": null,
+      "deposit": 0,
+      "instalment_amount": 0,
+      "instalment_frequency": "lump",
+      "num_instalments": 0,
+      "repay_total": 1150,
+      "term_days": 30,
+      "extra_fees": 0,
+      "security_type": "none",
+      "security_note": "No asset security, but harassment and contact-scraping are documented collection tactics for rogue apps.",
+      "sources": [
+        "https://www.theguardian.com/global-development/2022/oct/12/traumatising-how-rogue-digital-loan-apps-in-kenya-intimidate-borrowers"
+      ],
+      "figures_note": "Illustrative unlicensed-app offer for the demo."
+    },
+    {
+      "id": "tala-30d",
+      "lender_id": "tala",
+      "category": "app-cash",
+      "label": "Tala 30-day loan (licensed alternative)",
+      "principal": 1000,
+      "cash_price": null,
+      "deposit": 0,
+      "instalment_amount": 0,
+      "instalment_frequency": "lump",
+      "num_instalments": 0,
+      "repay_total": 1100,
+      "term_days": 30,
+      "extra_fees": 0,
+      "security_type": "none",
+      "security_note": "Licensed DCP; shown as a cheaper licensed alternative.",
+      "sources": [
+        "https://www.connectingafrica.com/fintech/majority-of-kenya-s-mobile-lenders-are-unlicensed"
+      ],
+      "figures_note": "Illustrative licensed-app offer for comparison."
+    }
+  ]
+}

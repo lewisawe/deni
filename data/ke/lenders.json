@@ -1,0 +1,113 @@
+{
+  "_meta": {
+    "country": "KE",
+    "description": "Lender registry: licence status + regulator/court findings. Each fact carries a source and date. Facts only — no unsourced accusations.",
+    "cbk_dcp_list_note": "Licence status reflects CBK's published Digital Credit Providers list. DCP licensing applies to app-based digital lenders; asset financiers and microfinance banks are licensed under different regimes (noted per lender).",
+    "last_updated": "2026-09-14"
+  },
+  "lenders": [
+    {
+      "id": "mkopa",
+      "name": "M-KOPA",
+      "type": "payg-device",
+      "regime": "Not a CBK-DCP; PAYG asset financier (device secured against itself).",
+      "cbk_dcp_licensed": null,
+      "security_model": "device-lock",
+      "findings": [
+        {
+          "body": "Regulatory/press",
+          "summary": "PAYG devices are remotely locked if a payment is missed; under scrutiny over hidden costs of the daily-payment model.",
+          "citation": "https://mjengohub.co.ke/articles/finance/state-interventions-loom-as-mobile-phone-credit-schemes-face-regulatory-scrutiny-over-hidden-costs",
+          "date": "2026"
+        },
+        {
+          "body": "GSMA",
+          "summary": "Financing is secured against the handset, which is 'locked' if payments cease.",
+          "citation": "https://www.gsma.com/mobilefordevelopment/wp-content/uploads/2022/04/M-KOPA-Applying-the-pay-as-you-go-model-to-smartphones-in-Africa.pdf",
+          "date": "2022"
+        }
+      ]
+    },
+    {
+      "id": "watu",
+      "name": "Watu Credit",
+      "type": "moto-car",
+      "regime": "Asset financier (motorbike/tuk-tuk logbook financing).",
+      "cbk_dcp_licensed": null,
+      "security_model": "repossession-tracker",
+      "findings": [
+        {
+          "body": "Rest of World",
+          "summary": "Boda-boda BNPL model criticised for saddling riders with expensive debt; repossession on default.",
+          "citation": "https://restofworld.org/2023/bike-theft-kenya-bnpl/",
+          "date": "2023"
+        }
+      ]
+    },
+    {
+      "id": "mogo",
+      "name": "Mogo Auto (Mogo Kenya)",
+      "type": "moto-car",
+      "regime": "Asset financier (motorbike/car logbook financing).",
+      "cbk_dcp_licensed": null,
+      "security_model": "repossession-tracker",
+      "findings": [
+        {
+          "body": "Competition Authority of Kenya (CAK)",
+          "summary": "CAK found Mogo Auto in violation of the Competition Act for false and misleading representations and unconscionable conduct in its loan products.",
+          "citation": "https://www.dawan.africa/news/mogo-faces-fresh-scrutiny-as-parliament-turns-spotlight-on-kenyas-asset-financing-industry",
+          "date": "2024-10"
+        },
+        {
+          "body": "Press",
+          "summary": "Repossession over small arrears documented; tracker used to disable/locate the bike.",
+          "citation": "https://nyakundireport.com/p/12166/mogo-caught-in-kes-13000-motorcycle-repossession-case-after-informing-the-rider-that-their-tracker-was-disabled",
+          "date": "2024"
+        }
+      ]
+    },
+    {
+      "id": "kwft",
+      "name": "Kenya Women Microfinance Bank (KWFT)",
+      "type": "microfinance",
+      "regime": "Microfinance bank (secured + group-guarantee lending).",
+      "cbk_dcp_licensed": null,
+      "security_model": "collateral-joint-registration",
+      "findings": [
+        {
+          "body": "High Court of Kenya",
+          "summary": "Collateral vehicle (KCN 925C) was registered in the lender's joint name and enforced via court process — illustrates asset-seizure exposure in secured microfinance.",
+          "citation": "https://new.kenyalaw.org/akn/ke/judgment/kehc/2026/5105/eng@2026-04-22/source.pdf",
+          "date": "2026-04-22"
+        }
+      ]
+    },
+    {
+      "id": "quickcash_demo",
+      "name": "QuickCash (unlicensed app — demo)",
+      "type": "app-cash",
+      "regime": "App-based digital lender. NOT on CBK's licensed DCP list (illustrative demo lender).",
+      "cbk_dcp_licensed": false,
+      "security_model": "none",
+      "findings": [
+        {
+          "body": "Court (general precedent)",
+          "summary": "Kenyan court blocked unlicensed digital lenders from enforcing repayment — an unlicensed lender may not be able to lawfully pursue a borrower.",
+          "citation": "https://weetracker.com/2026/07/27/kenyan-court-delivers-blow-to-unlicensed-loan-apps-seeking-debt-repayment/",
+          "date": "2026-07-27"
+        }
+      ]
+    },
+    {
+      "id": "tala",
+      "name": "Tala",
+      "type": "app-cash",
+      "regime": "App-based digital lender.",
+      "cbk_dcp_licensed": true,
+      "cbk_licensed_source": "CBK Digital Credit Providers licensed list (verify current at build/demo time).",
+      "cbk_licensed_date": "2026-09-14",
+      "security_model": "none",
+      "findings": []
+    }
+  ]
+}
