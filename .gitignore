@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+# Node
+node_modules/
+dist/
+# AWS / secrets
+.aws-credentials
+*.pem
+# OS
+.DS_Store
