@@ -10,9 +10,13 @@
 </head>
 <body class="grid-bg">
   <header style="border-bottom:1px solid var(--color-carbon-black);background:var(--color-paper-white);">
-    <div style="max-width:var(--page-max-width);margin:0 auto;padding:var(--spacing-16) var(--spacing-24);display:flex;align-items:center;justify-content:space-between;">
+    <div style="max-width:var(--page-max-width);margin:0 auto;padding:var(--spacing-16) var(--spacing-24);display:flex;align-items:center;justify-content:space-between;gap:var(--spacing-16);flex-wrap:wrap;">
       <span style="font-family:var(--font-geist-mono);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Deni</span>
-      <span style="font-family:var(--font-geist-mono);font-size:var(--text-caption);">Know the real cost before you borrow</span>
+      <div id="lang" role="group" aria-label="Language" style="display:flex;gap:6px;">
+        <button data-lang="en" class="lang-btn" aria-pressed="true">English</button>
+        <button data-lang="sw" class="lang-btn" aria-pressed="false">Kiswahili</button>
+        <button data-lang="sheng" class="lang-btn" aria-pressed="false">Sheng</button>
+      </div>
     </div>
   </header>
 
@@ -20,17 +24,29 @@
     <h1 style="font-size:var(--text-heading-lg);font-weight:600;letter-spacing:-0.03em;line-height:1.1;margin:0 0 var(--spacing-16);">
       What will this loan <span style="color:var(--color-signal-orange);">really</span> cost you?
     </h1>
-    <p style="max-width:52ch;margin:0 0 var(--spacing-24);">
-      Pick a loan you're considering. Deni shows the true cost, whether the lender is licensed,
-      and what they can take if you miss a payment.
-    </p>
 
-    <label for="product" style="display:block;font-weight:600;margin-bottom:var(--spacing-8);">Choose a loan</label>
+    <!-- Input: pick a known loan, or paste an SMS offer -->
+    <label for="product" style="display:block;font-weight:600;margin-bottom:var(--spacing-8);">Pick a loan</label>
     <select id="product" style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);background:var(--color-paper-white);">
       <option value="">Loading…</option>
     </select>
 
-    <div id="result" style="margin-top:var(--spacing-32);" aria-live="polite"></div>
+    <p style="text-align:center;font-family:var(--font-geist-mono);font-size:var(--text-caption);margin:var(--spacing-16) 0;">— or paste the SMS the lender sent you —</p>
+    <textarea id="sms" rows="3" placeholder="e.g. Congrats! You qualify for KES 1,000. Repay KES 1,150 in 30 days."
+      style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);"></textarea>
+    <button id="parse-btn" class="btn-primary" style="margin-top:var(--spacing-8);">Read my offer</button>
+
+    <div id="confirm" style="margin-top:var(--spacing-16);"></div>
+    <div id="result" style="margin-top:var(--spacing-24);" aria-live="polite"></div>
+
+    <!-- DURING flow -->
+    <hr style="margin:var(--spacing-40) 0;border:none;border-top:1px solid var(--color-carbon-black);" />
+    <h2 style="font-size:var(--text-heading);font-weight:600;margin:0 0 var(--spacing-8);">Already in trouble with a loan?</h2>
+    <p style="margin:0 0 var(--spacing-16);">Being harassed, threatened with repossession, or wrongly listed? Describe it — Deni tells you the law, who to contact, and drafts your complaint.</p>
+    <textarea id="problem" rows="3" placeholder="e.g. They are calling everyone in my phone and threatening to take my boda."
+      style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);"></textarea>
+    <button id="recourse-btn" class="btn-primary" style="margin-top:var(--spacing-8);">Know my rights</button>
+    <div id="recourse" style="margin-top:var(--spacing-24);" aria-live="polite"></div>
   </main>
 
   <script src="/app.js"></script>
