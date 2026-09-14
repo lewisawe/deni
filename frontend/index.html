@@ -9,16 +9,30 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body class="grid-bg">
-  <main style="max-width: var(--page-max-width); margin: 0 auto; padding: var(--spacing-40) var(--spacing-24);">
-    <p style="font-family: var(--font-geist-mono); text-transform: uppercase; letter-spacing: 0.05em; font-size: var(--text-caption);">Deni</p>
-    <h1 style="font-size: var(--text-heading-lg); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1;">
-      Know the <span style="color: var(--color-signal-orange);">real cost</span> before you borrow.
-    </h1>
-    <div class="card-hard" style="margin-top: var(--spacing-32); max-width: 420px;">
-      <p style="margin: 0 0 var(--spacing-8); font-size: var(--text-caption); text-transform: uppercase; font-family: var(--font-geist-mono);">Example</p>
-      <p class="stat-number" style="font-size: 50px; margin: 0;">292% APR</p>
-      <p style="margin: var(--spacing-8) 0 0;">Borrow 1,000, repay 1,150 in 30 days. Scaffold live — real engine lands next.</p>
+  <header style="border-bottom:1px solid var(--color-carbon-black);background:var(--color-paper-white);">
+    <div style="max-width:var(--page-max-width);margin:0 auto;padding:var(--spacing-16) var(--spacing-24);display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-family:var(--font-geist-mono);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Deni</span>
+      <span style="font-family:var(--font-geist-mono);font-size:var(--text-caption);">Know the real cost before you borrow</span>
     </div>
+  </header>
+
+  <main style="max-width:760px;margin:0 auto;padding:var(--spacing-40) var(--spacing-24);">
+    <h1 style="font-size:var(--text-heading-lg);font-weight:600;letter-spacing:-0.03em;line-height:1.1;margin:0 0 var(--spacing-16);">
+      What will this loan <span style="color:var(--color-signal-orange);">really</span> cost you?
+    </h1>
+    <p style="max-width:52ch;margin:0 0 var(--spacing-24);">
+      Pick a loan you're considering. Deni shows the true cost, whether the lender is licensed,
+      and what they can take if you miss a payment.
+    </p>
+
+    <label for="product" style="display:block;font-weight:600;margin-bottom:var(--spacing-8);">Choose a loan</label>
+    <select id="product" style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);background:var(--color-paper-white);">
+      <option value="">Loading…</option>
+    </select>
+
+    <div id="result" style="margin-top:var(--spacing-32);" aria-live="polite"></div>
   </main>
+
+  <script src="/app.js"></script>
 </body>
 </html>
