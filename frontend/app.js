@@ -350,9 +350,16 @@ function renderRecourse(r) {
     ${r.complaint ? `<div class="card-hard" style="margin-top:var(--spacing-16);">
       <p style="margin:0 0 var(--spacing-8);font-weight:600;">Your prepared document</p>
       <p style="font-family:var(--font-geist-mono);font-size:var(--text-caption);margin:0 0 var(--spacing-8);">Case ref: <span class="stat-inline" style="color:var(--color-carbon-black);">${r.case_ref}</span></p>
-      <pre style="white-space:pre-wrap;font-family:var(--font-geist);font-size:var(--text-caption);background:var(--color-paper-white);border:1px solid var(--color-ash);border-radius:var(--radius-smallbuttons);padding:12px;">${r.complaint}</pre>
+      <p style="margin:0 0 6px;font-size:var(--text-caption);color:var(--color-graphite);">Edit the details in [brackets], then share. Your changes are kept on this device only.</p>
+      <textarea id="complaint-edit" rows="16" aria-label="Editable complaint document" style="width:100%;white-space:pre-wrap;font-family:var(--font-geist);font-size:var(--text-caption);background:var(--color-paper-white);border:1px solid var(--color-ash);border-radius:var(--radius-smallbuttons);padding:12px;"></textarea>
     </div>` : ""}
     <p style="margin-top:var(--spacing-16);font-size:var(--text-caption);color:var(--color-graphite);">${r.disclaimer}</p>`;
+  // Fill the editable document and keep r.complaint in sync so the share bar uses edits.
+  const edit = $("complaint-edit");
+  if (edit) {
+    edit.value = r.complaint;
+    edit.addEventListener("input", () => { r.complaint = edit.value; });
+  }
   $("recourse").appendChild(shareBar("recourse", r));
 }
 
