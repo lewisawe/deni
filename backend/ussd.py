@@ -17,7 +17,7 @@ from __future__ import annotations
 from decimal import Decimal
 
 from .cost_engine import LoanOffer, compute_cost
-from .data_pack import get_lender, get_product, load_pack
+from .data_pack import get_forum, get_lender, get_product, load_pack
 
 # USSD-friendly short product menu (subset for the small screen).
 USSD_PRODUCTS = [
@@ -81,7 +81,8 @@ def handle(text: str, country: str = "ke") -> str:
 
     if not parts:  # root menu
         menu = "\n".join(f"{i+1}. {label}" for i, (label, _) in enumerate(USSD_PRODUCTS))
-        return f"CON Deni - real cost of a loan\n{menu}\n4. Check if lender is licensed"
+        return (f"CON Deni - know your rights\n{menu}\n"
+                f"4. Check if lender is licensed\n5. Know your rights")
 
     choice = parts[0]
     if choice in ("1", "2", "3"):
@@ -95,4 +96,31 @@ def handle(text: str, country: str = "ke") -> str:
             return "CON Type the lender name (e.g. Tala, QuickCash, Mogo):"
         return _check_lender(country, parts[1])
 
+    if choice == "5":
+        return _rights_menu(country, parts[1:])
+
     return "END Invalid choice. Dial again."
+
+
+def _rights_menu(country: str, rest: list[str]) -> str:
+    """USSD know-your-rights: list scenarios, then show law + forum for one.
+    Brings the civic 'access to information' feature to a basic phone."""
+    scenarios = load_pack(country)["rules"]["scenarios"]
+    if not rest:
+        lines = "\n".join(f"{i+1}. {s['title'][:34]}" for i, s in enumerate(scenarios))
+        return f"CON Know your rights - pick one:\n{lines}"
+    try:
+        idx = int(rest[0]) - 1
+    except ValueError:
+        return "END Invalid choice."
+    if not (0 <= idx < len(scenarios)):
+        return "END Invalid choice."
+    s = scenarios[idx]
+    forum = get_forum(country, s.get("forum_key", "")) or {}
+    law = s.get("law_statement", "")[:200]
+    return (
+        f"END {s['title'][:40]}\n"
+        f"{law}\n"
+        f"Go to: {forum.get('name', 'the relevant body')}\n"
+        f"Not legal advice."
+    )

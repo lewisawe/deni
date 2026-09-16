@@ -49,6 +49,15 @@
       "what_to_include": ["Your name and ID", "The lender and listing", "Why it is wrong (paid / disputed / unlicensed lender)", "Evidence"],
       "template_id": "crb_dispute",
       "source": "https://new.kenyalaw.org/akn/ke/act/ln/2020/55/eng@2020-04-17/source"
+    },
+    {
+      "key": "small_claims",
+      "name": "Small Claims Court",
+      "handles": "Money claims up to KES 1,000,000 — refunds, overpayments, the value of a wrongly seized asset. You can represent yourself; no advocate required.",
+      "channel": "File a statement of claim at a Small Claims Court registry. Pay the prescribed filing fee, attach your evidence, and serve the other party. The court is designed for self-represented claimants and aims to decide within 60 days.",
+      "what_to_include": ["Your name and contact", "The lender/other party's name and address", "The exact amount you are claiming and how you calculated it", "What happened and the dates", "Evidence (agreement, M-Pesa/payment records, messages, photos)", "What you want the court to order"],
+      "template_id": "small_claims_statement",
+      "source": "https://new.kenyalaw.org/akn/ke/act/2016/2/eng@2020-04-30/source"
     }
   ]
 }

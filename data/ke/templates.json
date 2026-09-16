@@ -39,6 +39,13 @@
       "legal_basis": "Banking (Credit Reference Bureau) Regulations, 2020 (Legal Notice 55 of 2020).",
       "body": "To {{bureau}},\n\nRE: DISPUTE OF CREDIT LISTING — {{redacted_name}}, ID {{redacted_id}}\n\nI dispute the listing by {{lender_name}}. The listing is incorrect because {{reason}}.\n\nUnder the Banking (Credit Reference Bureau) Regulations 2020, I request that you investigate and correct or remove this listing.\n\nCase reference (my record): {{case_ref}}\n\nYours faithfully,\n{{redacted_name}}",
       "not_advice": "This is a self-prepared dispute, not legal advice."
+    },
+    "small_claims_statement": {
+      "title": "Statement of claim — Small Claims Court",
+      "addressee": "The Small Claims Court",
+      "legal_basis": "Small Claims Court Act, 2016 (Cap. 10A), as amended by Act No. 5 of 2020 (monetary jurisdiction up to KES 1,000,000). Article 48 and 169(1) of the Constitution (access to justice; subordinate courts).",
+      "body": "IN THE SMALL CLAIMS COURT AT [court station]\n\nCLAIM NO. ______ OF [year]\n\nBETWEEN\n{{redacted_name}} .............................................. CLAIMANT\nAND\n{{lender_name}} .............................................. RESPONDENT\n\nSTATEMENT OF CLAIM\n\n1. The Claimant claims from the Respondent the sum of KES {{claim_amount}}.\n2. The claim arises as follows: on {{dates}}, {{what_happened}}.\n3. The amount claimed is calculated as: {{claim_basis}}.\n4. The Claimant has evidence in support: {{evidence_list}}.\n5. The Claimant therefore prays for judgment against the Respondent for KES {{claim_amount}}, costs, and any other relief the Court deems just.\n\nThe Claimant confirms this claim does not exceed the Court's monetary limit and that the Claimant may appear in person.\n\nCase reference (my record): {{case_ref}}\nContact: {{redacted_contact}}\n\nDated at __________ this ____ day of __________, [year].\n\nSigned: {{redacted_name}} (Claimant)",
+      "not_advice": "This is a self-prepared draft statement of claim, not legal advice. Confirm the current monetary limit, filing fee, correct court station, and required form with the Small Claims Court registry before filing. Whether your claim succeeds depends on your facts and evidence."
     }
   }
 }

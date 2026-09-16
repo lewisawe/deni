@@ -51,6 +51,15 @@
       "forum_key": "crb",
       "citation": "https://new.kenyalaw.org/akn/ke/act/ln/2020/55/eng@2020-04-17/source",
       "citation_date": "2020 (LN 55/2020)"
+    },
+    {
+      "key": "small_claims_recovery",
+      "title": "You want to recover money (overpayment, a refund, or the value of a wrongly seized asset)",
+      "law_statement": "The Small Claims Court (Small Claims Court Act, 2016, Cap. 10A) hears money claims up to KES 1,000,000. It is designed for ordinary people: you may represent yourself without an advocate, the process is simplified, and cases are meant to be decided quickly (the Act targets resolution within 60 days). This is a direct, low-cost route to claim money a lender wrongly took or owes you.",
+      "condition": "Applies where your claim is for money (a refund, an overpayment, or the monetary value of a loss) and does not exceed KES 1,000,000. It is a civil money claim, not a criminal or regulatory complaint. Confirm the current pecuniary limit and filing fee with the court before filing.",
+      "forum_key": "small_claims",
+      "citation": "https://new.kenyalaw.org/akn/ke/act/2016/2/eng@2020-04-30/source",
+      "citation_date": "Act No. 2 of 2016 (Cap. 10A), amended by Act No. 5 of 2020 (limit raised to KES 1,000,000)"
     }
   ]
 }

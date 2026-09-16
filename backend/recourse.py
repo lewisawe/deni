@@ -16,12 +16,15 @@ _KEYWORDS = {
     "misleading_terms": ["mislead", "hidden", "didn't tell", "not disclose", "lied", "cheat", "trick"],
     "unlicensed_chasing": ["unlicensed", "not licensed", "chasing", "enforce", "illegal lender"],
     "wrongful_crb": ["crb", "blacklist", "listed", "credit bureau", "cleared"],
+    "small_claims_recovery": ["refund", "recover my money", "get my money back", "overpaid", "overpayment", "owe me", "they owe", "claim my money", "sue for", "small claims"],
 }
 
 _CLASSIFY_SYSTEM = (
     "Classify a Kenyan borrower's problem into exactly one key from this set: "
     "harassment_contacts, repossession, misleading_terms, unlicensed_chasing, "
-    "wrongful_crb. Return JSON: {\"scenario\": <key or null>, \"facts\": {"
+    "wrongful_crb, small_claims_recovery. Use small_claims_recovery when the person "
+    "wants to recover a sum of money (a refund, an overpayment, or the value of a "
+    "loss). Return JSON: {\"scenario\": <key or null>, \"facts\": {"
     "\"lender_name\": <string or null>, \"what_happened\": <short phrase>, "
     "\"dates\": <string or null>}}. Use null if nothing matches."
 )
@@ -66,6 +69,9 @@ def _fill_template(country: str, template_id: str, facts: dict, case_ref: str) -
         "demand": facts.get("demand") or "the immediate return of the asset",
         "bureau": facts.get("bureau") or "[TransUnion / Metropol / Creditinfo]",
         "reason": facts.get("reason") or "[why the listing is wrong]",
+        "claim_amount": facts.get("claim_amount") or "[amount you are claiming]",
+        "claim_basis": facts.get("claim_basis") or "[how you calculated the amount]",
+        "evidence_list": facts.get("evidence_list") or "[list your evidence: agreement, payment records, messages, photos]",
     }
     # Fill {{slot}} tokens; leave unknown tokens visibly bracketed.
     return re.sub(r"\{\{(\w+)\}\}", lambda m: str(values.get(m.group(1), f"[{m.group(1)}]")), body)
