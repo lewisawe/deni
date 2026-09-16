@@ -216,7 +216,8 @@ function renderResult(r) {
       <p style="margin:0;">${r.at_risk.note}</p></div>` : ""}
     ${alt ? `<div class="card-hard" style="margin-top:var(--spacing-16);background:var(--color-chartreuse-highlight);">
       <p style="margin:0 0 var(--spacing-8);font-weight:600;">A cheaper licensed option</p>
-      <p style="margin:0;">${alt.label}: <span class="stat-inline" style="color:var(--color-carbon-black);">${alt.cost.apr_pct}% APR</span> instead of ${c.apr_pct}%.</p></div>` : ""}
+      <p style="margin:0 0 6px;">${alt.label}: <span class="stat-inline" style="color:var(--color-carbon-black);">${alt.cost.apr_pct}% APR</span> instead of ${c.apr_pct}%.</p>
+      ${(Number(alt.cost.principal) === Number(c.principal)) ? `<p style="margin:0;font-size:var(--text-subheading);">You would pay <span class="stat-inline" style="color:var(--color-carbon-black);">${money(Number(c.total_paid) - Number(alt.cost.total_paid))}</span> less.</p>` : ""}</div>` : ""}
     <p style="margin-top:var(--spacing-16);font-size:var(--text-caption);color:var(--color-graphite);">${r.disclaimer}</p>`;
   explainInto($("explain"), c);
   $("result").appendChild(shareBar("cost", r));
@@ -284,6 +285,7 @@ $("parse-btn").addEventListener("click", async () => {
   $("confirm").innerHTML = `
     <div class="card-hard">
       <p style="margin:0 0 var(--spacing-8);font-weight:600;">Is this right? Confirm before we compute.</p>
+      ${p.confidence != null ? `<p style="margin:0 0 var(--spacing-8);font-size:var(--text-caption);color:var(--color-graphite);">I'm about <strong>${Math.round(p.confidence * 100)}%</strong> sure I read this correctly. Please check the fields below.</p>` : ""}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-family:var(--font-geist-mono);font-size:var(--text-caption);">
         <label>Amount received<input id="f-principal" value="${f.principal}" style="width:100%"></label>
         <label>Repay total<input id="f-repay" value="${f.repay_total ?? ""}" style="width:100%"></label>
@@ -324,15 +326,29 @@ function renderRecourse(r) {
     $("recourse").innerHTML = `<div class="card-hard"><p style="margin:0;">${(r && r.message) || "Couldn't match that to a known situation. Try describing what the lender is doing."}</p></div>`;
     return;
   }
+  const forums = (r.forums && r.forums.length) ? r.forums : (r.forum ? [{ ...r.forum, primary: true }] : []);
+  const forumsHtml = forums.map((f) => `
+    <div style="border:1px solid var(--color-carbon-black);border-radius:var(--radius-cards);padding:12px;margin-bottom:10px;${f.primary ? "background:var(--color-chartreuse-highlight);" : ""}">
+      <p style="margin:0 0 4px;font-weight:600;">${t("go_to")}: ${f.name}${f.primary ? "" : ` <span style="font-weight:400;font-size:var(--text-caption);color:var(--color-graphite);">(also applies)</span>`}</p>
+      ${f.handles ? `<p style="margin:0 0 6px;font-size:var(--text-caption);color:var(--color-graphite);">${f.handles}</p>` : ""}
+      ${f.channel ? `<p style="margin:0 0 6px;font-size:var(--text-caption);"><strong>How to file:</strong> ${f.channel}</p>` : ""}
+      ${(f.what_to_include && f.what_to_include.length) ? `
+        <p style="margin:6px 0 4px;font-size:var(--text-caption);font-weight:600;">What to bring (tick what you have):</p>
+        <div>${f.what_to_include.map((w, i) => `<label style="display:flex;gap:8px;align-items:flex-start;font-size:var(--text-caption);margin-bottom:3px;"><input type="checkbox"> <span>${w}</span></label>`).join("")}</div>` : ""}
+    </div>`).join("");
   $("recourse").innerHTML = `
     <div class="card-hard">
       <p style="margin:0 0 var(--spacing-8);font-weight:600;">${r.title}</p>
       <p style="margin:0 0 var(--spacing-8);">${r.law_statement}</p>
       <p style="margin:0 0 var(--spacing-8);font-size:var(--text-caption);color:var(--color-graphite);"><em>${r.condition}</em></p>
-      <span style="display:inline-block;padding:4px 10px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-tags);background:var(--color-chartreuse-highlight);font-family:var(--font-geist-mono);font-size:var(--text-caption);text-transform:uppercase;">Go to: ${r.forum.name}</span>
+      ${r.citation ? `<p style="margin:0;font-size:var(--text-caption);font-family:var(--font-geist-mono);color:var(--color-steel);">${t("source")}: <a href="${r.citation}" target="_blank" rel="noopener">${r.citation}</a>${r.citation_date ? ` · ${r.citation_date}` : ""}</p>` : ""}
+    </div>
+    <div class="card-hard" style="margin-top:var(--spacing-16);">
+      <p style="margin:0 0 var(--spacing-8);font-weight:600;">Where to take it${forums.length > 1 ? ` (${forums.length} bodies apply)` : ""}</p>
+      ${forumsHtml}
     </div>
     ${r.complaint ? `<div class="card-hard" style="margin-top:var(--spacing-16);">
-      <p style="margin:0 0 var(--spacing-8);font-weight:600;">Your prepared complaint</p>
+      <p style="margin:0 0 var(--spacing-8);font-weight:600;">Your prepared document</p>
       <p style="font-family:var(--font-geist-mono);font-size:var(--text-caption);margin:0 0 var(--spacing-8);">Case ref: <span class="stat-inline" style="color:var(--color-carbon-black);">${r.case_ref}</span></p>
       <pre style="white-space:pre-wrap;font-family:var(--font-geist);font-size:var(--text-caption);background:var(--color-paper-white);border:1px solid var(--color-ash);border-radius:var(--radius-smallbuttons);padding:12px;">${r.complaint}</pre>
     </div>` : ""}
@@ -369,8 +385,16 @@ async function loadRights() {
         <p style="margin:var(--spacing-8) 0 0;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);">
           ${t("source")}: <a href="${r.citation}" target="_blank" rel="noopener">${r.citation}</a>${r.citation_date ? ` · ${r.citation_date}` : ""}
         </p>
+        <button class="btn-primary" data-act-title="${(r.title || "").replace(/"/g, "&quot;")}" style="margin-top:var(--spacing-16);padding:6px 16px;">${t("wn_action")}</button>
       </details>`).join("") +
       `<p style="font-size:var(--text-caption);color:var(--color-graphite);">${data.disclaimer}${data.last_updated ? ` Last updated: ${data.last_updated}.` : ""}</p>`;
+    // Cross-link: reading a right flows straight into acting on it.
+    box.querySelectorAll("[data-act-title]").forEach((b) => b.addEventListener("click", () => {
+      const p = $("problem");
+      p.value = b.getAttribute("data-act-title");
+      p.scrollIntoView({ behavior: "smooth", block: "center" });
+      $("recourse-btn").click();
+    }));
     RIGHTS_LOADED = true;
   } catch (_) {
     box.innerHTML = '<p>Could not load rights. Try refreshing.</p>';
@@ -392,11 +416,21 @@ $("lender-btn").addEventListener("click", async () => {
       unknown: ["var(--color-paper-white)", "var(--color-carbon-black)"],
     };
     const [bg, fg] = map[r.status] || map.unknown;
+    const findingsHtml = (r.findings && r.findings.length) ? `
+      <div style="margin-top:var(--spacing-16);">
+        <p style="margin:0 0 8px;font-weight:600;font-size:var(--text-caption);text-transform:uppercase;font-family:var(--font-geist-mono);">On record against this lender</p>
+        ${r.findings.map((f) => `<div style="border-left:3px solid var(--color-signal-orange);padding-left:12px;margin-bottom:10px;">
+          <p style="margin:0;font-size:var(--text-caption);"><strong>${f.body || ""}</strong>${f.date ? ` · ${f.date}` : ""}</p>
+          <p style="margin:2px 0 0;font-size:var(--text-caption);">${f.summary || ""}</p>
+          ${f.citation ? `<a href="${f.citation}" target="_blank" rel="noopener" style="font-size:var(--text-caption);font-family:var(--font-geist-mono);color:var(--color-steel);word-break:break-all;">${f.citation}</a>` : ""}
+        </div>`).join("")}
+      </div>` : "";
     box.innerHTML = `<div class="card-hard">
       <span style="display:inline-block;padding:4px 10px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-tags);background:${bg};color:${fg};font-family:var(--font-geist-mono);font-size:var(--text-caption);text-transform:uppercase;font-weight:500;">${r.label}</span>
       <p style="margin:var(--spacing-8) 0 0;">${r.note}</p>
+      ${findingsHtml}
       ${r.status === "unlicensed" ? `<button class="btn-primary" style="margin-top:var(--spacing-8);padding:6px 16px;" id="lender-report">Report to CBK</button>` : ""}
-      <p style="margin:var(--spacing-8) 0 0;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);">Source: CBK licensed Digital Credit Providers register.</p>
+      <p style="margin:var(--spacing-8) 0 0;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);">Facts only, each sourced. Verify current status on the official register.</p>
     </div>`;
     const rep = document.getElementById("lender-report");
     if (rep) rep.addEventListener("click", () => {
