@@ -44,10 +44,15 @@ brief's own criteria. Not all are for the sprint; the sprint-critical ones are m
 
 ## Scalability (judging axis)
 
-- **Stub a second-country data pack.** [high value] Scalability is currently asserted
-  ("swap the pack") but not shown. A thin `data/ng/` (even one lender + a couple of
-  rights) would make "adds a country by adding a file" demonstrable, not just claimed.
-  Cheapest way to strengthen the softest judging axis.
+- **DONE (2026-09-16): South Africa is now a live second country pack.** `data/za/`
+  covers lenders, products, rights, forums, and templates built on real SA bodies
+  (National Credit Regulator + National Credit Act, POPIA + Information Regulator,
+  credit-bureau disputes, Small Claims Court). The licence check was refactored so each
+  pack declares its own licensing authority — adding a country is now genuinely a data
+  swap, and the app has a country selector to demo it. Scalability is demonstrated, not
+  just claimed.
+- Further countries (Ghana, etc.) would follow the same pattern: a new `data/<cc>/`
+  folder with the five files and a `licence_authority` block.
 
 ## Multilingual (constraint 5)
 
