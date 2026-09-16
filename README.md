@@ -55,11 +55,12 @@ See `INTEGRATION.md` for the exact sandbox setup for both channels.
 ## Two countries, one engine (scalability)
 
 Everything country-specific (lenders, products, rights, forums, templates, the
-licensing authority, the currency, example lenders) lives in a per-country data pack.
-`data/ke/` is Kenya; `data/za/` is South Africa. The app has a country selector, and
-switching it changes every surface: the regulator named (CBK vs NCR), the law cited,
-the currency shown (KES vs rand), the public bodies routed to. Adding a country is
-adding a folder, not changing code.
+licensing authority, the currency, the languages, example lenders) lives in a
+per-country data pack. `data/ke/` is Kenya; `data/za/` is South Africa. The app has a
+country selector, and switching it changes every surface: the regulator named (CBK vs
+NCR), the law cited, the currency shown (KES vs rand), the languages offered (Kenya:
+English, Kiswahili, Sheng; South Africa: English), and the public bodies routed to.
+Adding a country is adding a folder, not changing code.
 
 ## How it works
 
