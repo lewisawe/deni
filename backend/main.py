@@ -37,6 +37,24 @@ def list_products(country: str = "ke") -> dict:
     ]}
 
 
+@app.get("/api/rights")
+def list_rights(country: str = "ke") -> dict:
+    """Browsable know-your-rights library (access to information).
+
+    Lets a citizen read what the law says and which public body handles it, before
+    they have a problem. Every entry is sourced and dated.
+    """
+    from .data_pack import list_rights as _list_rights
+    return _list_rights(country)
+
+
+@app.get("/api/check-lender")
+def check_lender(name: str = "", country: str = "ke") -> dict:
+    """Check a lender against CBK's licensed Digital Credit Providers register."""
+    from .data_pack import check_lender as _check_lender
+    return _check_lender(country, name)
+
+
 @app.get("/api/evaluate/{product_id}")
 def evaluate(product_id: str, country: str = "ke") -> dict:
     """BEFORE assessment for a known product (cost + licence + risk + alternative)."""
@@ -142,4 +160,16 @@ def whatsapp_webhook(payload: WhatsAppIn) -> dict:
 
 # Serve the SPA. Mounted last so API routes take precedence.
 if FRONTEND_DIR.is_dir():
+    @app.get("/")
+    def landing() -> FileResponse:
+        """Marketing/landing page (civic pitch, converts to the app)."""
+        return FileResponse(str(FRONTEND_DIR / "landing.html"))
+
+    @app.get("/app")
+    def app_page() -> FileResponse:
+        """The Deni tool (rights / lender / cost / action)."""
+        return FileResponse(str(FRONTEND_DIR / "index.html"))
+
+    # Static assets (styles.css, app.js, and direct file access). Mounted at /static
+    # AND at / for asset files; explicit routes above take precedence for / and /app.
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
