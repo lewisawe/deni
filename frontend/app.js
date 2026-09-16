@@ -110,10 +110,11 @@ document.querySelectorAll(".lang-btn").forEach((b) => {
 
 /* ---------- helpers ---------- */
 function licenceBadge(l) {
+  const a = (META && META.authority_short) || "the regulator";
   const map = {
-    licensed: ["Licensed by CBK", "var(--color-chartreuse-highlight)", "var(--color-carbon-black)"],
-    unlicensed: ["NOT on CBK licensed list", "var(--color-signal-orange)", "var(--color-paper-white)"],
-    "not-applicable": ["Not a CBK digital lender", "var(--color-paper-white)", "var(--color-carbon-black)"],
+    licensed: [`Licensed by ${a}`, "var(--color-chartreuse-highlight)", "var(--color-carbon-black)"],
+    unlicensed: [`NOT on the ${a} register`, "var(--color-signal-orange)", "var(--color-paper-white)"],
+    "not-applicable": [`Not a ${a}-listed lender`, "var(--color-paper-white)", "var(--color-carbon-black)"],
   };
   const [txt, bg, fg] = map[l.status] || map["not-applicable"];
   return `<span style="display:inline-block;padding:4px 10px;border:1px solid var(--color-carbon-black);
@@ -131,19 +132,62 @@ async function buildReceipt(kind, data) {
 
 function receiptToImage(text) {
   // Render the receipt text to a PNG on canvas (Timescale: paper-white, mono).
-  const lines = text.split("\n");
-  const pad = 32, lh = 26, w = 720;
+  // Word-wrap each line to the content width so nothing is clipped, and size the
+  // canvas height to the wrapped line count.
+  const pad = 32, lh = 26, w = 760, contentW = w - pad * 2;
+  const bodyFont = "400 15px 'JetBrains Mono', monospace";
+  const titleFont = "700 22px 'JetBrains Mono', monospace";
+
+  // Measure with a scratch context first so we know how many wrapped lines we get.
+  const scratch = document.createElement("canvas").getContext("2d");
+  function wrap(line, font) {
+    scratch.font = font;
+    if (line === "") return [""];
+    const words = line.split(" ");
+    const out = [];
+    let cur = "";
+    for (const word of words) {
+      const test = cur ? cur + " " + word : word;
+      if (scratch.measureText(test).width <= contentW) {
+        cur = test;
+      } else {
+        if (cur) out.push(cur);
+        // A single word longer than the width: hard-break it by characters.
+        if (scratch.measureText(word).width > contentW) {
+          let chunk = "";
+          for (const ch of word) {
+            if (scratch.measureText(chunk + ch).width <= contentW) { chunk += ch; }
+            else { out.push(chunk); chunk = ch; }
+          }
+          cur = chunk;
+        } else {
+          cur = word;
+        }
+      }
+    }
+    if (cur) out.push(cur);
+    return out;
+  }
+
+  const src = text.split("\n");
+  // Build a flat list of {text, isTitle} wrapped lines.
+  const rows = [];
+  src.forEach((ln, i) => {
+    const font = i === 0 ? titleFont : bodyFont;
+    wrap(ln, font).forEach((wl) => rows.push({ text: wl, title: i === 0 }));
+  });
+
   const cvs = document.createElement("canvas");
-  cvs.width = w; cvs.height = pad * 2 + lh * lines.length;
+  cvs.width = w;
+  cvs.height = pad * 2 + lh * rows.length;
   const ctx = cvs.getContext("2d");
   ctx.fillStyle = "#fafafa"; ctx.fillRect(0, 0, cvs.width, cvs.height);
-  ctx.fillStyle = "#000"; ctx.fillRect(0, 0, 6, cvs.height); // orange-ish rail
-  ctx.fillStyle = "#ff5b29"; ctx.fillRect(0, 0, 6, cvs.height);
-  lines.forEach((ln, i) => {
+  ctx.fillStyle = "#ff5b29"; ctx.fillRect(0, 0, 6, cvs.height); // signal-orange rail
+  rows.forEach((row, i) => {
     const y = pad + lh * (i + 1);
-    if (i === 0) { ctx.font = "700 22px 'JetBrains Mono', monospace"; ctx.fillStyle = "#ff5b29"; }
-    else { ctx.font = "400 15px 'JetBrains Mono', monospace"; ctx.fillStyle = "#242424"; }
-    ctx.fillText(ln, pad, y);
+    if (row.title) { ctx.font = titleFont; ctx.fillStyle = "#ff5b29"; }
+    else { ctx.font = bodyFont; ctx.fillStyle = "#242424"; }
+    ctx.fillText(row.text, pad, y);
   });
   return cvs.toDataURL("image/png");
 }
@@ -416,7 +460,7 @@ $("lender-btn").addEventListener("click", async () => {
   const name = $("lender-name").value.trim();
   if (!name) return;
   const box = $("lender-result");
-  box.innerHTML = '<p style="font-family:var(--font-geist-mono);">Checking CBK register…</p>';
+  box.innerHTML = `<p style="font-family:var(--font-geist-mono);">Checking the ${META.authority_short || "register"}...</p>`;
   try {
     const r = await (await fetch("/api/check-lender?country=" + COUNTRY + "&name=" + encodeURIComponent(name))).json();
     const map = {
