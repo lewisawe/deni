@@ -4,6 +4,9 @@
     "description": "Modelled products for the demo. Figures are illustrative of common South African consumer-credit structures; exact terms change, so each product names its data date. The cost engine computes markup/APR from these inputs; no figure is asserted without its inputs shown.",
     "note": "amounts in ZAR. principal = value received today (cash received, or cash price of the asset).",
     "currency": {"code": "ZAR", "symbol": "R", "locale": "en-ZA"},
+    "languages": [
+      {"code": "en", "label": "English"}
+    ],
     "last_updated": "2026-09-16"
   },
   "products": [

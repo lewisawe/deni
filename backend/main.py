@@ -58,8 +58,10 @@ def check_lender(name: str = "", country: str = "ke") -> dict:
 @app.get("/api/meta")
 def meta(country: str = "ke") -> dict:
     """Country meta the UI needs to adapt labels: the licensing authority + examples."""
-    from .data_pack import currency, licence_authority
+    from .data_pack import currency, licence_authority, load_pack
     la = licence_authority(country)
+    langs = load_pack(country)["products"].get("_meta", {}).get(
+        "languages", [{"code": "en", "label": "English"}])
     return {
         "country": country,
         "authority_short": la.get("authority_short", "the regulator"),
@@ -67,6 +69,7 @@ def meta(country: str = "ke") -> dict:
         "register_name": la.get("register_name", "the register"),
         "examples": la.get("examples", "e.g. a lender's name"),
         "currency": currency(country),
+        "languages": langs,
     }
 
 

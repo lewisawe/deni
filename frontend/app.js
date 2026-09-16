@@ -105,19 +105,22 @@ function applyLang() {
 }
 
 /* ---------- language toggle ---------- */
-document.querySelectorAll(".lang-btn").forEach((b) => {
-  b.addEventListener("click", () => {
-    LANG = b.dataset.lang;
-    document.querySelectorAll(".lang-btn").forEach((x) =>
-      x.setAttribute("aria-pressed", String(x === b)));
-    applyLang();
-    // Re-render the rights library in the new language (it's fetched fresh per language).
-    RIGHTS_LOADED = false;
-    if (document.querySelector('.door-btn[data-panel="rights"]').getAttribute("aria-selected") === "true") {
-      loadRights();
-    }
+function bindLangButtons() {
+  document.querySelectorAll(".lang-btn").forEach((b) => {
+    b.addEventListener("click", () => {
+      LANG = b.dataset.lang;
+      document.querySelectorAll(".lang-btn").forEach((x) =>
+        x.setAttribute("aria-pressed", String(x === b)));
+      applyLang();
+      // Re-render the rights library in the new language (fetched fresh per language).
+      RIGHTS_LOADED = false;
+      if (document.querySelector('.door-btn[data-panel="rights"]').getAttribute("aria-selected") === "true") {
+        loadRights();
+      }
+    });
   });
-});
+}
+bindLangButtons();
 
 /* ---------- helpers ---------- */
 function licenceBadge(l) {
@@ -528,6 +531,19 @@ async function applyCountryMeta() {
     META = await (await fetch("/api/meta?country=" + COUNTRY)).json();
   } catch (_) { /* keep defaults */ }
   if (META.currency) CURRENCY = META.currency;
+  // Rebuild the language toggle from the country's own languages (Kenya has
+  // English/Kiswahili/Sheng; South Africa has English). If the current language
+  // isn't offered here, fall back to English.
+  const langs = (META.languages && META.languages.length) ? META.languages
+    : [{ code: "en", label: "English" }];
+  if (!langs.some((l) => l.code === LANG)) LANG = "en";
+  const langGroup = $("lang");
+  if (langGroup) {
+    langGroup.innerHTML = langs.map((l) =>
+      `<button data-lang="${l.code}" class="lang-btn" aria-pressed="${String(l.code === LANG)}">${l.label}</button>`
+    ).join("");
+    bindLangButtons();
+  }
   // Lender panel label + placeholder adapt to the country's regulator.
   const label = document.querySelector('[data-i18n="lender_label"]');
   if (label) label.textContent = t("lender_label").replace("{authority}", META.authority_name);
