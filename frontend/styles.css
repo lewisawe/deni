@@ -155,3 +155,47 @@ html, body {
 @media (max-width: 520px) {
   #doors { grid-template-columns: 1fr; }
 }
+
+/* Hero collapses when inside a tool (lender/cost) so the tool leads (journey polish). */
+#hero-title { font-size: var(--text-heading-lg); }
+#hero-title.hero-compact {
+  font-size: var(--text-heading);
+  margin-bottom: var(--spacing-16);
+}
+#hero-lead.hero-hidden { display: none; }
+
+/* Lightweight loading spinner for compute/check/find states. */
+.deni-spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  margin-right: 8px;
+  border: 2px solid var(--color-ash);
+  border-top-color: var(--color-signal-orange);
+  border-radius: 50%;
+  vertical-align: middle;
+  animation: deni-spin 0.7s linear infinite;
+}
+.deni-loading {
+  font-family: var(--font-geist-mono);
+  font-size: var(--text-caption);
+  color: var(--color-graphite);
+  display: flex;
+  align-items: center;
+}
+@keyframes deni-spin { to { transform: rotate(360deg); } }
+
+/* Empty-state hint in result areas. */
+.deni-hint {
+  border: 1px dashed var(--color-ash);
+  border-radius: var(--radius-cards);
+  padding: var(--spacing-16);
+  color: var(--color-steel);
+  font-size: var(--text-caption);
+  text-align: center;
+}
+
+/* Respect reduced-motion: no spin, no transitions. */
+@media (prefers-reduced-motion: reduce) {
+  .deni-spinner { animation: none; }
+  #hero-title { transition: none; }
+}

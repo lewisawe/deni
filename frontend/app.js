@@ -78,6 +78,17 @@ const I18N = {
 const BCP = { en: "en", sw: "sw", sheng: "sw" };
 function t(key) { return (I18N[LANG] && I18N[LANG][key]) || I18N.en[key] || key; }
 
+/* Loading markup with a spinner (journey polish). */
+function spinner(label) {
+  return `<div class="deni-loading"><span class="deni-spinner" aria-hidden="true"></span>${label}</div>`;
+}
+
+/* Scroll an element into view so the user sees the result immediately. */
+function reveal(id) {
+  const el = $(id);
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
 /* Apply the current language to every marked element + the document lang attribute. */
 function applyLang() {
   document.documentElement.lang = BCP[LANG] || "en";
@@ -315,15 +326,15 @@ $("product").addEventListener("change", async (e) => {
   const id = e.target.value;
   $("confirm").innerHTML = "";
   if (!id) { $("result").innerHTML = ""; return; }
-  $("result").innerHTML = `<p style="font-family:var(--font-geist-mono);">${t("computing")}</p>`;
-  renderResult(await (await fetch(`/api/evaluate/${id}?country=${COUNTRY}`)).json());
+  $("result").innerHTML = spinner(t("computing"));
+  renderResult(await (await fetch(`/api/evaluate/${id}?country=${COUNTRY}`)).json()); reveal("result");
 });
 
 /* ---------- before: paste an SMS -> parse -> confirm -> compute ---------- */
 $("parse-btn").addEventListener("click", async () => {
   const text = $("sms").value.trim();
   if (!text) return;
-  $("confirm").innerHTML = `<p style="font-family:var(--font-geist-mono);">${t("reading")}</p>`;
+  $("confirm").innerHTML = spinner(t("reading"));
   const p = await (await fetch("/api/parse", {
     method: "POST", body: new URLSearchParams({ text }),
   })).json();
@@ -346,11 +357,12 @@ $("parse-btn").addEventListener("click", async () => {
       term_days: Number($("f-term").value),
       repay_total: $("f-repay").value ? Number($("f-repay").value) : null,
     };
-    $("result").innerHTML = `<p style="font-family:var(--font-geist-mono);">${t("computing")}</p>`;
+    $("result").innerHTML = spinner(t("computing"));
     renderResult(await (await fetch("/api/cost", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     })).json());
+    reveal("result");
   });
 });
 
@@ -358,7 +370,7 @@ $("parse-btn").addEventListener("click", async () => {
 $("recourse-btn").addEventListener("click", async () => {
   const text = $("problem").value.trim();
   if (!text) return;
-  $("recourse").innerHTML = `<p style="font-family:var(--font-geist-mono);">${t("finding")}</p>`;
+  $("recourse").innerHTML = spinner(t("finding"));
   try {
     const r = await (await fetch("/api/recourse", {
       method: "POST", headers: { "Content-Type": "application/json" },
@@ -408,6 +420,7 @@ function renderRecourse(r) {
     edit.addEventListener("input", () => { r.complaint = edit.value; });
   }
   $("recourse").appendChild(shareBar("recourse", r));
+  reveal("recourse");
 }
 
 /* ---------- Enhancement A: civic doors (tab switching) ---------- */
@@ -418,6 +431,18 @@ function selectDoor(panel) {
     const sec = document.getElementById("panel-" + p);
     if (sec) sec.hidden = p !== panel;
   });
+  // Journey polish: full hero on the default rights view; collapse it inside a tool.
+  const title = $("hero-title"), lead = $("hero-lead");
+  const inTool = panel !== "rights";
+  if (title) title.classList.toggle("hero-compact", inTool);
+  if (lead) lead.classList.toggle("hero-hidden", inTool);
+  // Empty-state hints so first-timers know what will appear.
+  if (panel === "cost" && $("result") && !$("result").innerHTML.trim() && !$("confirm").innerHTML.trim()) {
+    $("result").innerHTML = '<div class="deni-hint">Pick a loan or paste an offer above. Deni shows the true cost, the licence status, and a cheaper option.</div>';
+  }
+  if (panel === "lender" && $("lender-result") && !$("lender-result").innerHTML.trim()) {
+    $("lender-result").innerHTML = '<div class="deni-hint">Type a lender name to see if it is on the register, and any findings on record.</div>';
+  }
   if (panel === "rights") loadRights();
 }
 document.querySelectorAll(".door-btn").forEach((b) =>
@@ -460,7 +485,7 @@ $("lender-btn").addEventListener("click", async () => {
   const name = $("lender-name").value.trim();
   if (!name) return;
   const box = $("lender-result");
-  box.innerHTML = `<p style="font-family:var(--font-geist-mono);">Checking the ${META.authority_short || "register"}...</p>`;
+  box.innerHTML = spinner("Checking the " + (META.authority_short || "register") + "...");
   try {
     const r = await (await fetch("/api/check-lender?country=" + COUNTRY + "&name=" + encodeURIComponent(name))).json();
     const map = {
@@ -493,6 +518,7 @@ $("lender-btn").addEventListener("click", async () => {
       p.scrollIntoView({ behavior: "smooth", block: "center" });
       $("recourse-btn").click();
     });
+    reveal("lender-result");
   } catch (_) { box.innerHTML = "<p>Could not check that lender. Try again.</p>"; }
 });
 
