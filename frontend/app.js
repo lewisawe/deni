@@ -84,20 +84,6 @@ function shareBar(kind, data) {
   return el;
 }
 
-/* ---------- audio output (R9 accessibility) ----------
-   Browser TTS: offline, zero-latency, supports sw/en voices where installed.
-   Chosen over Nova Sonic (speech-to-speech) which would need audio-streaming infra
-   beyond a lightweight web demo. */
-const LANG_BCP = { en: "en-KE", sw: "sw-KE", sheng: "sw-KE" };
-function speak(text) {
-  if (!("speechSynthesis" in window) || !text) return;
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = LANG_BCP[LANG] || "en-KE";
-  u.rate = 0.95;
-  window.speechSynthesis.speak(u);
-}
-
 async function explainInto(el, cost) {
   try {
     const e = await (await fetch("/api/explain", {
@@ -105,9 +91,7 @@ async function explainInto(el, cost) {
       body: JSON.stringify({ cost, lang: LANG }),
     })).json();
     if (e.available && e.text) {
-      el.innerHTML = `<p style="margin:var(--spacing-8) 0 0;font-style:italic;">${e.text}</p>
-        <button class="btn-primary" style="margin-top:8px;padding:6px 16px;" aria-label="Listen to this explanation">Listen</button>`;
-      el.querySelector("button").addEventListener("click", () => speak(e.text));
+      el.innerHTML = `<p style="margin:var(--spacing-8) 0 0;font-style:italic;">${e.text}</p>`;
     }
   } catch (_) { /* AI optional — silent */ }
 }
@@ -142,6 +126,38 @@ function renderResult(r) {
     <p style="margin-top:var(--spacing-16);font-size:var(--text-caption);color:var(--color-graphite);">${r.disclaimer}</p>`;
   explainInto($("explain"), c);
   $("result").appendChild(shareBar("cost", r));
+  $("result").appendChild(whatNextCivic(r));
+}
+
+/* ---------- Enhancement D: always-on civic "what next" ----------
+   Every flow ends with a concrete civic action, never just a number. Wires the
+   money path back into the rights/accountability spine (brief constraint 7). */
+function whatNextCivic(r) {
+  const unlicensed = r && r.licence && r.licence.status === "unlicensed";
+  const el = document.createElement("div");
+  el.className = "card-hard";
+  el.style.marginTop = "var(--spacing-16)";
+  el.style.background = "var(--color-chartreuse-highlight)";
+  el.innerHTML = `<p style="margin:0 0 8px;font-weight:600;">What you can do next</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn-primary" data-go="rights" style="padding:6px 16px;">Know your rights</button>
+      ${unlicensed ? `<button class="btn-primary" data-go="report" style="padding:6px 16px;">Report this lender to CBK</button>` : ""}
+      <button class="btn-primary" data-go="action" style="padding:6px 16px;">Take action on a problem</button>
+    </div>`;
+  el.querySelector("[data-go='rights']").addEventListener("click", () => selectDoor("rights"));
+  const act = el.querySelector("[data-go='action']");
+  if (act) act.addEventListener("click", () => {
+    document.getElementById("problem").scrollIntoView({ behavior: "smooth", block: "center" });
+    document.getElementById("problem").focus();
+  });
+  const rep = el.querySelector("[data-go='report']");
+  if (rep) rep.addEventListener("click", () => {
+    const p = document.getElementById("problem");
+    p.value = "An unlicensed lender is chasing me for repayment.";
+    p.scrollIntoView({ behavior: "smooth", block: "center" });
+    document.getElementById("recourse-btn").click();
+  });
+  return el;
 }
 
 /* ---------- before: pick a product ---------- */
@@ -230,7 +246,81 @@ function renderRecourse(r) {
   $("recourse").appendChild(shareBar("recourse", r));
 }
 
+/* ---------- Enhancement A: civic doors (tab switching) ---------- */
+function selectDoor(panel) {
+  document.querySelectorAll(".door-btn").forEach((b) =>
+    b.setAttribute("aria-selected", String(b.dataset.panel === panel)));
+  ["rights", "lender", "cost"].forEach((p) => {
+    const sec = document.getElementById("panel-" + p);
+    if (sec) sec.hidden = p !== panel;
+  });
+  if (panel === "rights") loadRights();
+}
+document.querySelectorAll(".door-btn").forEach((b) =>
+  b.addEventListener("click", () => selectDoor(b.dataset.panel)));
+
+/* ---------- Enhancement B: know-your-rights browse (access to information) ---------- */
+let RIGHTS_LOADED = false;
+async function loadRights() {
+  if (RIGHTS_LOADED) return;
+  const box = $("rights-list");
+  try {
+    const data = await (await fetch("/api/rights")).json();
+    box.innerHTML = data.rights.map((r) => `
+      <details class="card-hard" style="margin-bottom:var(--spacing-16);">
+        <summary style="cursor:pointer;font-weight:600;">${r.title}</summary>
+        <p style="margin:var(--spacing-8) 0 0;">${r.law_statement}</p>
+        ${r.condition ? `<p style="margin:var(--spacing-8) 0 0;font-size:var(--text-caption);color:var(--color-graphite);"><em>${r.condition}</em></p>` : ""}
+        ${r.forum && r.forum.name ? `<p style="margin:var(--spacing-8) 0 0;"><strong>Where to go:</strong> ${r.forum.name}${r.forum.handles ? ` — ${r.forum.handles}` : ""}</p>` : ""}
+        <p style="margin:var(--spacing-8) 0 0;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);">
+          Source: <a href="${r.citation}" target="_blank" rel="noopener">${r.citation}</a>${r.citation_date ? ` · ${r.citation_date}` : ""}
+        </p>
+      </details>`).join("") +
+      `<p style="font-size:var(--text-caption);color:var(--color-graphite);">${data.disclaimer}${data.last_updated ? ` Last updated: ${data.last_updated}.` : ""}</p>`;
+    RIGHTS_LOADED = true;
+  } catch (_) {
+    box.innerHTML = '<p>Could not load rights. Try refreshing.</p>';
+  }
+}
+
+/* ---------- Enhancement A: standalone lender check (accountability) ---------- */
+$("lender-btn").addEventListener("click", async () => {
+  const name = $("lender-name").value.trim();
+  if (!name) return;
+  const box = $("lender-result");
+  box.innerHTML = '<p style="font-family:var(--font-geist-mono);">Checking CBK register…</p>';
+  try {
+    const r = await (await fetch("/api/check-lender?name=" + encodeURIComponent(name))).json();
+    const map = {
+      licensed: ["var(--color-chartreuse-highlight)", "var(--color-carbon-black)"],
+      unlicensed: ["var(--color-signal-orange)", "var(--color-paper-white)"],
+      "not-applicable": ["var(--color-paper-white)", "var(--color-carbon-black)"],
+      unknown: ["var(--color-paper-white)", "var(--color-carbon-black)"],
+    };
+    const [bg, fg] = map[r.status] || map.unknown;
+    box.innerHTML = `<div class="card-hard">
+      <span style="display:inline-block;padding:4px 10px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-tags);background:${bg};color:${fg};font-family:var(--font-geist-mono);font-size:var(--text-caption);text-transform:uppercase;font-weight:500;">${r.label}</span>
+      <p style="margin:var(--spacing-8) 0 0;">${r.note}</p>
+      ${r.status === "unlicensed" ? `<button class="btn-primary" style="margin-top:var(--spacing-8);padding:6px 16px;" id="lender-report">Report to CBK</button>` : ""}
+      <p style="margin:var(--spacing-8) 0 0;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);">Source: CBK licensed Digital Credit Providers register.</p>
+    </div>`;
+    const rep = document.getElementById("lender-report");
+    if (rep) rep.addEventListener("click", () => {
+      const p = $("problem");
+      p.value = "An unlicensed lender (" + name + ") is chasing me for repayment.";
+      p.scrollIntoView({ behavior: "smooth", block: "center" });
+      $("recourse-btn").click();
+    });
+  } catch (_) { box.innerHTML = "<p>Could not check that lender. Try again.</p>"; }
+});
+
+/* ---------- init ---------- */
 loadProducts();
+// Open the door named in the URL hash (from the landing page CTAs), else default to rights.
+(function initDoor() {
+  const h = (location.hash || "").replace("#", "");
+  selectDoor(["rights", "lender", "cost"].includes(h) ? h : "rights");
+})();
 fetch("/api/ai-status").then((r) => r.json()).then((s) => {
   if (!s.available) $("parse-btn").insertAdjacentHTML("afterend",
     '<p style="font-size:var(--text-caption);color:var(--color-graphite);">AI reading is offline — use the picker or enter numbers.</p>');
