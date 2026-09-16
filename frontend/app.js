@@ -5,6 +5,7 @@ const fmt = (n) => Number(n).toLocaleString(CURRENCY.locale || "en-KE", { maximu
 const money = (n) => `${CURRENCY.symbol} ${fmt(n)}`;
 let LANG = "en";
 let COUNTRY = "ke";
+let META = { authority_short: "CBK", authority_name: "the regulator", examples: "e.g. a lender's name" };
 
 /* ---------- UI string dictionary (real interface translation, en/sw/sheng) ----------
    The whole interface translates on toggle, not just the AI explanation, so a
@@ -16,7 +17,7 @@ const I18N = {
     door_rights: "Know your rights", door_lender: "Check a lender", door_cost: "Check a loan's cost",
     rights_intro: "Read what Kenyan law says about how lenders must treat you, before anything goes wrong.",
     loading_rights: "Loading your rights…",
-    lender_label: "Is this lender licensed by the Central Bank?",
+    lender_label: "Is this lender licensed/registered with {authority}?",
     lender_ph: "e.g. Tala, Mogo, QuickCash", lender_btn: "Check the register",
     cost_intro_pre: "See what a loan will ", cost_intro_hl: "really", cost_intro_post: " cost. The true price behind the daily/weekly framing.",
     pick_loan: "Pick a loan", or_paste: "or paste the SMS the lender sent you",
@@ -27,7 +28,7 @@ const I18N = {
     problem_ph: "e.g. They are calling everyone in my phone and threatening to take my boda.",
     recourse_btn: "Show me what to do",
     whatnext_title: "What you can do next", wn_rights: "Know your rights",
-    wn_report: "Report this lender to CBK", wn_action: "Take action on a problem",
+    wn_report: "Report this lender to {authority}", wn_action: "Take action on a problem",
     computing: "Computing…", finding: "Finding your rights…", reading: "Reading…",
     source: "Source", go_to: "Go to",
   },
@@ -37,7 +38,7 @@ const I18N = {
     door_rights: "Fahamu haki zako", door_lender: "Angalia mkopeshaji", door_cost: "Angalia gharama ya mkopo",
     rights_intro: "Soma sheria ya Kenya inavyosema kuhusu jinsi wakopeshaji wanavyopaswa kukutendea, kabla mambo hayajaharibika.",
     loading_rights: "Inapakia haki zako…",
-    lender_label: "Je, mkopeshaji huyu ana leseni ya Benki Kuu?",
+    lender_label: "Je, mkopeshaji huyu amesajiliwa na {authority}?",
     lender_ph: "mf. Tala, Mogo, QuickCash", lender_btn: "Angalia rejista",
     cost_intro_pre: "Ona mkopo utakugharimu ", cost_intro_hl: "kiasi gani hasa", cost_intro_post: ". Bei halisi nyuma ya maelezo ya kila siku/wiki.",
     pick_loan: "Chagua mkopo", or_paste: "au bandika SMS uliyotumiwa na mkopeshaji",
@@ -48,7 +49,7 @@ const I18N = {
     problem_ph: "mf. Wanapiga simu kila mtu kwenye simu yangu na kutishia kuchukua boda yangu.",
     recourse_btn: "Nionyeshe la kufanya",
     whatnext_title: "Unachoweza kufanya sasa", wn_rights: "Fahamu haki zako",
-    wn_report: "Ripoti mkopeshaji huyu CBK", wn_action: "Chukua hatua kuhusu tatizo",
+    wn_report: "Ripoti mkopeshaji huyu kwa {authority}", wn_action: "Chukua hatua kuhusu tatizo",
     computing: "Inakokotoa…", finding: "Inatafuta haki zako…", reading: "Inasoma…",
     source: "Chanzo", go_to: "Nenda",
   },
@@ -58,7 +59,7 @@ const I18N = {
     door_rights: "Jua haki zako", door_lender: "Cheki lender", door_cost: "Cheki gharama ya mkopo",
     rights_intro: "Soma vile sheria ya Kenya inasema kuhusu venye malenda wanafaa kukutreat, kabla mambo iharibike.",
     loading_rights: "Inaload haki zako…",
-    lender_label: "Huyu lender ako na leseni ya Central Bank?",
+    lender_label: "Huyu lender ako na leseni/amesajiliwa na {authority}?",
     lender_ph: "mf. Tala, Mogo, QuickCash", lender_btn: "Cheki rejista",
     cost_intro_pre: "Ona mkopo itakugharimu ", cost_intro_hl: "pesa ngapi kwa ukweli", cost_intro_post: ". Bei halisi nyuma ya story ya kila siku/wiki.",
     pick_loan: "Chagua mkopo", or_paste: "ama paste SMS ile lender alikutumia",
@@ -69,7 +70,7 @@ const I18N = {
     problem_ph: "mf. Wanapigia kila mtu kwa simu yangu na kutishia kuchukua boda yangu.",
     recourse_btn: "Nionyeshe nifanye aje",
     whatnext_title: "Vitu unaweza fanya sasa", wn_rights: "Jua haki zako",
-    wn_report: "Report huyu lender kwa CBK", wn_action: "Chukua hatua kuhusu shida",
+    wn_report: "Report huyu lender kwa {authority}", wn_action: "Chukua hatua kuhusu shida",
     computing: "Inakalmap…", finding: "Inatafuta haki zako…", reading: "Inasoma…",
     source: "Chanzo", go_to: "Nenda",
   },
@@ -82,7 +83,9 @@ function applyLang() {
   document.documentElement.lang = BCP[LANG] || "en";
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const k = el.getAttribute("data-i18n");
-    if (I18N[LANG] && I18N[LANG][k] != null) el.textContent = I18N[LANG][k];
+    if (I18N[LANG] && I18N[LANG][k] != null) {
+      el.textContent = I18N[LANG][k].replace("{authority}", (META && META.authority_name) || "the regulator");
+    }
   });
   document.querySelectorAll("[data-i18n-ph]").forEach((el) => {
     const k = el.getAttribute("data-i18n-ph");
@@ -236,7 +239,7 @@ function whatNextCivic(r) {
   el.innerHTML = `<p style="margin:0 0 8px;font-weight:600;">${t("whatnext_title")}</p>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
       <button class="btn-primary" data-go="rights" style="padding:6px 16px;">${t("wn_rights")}</button>
-      ${unlicensed ? `<button class="btn-primary" data-go="report" style="padding:6px 16px;">${t("wn_report")}</button>` : ""}
+      ${unlicensed ? `<button class="btn-primary" data-go="report" style="padding:6px 16px;">${t("wn_report").replace("{authority}", META.authority_short)}</button>` : ""}
       <button class="btn-primary" data-go="action" style="padding:6px 16px;">${t("wn_action")}</button>
     </div>`;
   el.querySelector("[data-go='rights']").addEventListener("click", () => selectDoor("rights"));
@@ -436,7 +439,7 @@ $("lender-btn").addEventListener("click", async () => {
       <span style="display:inline-block;padding:4px 10px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-tags);background:${bg};color:${fg};font-family:var(--font-geist-mono);font-size:var(--text-caption);text-transform:uppercase;font-weight:500;">${r.label}</span>
       <p style="margin:var(--spacing-8) 0 0;">${r.note}</p>
       ${findingsHtml}
-      ${r.status === "unlicensed" ? `<button class="btn-primary" style="margin-top:var(--spacing-8);padding:6px 16px;" id="lender-report">Report to CBK</button>` : ""}
+      ${r.status === "unlicensed" ? `<button class="btn-primary" style="margin-top:var(--spacing-8);padding:6px 16px;" id="lender-report">${t("wn_report").replace("{authority}", META.authority_short)}</button>` : ""}
       <p style="margin:var(--spacing-8) 0 0;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);">Facts only, each sourced. Verify current status on the official register.</p>
     </div>`;
     const rep = document.getElementById("lender-report");
@@ -449,9 +452,23 @@ $("lender-btn").addEventListener("click", async () => {
   } catch (_) { box.innerHTML = "<p>Could not check that lender. Try again.</p>"; }
 });
 
+/* ---------- country meta: adapt regulator names + examples per country ---------- */
+async function applyCountryMeta() {
+  try {
+    META = await (await fetch("/api/meta?country=" + COUNTRY)).json();
+  } catch (_) { /* keep defaults */ }
+  if (META.currency) CURRENCY = META.currency;
+  // Lender panel label + placeholder adapt to the country's regulator.
+  const label = document.querySelector('[data-i18n="lender_label"]');
+  if (label) label.textContent = t("lender_label").replace("{authority}", META.authority_name);
+  const ph = $("lender-name");
+  if (ph && META.examples) ph.setAttribute("placeholder", META.examples);
+}
+
 /* ---------- country selector (scalability: swap the data pack) ---------- */
 $("country").addEventListener("change", (e) => {
   COUNTRY = e.target.value;
+  applyCountryMeta().then(applyLang);
   // Reload the data-driven surfaces for the new country.
   loadProducts();
   RIGHTS_LOADED = false;
@@ -464,7 +481,7 @@ $("country").addEventListener("change", (e) => {
 });
 
 /* ---------- init ---------- */
-applyLang();           // render UI in the current language (default en) + set <html lang>
+applyCountryMeta().then(applyLang);   // fetch regulator names/currency, then render UI
 loadProducts();
 // Open the door named in the URL hash (from the landing page CTAs), else default to rights.
 (function initDoor() {
