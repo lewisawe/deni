@@ -1,4 +1,4 @@
-/* Deni — Timescale design tokens (from DESIGN.md) + Deni accessibility overrides.
+/* Deni: Timescale design tokens (from DESIGN.md) + Deni accessibility overrides.
    See specs/ui.md for the split-surface usage and a11y rules. */
 :root {
   /* Colors */
@@ -45,7 +45,7 @@
   --radius-buttons: 9999px;
   --radius-tags: 9999px;
 
-  /* Shadows — the signature hard offset */
+  /* Shadows: the signature hard offset */
   --shadow-subtle: rgb(0, 0, 0) 5px 5px 0px 0px;
   --shadow-sm: rgba(0, 0, 0, 0.6) 0px 3px 4px 0px;
 
@@ -54,7 +54,7 @@
 
   /* Deni a11y overrides (specs/ui.md): body text must hold WCAG AA >= 4.5:1.
      Steel (#6c6c6c) is ~5:1 on paper-white (ok). Signal Orange #ff5b29 is only
-     ~3:1 — fine as a large-display accent, but small orange text needs a darker
+     ~3:1, fine as a large-display accent, but small orange text needs a darker
      shade. --color-orange-text passes AA for small text. */
   --text-body-color: var(--color-carbon-black);
   --text-muted-color: var(--color-graphite);
@@ -101,7 +101,7 @@ html, body {
   padding: var(--spacing-24);
 }
 
-/* Visible focus indicator — overrides Timescale "no focus glow" for a11y. */
+/* Visible focus indicator: overrides Timescale "no focus glow" for a11y. */
 :focus-visible {
   outline: 3px solid var(--color-signal-orange);
   outline-offset: 2px;

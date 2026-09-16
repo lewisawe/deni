@@ -108,7 +108,7 @@ def check_lender(country: str, name: str) -> dict:
     """Look up a lender by (partial) name and return its licence/registration status.
 
     Checks a public fact against the pack-declared licensing authority (CBK in Kenya,
-    NCR in South Africa, etc). Facts only — never an unsourced accusation.
+    NCR in South Africa, etc). Facts only, never an unsourced accusation.
     """
     la = licence_authority(country)
     field = la["field"]

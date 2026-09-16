@@ -38,7 +38,7 @@ def _classify(text: str) -> tuple[str | None, dict]:
             key = d.get("scenario")
             if key in _KEYWORDS:
                 return key, d.get("facts", {}) or {}
-        except Exception:  # noqa: BLE001 — fall back to keywords
+        except Exception:  # noqa: BLE001, fall back to keywords
             pass
     low = text.lower()
     for key, words in _KEYWORDS.items():

@@ -1,4 +1,4 @@
-"""USSD channel (Deni R8) — Africa's Talking gateway.
+"""USSD channel (Deni R8): Africa's Talking gateway.
 
 AT is stateless: each keypress POSTs the FULL accumulated input (e.g. "1*2*3").
 We reply with a plain-text body: "CON ..." keeps the session open, "END ..."

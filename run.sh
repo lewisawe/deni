@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deni — one-command local run. Clones-and-runs in under a minute.
+# Deni: one-command local run. Clones-and-runs in under a minute.
 set -euo pipefail
 
 cd "$(dirname "$0")"

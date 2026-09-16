@@ -1,4 +1,4 @@
-# Deni — Design
+# Deni: Design
 
 > Spec 2 of 3. Frozen 14 Sep 2026. Realizes requirements.md. Fuller rationale in
 > ../architecture.md.
@@ -27,46 +27,46 @@
 
 ## Components
 
-### 1. Cost engine (deterministic) — R1
+### 1. Cost engine (deterministic): R1
 - Pure functions: `total_payable`, `total_cost_over_principal`, `effective_rate/apr`,
   `markup_vs_cash`. Inputs: principal/cash price, deposit, instalment, frequency,
   term, fees. Outputs: figures + a structured breakdown of the arithmetic.
 - Fully unit-tested. This is the trust core; it must be provably correct and it must
   expose its working (R1 "show the arithmetic").
 
-### 2. Offer parser (AI) — R2
+### 2. Offer parser (AI): R2
 - Nova 2 Lite (multimodal) extracts offer fields from pasted SMS text or an uploaded
   screenshot into the cost-engine input schema.
 - Output validated against the schema; low-confidence fields flagged for user
   confirmation before compute. Never auto-proceeds on uncertainty.
 
-### 3. Licence & findings check — R3, R7
+### 3. Licence & findings check: R3, R7
 - Looks up the lender in `lenders.json` (dated CBK licensed-DCP list + named
   companies + any regulator/court finding with citation).
 - Returns status + source + data-date + conditional enforcement note if unlicensed.
 
-### 4. Risk descriptor — R4
+### 4. Risk descriptor: R4
 - From `products.json`, states the default consequence for the product's security type
   (device lock / repossession / joint-registration / group guarantee).
 
-### 5. Alternative finder — R5
+### 5. Alternative finder: R5
 - Filters `products.json` for licensed products in the same category, ranks by true
   cost via the cost engine, returns the cheapest one or two.
 
-### 6. Recourse router (deterministic decision, AI phrasing) — R6, R13
+### 6. Recourse router (deterministic decision, AI phrasing): R6, R13
 - Maps a user's described problem to a scenario key in `rules.json`.
   - Scenario detection: Nova Pro classifies free-text into a fixed scenario set; the
     *rule, forum, condition, and citation are read from `rules.json`*, never generated.
 - Returns: legal statement (from data) + forum (from `forums.json`) + condition +
   citation/date + the complaint template id.
 
-### 7. Document generator (AI fills fixed template) — R6, R10
+### 7. Document generator (AI fills fixed template): R6, R10
 - Nova Pro fills a fixed complaint/demand/dispute template with the user's facts.
 - Legal basis, addressee, and citations are hard-coded in the template; the model
   supplies only the narrative/fact fields. Redacts identifying data by default.
 - Emits a case reference (client-generated) + evidence checklist.
 
-### 8. i18n layer — R11
+### 8. i18n layer: R11
 - `strings/en.json`, `strings/sw.json`, `strings/sheng.json`. All UI + explanation
   scaffolding keyed. Adding a language = adding a file (proves FR/PT/AR scalability).
 - AI explanations generated in the selected language (Nova supports 200+).
@@ -79,22 +79,22 @@
   licence check as a menu tree. Real against the AT gateway simulator; labelled
   "sandbox" (R14).
 
-## Data model (the substance — hand-built, each field sourced) — R7, R12
+## Data model (the substance: hand-built, each field sourced), R7, R12
 
 Per-country pack (Kenya first), each file isolatable for R12:
 
-- `lenders.json` — name, type, cbk_licensed{bool,date,source}, findings[{body,summary,
+- `lenders.json`: name, type, cbk_licensed{bool,date,source}, findings[{body,summary,
   citation,date}].
-- `products.json` — lender, category (app-cash|payg-device|moto-car|microfinance),
+- `products.json`: lender, category (app-cash|payg-device|moto-car|microfinance),
   cash_price?, deposit, instalment{amount,frequency}, term, fees[], security_type,
   security_note, sources[].
-- `rules.json` — scenario_key → {law_statement, condition, forum_key, citation, date}.
-- `forums.json` — forum_key → {name, channel, address, what_to_include, template_id}.
-- `templates/` — complaint/demand/dispute bodies with fixed legal basis + fillable
+- `rules.json`: scenario_key → {law_statement, condition, forum_key, citation, date}.
+- `forums.json`: forum_key → {name, channel, address, what_to_include, template_id}.
+- `templates/`: complaint/demand/dispute bodies with fixed legal basis + fillable
   fact slots.
-- `strings/{en,sw,sheng}.json` — UI + explanation scaffolding.
+- `strings/{en,sw,sheng}.json`: UI + explanation scaffolding.
 
-## AI integration (AWS Bedrock) — R14
+## AI integration (AWS Bedrock): R14
 
 - Access: profile `simi-ops`, region `us-east-1` (verified working 14 Sep).
 - Converse API. Model IDs (verified):

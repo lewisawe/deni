@@ -12,7 +12,7 @@ SECURITY_RISK = {
     "device-lock": "Miss a payment and the device is locked remotely until you clear arrears.",
     "repossession-tracker": "The asset has a tracker and can be repossessed on default. Repossession without proper notice and lawful process has been ruled unlawful by Kenyan courts.",
     "collateral-joint-registration": "Secured on an asset registered in the lender's joint name, and often group-guaranteed: a fellow member's default can expose your asset.",
-    "none": "No asset security. Note: harassment and contact-scraping are documented collection tactics by rogue apps — that has its own recourse.",
+    "none": "No asset security. Note: harassment and contact-scraping are documented collection tactics by rogue apps, that has its own recourse.",
 }
 
 

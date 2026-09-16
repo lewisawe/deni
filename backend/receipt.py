@@ -1,4 +1,4 @@
-"""Builds a shareable 'Deni report' — the receipt a borrower keeps (the action+receipt
+"""Builds a shareable 'Deni report': the receipt a borrower keeps (the action+receipt
 pattern). Plain-text canonical form; the frontend renders it to image/PDF and offers
 WhatsApp/copy. Kept server-side so text is consistent and sources are attached."""
 from __future__ import annotations
@@ -18,7 +18,7 @@ def cost_receipt(evaluation: dict, lang: str = "en") -> dict:
     prod = evaluation.get("product", {})
     ref = "DENI-" + uuid.uuid4().hex[:8].upper()
     lines = [
-        "DENI — LOAN COST CHECK",
+        "DENI: LOAN COST CHECK",
         f"Ref: {ref}   Date: {_today()}",
         "",
     ]
@@ -30,7 +30,7 @@ def cost_receipt(evaluation: dict, lang: str = "en") -> dict:
         f"APR: {c['apr_pct']}%",
     ]
     if lic:
-        lines.append(f"Lender licence: {lic.get('status', 'n/a')} — {lic.get('note','')}")
+        lines.append(f"Lender licence: {lic.get('status', 'n/a')}. {lic.get('note','')}")
     if evaluation.get("at_risk", {}).get("note"):
         lines.append(f"At risk: {evaluation['at_risk']['note']}")
     if evaluation.get("alternative"):
@@ -49,7 +49,7 @@ def recourse_receipt(recourse: dict) -> dict:
     """Receipt for a DURING/AFTER recourse action (includes the complaint)."""
     ref = recourse.get("case_ref") or ("DENI-" + uuid.uuid4().hex[:8].upper())
     lines = [
-        "DENI — YOUR RIGHTS & COMPLAINT",
+        "DENI: YOUR RIGHTS & COMPLAINT",
         f"Case ref: {ref}   Date: {_today()}",
         "",
         f"Situation: {recourse.get('title', '')}",

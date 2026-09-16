@@ -154,7 +154,7 @@ class WhatsAppIn(BaseModel):
 
 @app.post("/webhook/whatsapp")
 def whatsapp_webhook(payload: WhatsAppIn) -> dict:
-    """WhatsApp inbound webhook (R8) — same menu engine as USSD, turn-based.
+    """WhatsApp inbound webhook (R8), same menu engine as USSD, turn-based.
     A provider (AT WhatsApp / Meta Cloud API / Twilio) would POST here; we reply."""
     return {"reply": whatsapp.handle_message(payload.sender, payload.message)}
 

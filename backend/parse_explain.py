@@ -24,12 +24,12 @@ def parse_offer(text: str = "", image_bytes: bytes | None = None,
     """Extract offer fields for user confirmation (R2). Never auto-proceeds."""
     if not ai.available():
         return {"available": False,
-                "reason": "AI parsing unavailable — enter the numbers manually."}
+                "reason": "AI parsing unavailable. Enter the numbers manually."}
     prompt = text or "Extract the loan offer from the attached image."
     try:
         data = ai.converse_json(ai.MODEL_LITE, _PARSE_SYSTEM, prompt,
                                 image_bytes=image_bytes, image_format=image_format)
-    except Exception as exc:  # noqa: BLE001 — degrade, don't crash a demo
+    except Exception as exc:  # noqa: BLE001, degrade, don't crash a demo
         return {"available": False, "reason": f"Could not parse: {exc}"}
 
     fields = {
@@ -44,7 +44,7 @@ def parse_offer(text: str = "", image_bytes: bytes | None = None,
         "lender_name": data.get("lender_name"),
     }
     # Guard against double-counting: a lump repay_total already includes any fee/interest.
-    # If the model also reported extra_fees, it has likely split the same money out — drop it.
+    # If the model also reported extra_fees, it has likely split the same money out, drop it.
     if fields["repay_total"]:
         fields["extra_fees"] = 0
     missing = [k for k in _REQUIRED if not fields.get(k)]
@@ -59,7 +59,7 @@ def parse_offer(text: str = "", image_bytes: bytes | None = None,
 
 _EXPLAIN_SYSTEM = (
     "You are Deni, explaining a loan's true cost to a Kenyan borrower in plain, warm, "
-    "clear {lang}. You are given the already-computed figures — DO NOT recompute or "
+    "clear {lang}. You are given the already-computed figures. DO NOT recompute or "
     "change any number. Explain in 2-3 short sentences what the numbers mean and why "
     "it matters. Keep it simple for someone stressed and not financially trained. "
     "Do not give legal advice."

@@ -1,4 +1,4 @@
-"""Tests for the deterministic cost engine (Deni R1). The number is the whole pitch —
+"""Tests for the deterministic cost engine (Deni R1). The number is the whole pitch,
 it must be provably correct."""
 from decimal import Decimal
 

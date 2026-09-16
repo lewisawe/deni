@@ -12,7 +12,7 @@ Definitions used:
 - APR:         annualised percentage rate, simple annualisation of the period rate:
                  period_rate = total_cost / principal over the loan term,
                  APR = period_rate * (365 / term_days) * 100.
-               (Simple/nominal APR — transparent and easy to show. Documented, not a
+               (Simple/nominal APR, transparent and easy to show. Documented, not a
                hidden reducing-balance figure.)
 - markup_pct:  total_cost / principal * 100 (headline "you pay X% more than cash").
 """

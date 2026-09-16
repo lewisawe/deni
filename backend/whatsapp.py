@@ -1,4 +1,4 @@
-"""WhatsApp channel (Deni R8) — same idea as USSD.
+"""WhatsApp channel (Deni R8): same idea as USSD.
 
 A WhatsApp provider (Africa's Talking WhatsApp, Meta Cloud API, or Twilio) POSTs each
 inbound message to a webhook; we reply with text. WhatsApp is turn-based (no persistent
@@ -7,7 +7,7 @@ engine by reconstructing the accumulated 'text' path. One engine, two channels.
 
 HONESTY: going live needs an approved WhatsApp Business number (provider + Meta
 verification), not obtainable in the sprint. This webhook is real and works against a
-simulated provider POST — the same way USSD is demoed on the Africa's Talking simulator.
+simulated provider POST, the same way USSD is demoed on the Africa's Talking simulator.
 """
 from __future__ import annotations
 

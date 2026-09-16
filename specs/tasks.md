@@ -1,14 +1,14 @@
-# Deni — Tasks
+# Deni: Tasks
 
 > Spec 3 of 3. Frozen 14 Sep 2026. Executable plan realizing design.md.
 > Demo-first: a full end-to-end run must work by end of Task 6, then depth + polish.
 > Each task states its requirement refs and a demo checkpoint (what works when done).
 
-## Phase 1 — Spine (money is provably correct before anything else)
+## Phase 1: Spine (money is provably correct before anything else)
 
 ### T1. Repo scaffold + run script
 - FastAPI backend, static SPA frontend, `data/` packs dir, `run.sh`, README stub.
-- Bedrock client wrapper (boto3, region us-east-1, profile-aware) — not called yet.
+- Bedrock client wrapper (boto3, region us-east-1, profile-aware), not called yet.
 - **Demo:** `bash run.sh` serves the app locally; health endpoint responds.
 - Refs: design "Architecture".
 
@@ -18,7 +18,7 @@
 - Unit tests incl. the canonical case ("borrow 1,000 repay 1,150 / 30 days" → APR),
   and a PAYG daily case ("deposit + X/day × 365 vs cash price" → markup).
 - **Demo:** tests pass; calling the engine returns the shock number + its working.
-- Refs: R1. This is the trust core — do it first, correctly.
+- Refs: R1. This is the trust core, do it first, correctly.
 
 ### T3. Data packs (Kenya), sourced  [R3,R4,R7,R12]
 - `lenders.json` (CBK licensed-DCP list dated + M-KOPA, Watu, Mogo, KWFT, 1–2 app
@@ -29,7 +29,7 @@
 - **Demo:** licence check + risk descriptor + recourse rule resolve from data for each
   named product, with sources.
 
-## Phase 2 — Before flow, end to end (no AI yet)
+## Phase 2: Before flow, end to end (no AI yet)
 
 ### T4. Before flow in chat UI  [R1,R3,R4,R5,R7,R13]
 - Structured offer entry → cost engine → licence check → risk → cheaper alternative →
@@ -43,7 +43,7 @@
   keyed.
 - **Demo:** flip the before flow across three languages.
 
-## Phase 3 — AI + during flow  (TARGET: full demo runs end to end)
+## Phase 3: AI + during flow  (TARGET: full demo runs end to end)
 
 ### T6. Bedrock wired: parse + explain  [R2,R14]
 - Nova 2 Lite: parse pasted SMS / screenshot → offer schema → user-confirm step;
@@ -59,7 +59,7 @@
   forum (ODPC/CAK/court) + generated complaint + case reference. ← "during" works.
   **After Task 7 the full 5-step demo script runs.**
 
-## Phase 4 — Second channel, breadth, after flow
+## Phase 4: Second channel, breadth, after flow
 
 ### T8. USSD via Africa's Talking sandbox  [R8]
 - Create sandbox USSD channel; implement callback (CON/END stateless replay); menu:
@@ -76,7 +76,7 @@
   reader semantics; icon-first cards verified at small size.
 - **Demo:** result read aloud; usable with a screen reader; legible tiny.
 
-## Phase 5 — Submit + polish
+## Phase 5: Submit + polish
 
 ### T11. Submit v1 (Day 5)  [R14, brief]
 - Repo public + README (what it does, how to run in <1 min, honesty notes incl. USSD

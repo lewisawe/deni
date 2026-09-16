@@ -1,4 +1,4 @@
-# Deni — UI/UX spec
+# Deni: UI/UX spec
 
 > Spec addendum. Frozen 14 Sep 2026. Design system: "Timescale" (../../DESIGN.md).
 > Decision: SPLIT by surface. Realizes R9 (accessibility) alongside the Timescale look.
@@ -12,18 +12,18 @@ Black structure, hard offset shadow `5px 5px 0px #000`, Geist (voice) + Geist Mo
 
 ## The split (two surfaces, one token set)
 
-### Surface A — Pitch / landing / result cards (JUDGE-FACING) → FULL Timescale
+### Surface A: Pitch / landing / result cards (JUDGE-FACING) → FULL Timescale
 Where judges look. Use the system at full strength:
 - Hero + landing: full blueprint aesthetic, grid-pattern background, hard-shadow cards.
 - **The cost result card is the money moment:** the true APR / total / markup rendered
-  in **Geist Mono, large, Signal Orange** — the "switched on" number against the
+  in **Geist Mono, large, Signal Orange**, the "switched on" number against the
   monochrome page. This is the single most important visual in the product; it uses
   the Timescale stat-banner treatment (`5px 5px 0px #000` shadow, mono numerals).
 - Licence-status + "not on CBK list" callouts use the Chartreuse spotlight wash.
-- Rationale: engineered, number-forward, trust-signalling — perfect for the shock
+- Rationale: engineered, number-forward, trust-signalling, perfect for the shock
   figure and the "AI Coding Usage / Presentation" judging.
 
-### Surface B — Borrower chat flow (END-USER-FACING) → Timescale TOKENS, simplified layout
+### Surface B: Borrower chat flow (END-USER-FACING) → Timescale TOKENS, simplified layout
 Where a stressed, low-data, varied-literacy borrower actually is. Keep the *language*
 (colors, fonts, orange-for-the-number rule) but relax the marketing density:
 - WhatsApp-shaped conversational layout, not a landing-page grid.
@@ -31,19 +31,19 @@ Where a stressed, low-data, varied-literacy borrower actually is. Keep the *lang
 - Keep the Geist Mono + Signal Orange treatment for the key number (consistency +
   it IS the point), but everything else simple and calm.
 
-### Surface C — USSD → plain text, no styling
+### Surface C: USSD → plain text, no styling
 Africa's Talking `CON`/`END` text menus. Inherits none of the visual system by
 nature. The design system does not apply; the *content hierarchy* (number first,
 next step last) still does.
 
-## Accessibility adjustments to the base system (R9) — required overrides
+## Accessibility adjustments to the base system (R9): required overrides
 
 Timescale is a light desktop-web marketing aesthetic; these overrides make it serve
 low-literacy, feature-phone, stressed users without breaking the look:
 
 1. **Body-text contrast:** use Carbon Black `#000` (or no lighter than `#242424`
    Graphite) for body copy in Surface B, NOT Steel `#6c6c6c`. Steel `#6c6c6c` on
-   `#fafafa` is ~4.0:1 — below WCAG AA 4.5:1 for body. Reserve Steel for large text /
+   `#fafafa` is ~4.0:1, below WCAG AA 4.5:1 for body. Reserve Steel for large text /
    captions only. Verify every text/background pair ≥ 4.5:1 (≥ 3:1 for large).
 2. **Type scale in Surface B:** minimum 16px body, prefer 18px; do not use the 52/80px
    display or the tightest -0.03em tracking in the app flow (marketing sizes only).
@@ -52,7 +52,7 @@ low-literacy, feature-phone, stressed users without breaking the look:
 4. **Audio:** every explanation has an audio-play control (Nova 2 Sonic or TTS).
 5. **Semantics:** proper headings, labelled controls, focus-visible states,
    screen-reader order matches visual order. Timescale's "no focus glow" note is
-   overridden — a visible focus indicator is required for a11y.
+   overridden, a visible focus indicator is required for a11y.
 6. **Language:** EN/SW/Sheng selector prominent; the number treatment is
    language-independent so the figure reads the same in any language.
 
@@ -72,13 +72,13 @@ low-literacy, feature-phone, stressed users without breaking the look:
 
 ## Do / Don't (inherited + Deni-specific)
 
-- DO render every key number in Geist Mono Signal Orange — it is the product's voice.
+- DO render every key number in Geist Mono Signal Orange, it is the product's voice.
 - DO keep the hard offset shadow on judge-facing cards; it is the signature.
 - DON'T use Steel `#6c6c6c` for body text in the borrower flow (contrast).
 - DON'T bring 80px display type or the densest tracking into the chat flow.
 - DON'T add a third chromatic color; orange = number/emphasis, chartreuse = licence
   spotlight, black = structure.
-- DON'T style the USSD flow — it's plain text; carry only the content hierarchy.
+- DON'T style the USSD flow, it's plain text; carry only the content hierarchy.
 
 ## Build integration
 
