@@ -1,4 +1,4 @@
-# Deni — Suggestions & Roadmap
+# Deni Suggestions and Roadmap
 
 Ideas surfaced during the build, kept here so they don't get lost. Grouped by the
 brief's own criteria. Not all are for the sprint; the sprint-critical ones are marked.
@@ -15,12 +15,12 @@ brief's own criteria. Not all are for the sprint; the sprint-critical ones are m
 ## Inclusion (constraint 3: literacy, digital confidence, device access)
 
 - **Number-first visual comparison.** [nice-to-have] Add a simple bar showing
-  "you pay" vs "value received" so the cost ratio is graspable without reading prose —
+  "you pay" vs "value received" so the cost ratio is graspable without reading prose,
   serves low-literacy users. The big APR number already leads; this reinforces it.
 - **Plainer language pass.** Keep sentences short and jargon-light across all three
   languages for low digital confidence.
 - **Feature-phone reach is an inclusion feature, not just low-bandwidth.** The USSD
-  path reaches people without smartphones — frame it that way in the pitch.
+  path reaches people without smartphones. Frame it that way in the pitch.
 
 ## Accessibility (constraint 3: disability / assistive tech)
 
@@ -48,7 +48,7 @@ brief's own criteria. Not all are for the sprint; the sprint-critical ones are m
   covers lenders, products, rights, forums, and templates built on real SA bodies
   (National Credit Regulator + National Credit Act, POPIA + Information Regulator,
   credit-bureau disputes, Small Claims Court). The licence check was refactored so each
-  pack declares its own licensing authority — adding a country is now genuinely a data
+  pack declares its own licensing authority. Adding a country is now genuinely a data
   swap, and the app has a country selector to demo it. Scalability is demonstrated, not
   just claimed.
 - Further countries (Ghana, etc.) would follow the same pattern: a new `data/<cc>/`
@@ -70,7 +70,7 @@ brief's own criteria. Not all are for the sprint; the sprint-critical ones are m
 
 - **Outbound SMS receipt via a gateway.** Text the true cost + case reference to the
   user's phone. A real "works on any phone" moment. Needs a gateway account + sender
-  setup; out of scope for the sprint. (No Africa's Talking key is bundled — USSD is
+  setup; out of scope for the sprint. (No Africa's Talking key is bundled: USSD is
   inbound and needs none.)
 - **Live regulator / CRB API integration.** Currently the app prepares paperwork and
   routes; it does not file. Real filing is post-sprint.

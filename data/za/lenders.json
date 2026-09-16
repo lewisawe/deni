@@ -1,7 +1,7 @@
 {
   "_meta": {
     "country": "ZA",
-    "description": "Lender registry: licence/registration status + regulator findings. Each fact carries a source and date. Facts only — no unsourced accusations. This is a demonstration pack showing that Deni's Kenya model ports to another country by swapping data; it is lighter than the Kenya pack and figures are illustrative.",
+    "description": "Lender registry: licence/registration status + regulator findings. Each fact carries a source and date. Facts only, no unsourced accusations. This is a demonstration pack showing that Deni's Kenya model ports to another country by swapping data; it is lighter than the Kenya pack and figures are illustrative.",
     "ncr_note": "In South Africa, credit providers must be registered with the National Credit Regulator (NCR) under the National Credit Act 34 of 2005. This is the analogue of Kenya's CBK licensing.",
     "licence_authority": {
       "field": "ncr_registered",
@@ -28,7 +28,7 @@
     },
     {
       "id": "sa_unregistered_demo",
-      "name": "QuickRand (unregistered lender — demo)",
+      "name": "QuickRand (unregistered lender, demo)",
       "type": "app-cash",
       "regime": "Illustrative lender NOT registered with the NCR. Providing credit without NCR registration is unlawful under the National Credit Act.",
       "ncr_registered": false,

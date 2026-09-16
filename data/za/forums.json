@@ -35,7 +35,7 @@
     {
       "key": "small_claims",
       "name": "Small Claims Court (South Africa)",
-      "handles": "Civil money claims up to the Small Claims Court limit — refunds, overpayments, small debts. You represent yourself; no lawyer.",
+      "handles": "Civil money claims up to the Small Claims Court limit: refunds, overpayments, small debts. You represent yourself; no lawyer.",
       "channel": "Lodge your claim at a Small Claims Court after sending a letter of demand. No advocate is used; a Commissioner hears the matter.",
       "what_to_include": ["Your name and contact", "The other party's name and address", "The amount claimed and how you calculated it", "What happened and the dates", "Evidence (agreement, payment records, messages)", "Proof you sent a letter of demand"],
       "template_id": "small_claims_statement",

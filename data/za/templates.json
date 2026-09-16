@@ -23,11 +23,11 @@
       "title": "Credit bureau listing dispute",
       "addressee": "{{bureau}} (credit bureau)",
       "legal_basis": "National Credit Act 34 of 2005 and POPIA (right to accurate credit information; right to dispute).",
-      "body": "To {{bureau}},\n\nRE: DISPUTE OF CREDIT LISTING — {{redacted_name}}, ID {{redacted_id}}\n\nI dispute the listing by {{lender_name}}. The listing is incorrect because {{reason}}.\n\nUnder the National Credit Act, I request that you investigate and correct or remove this listing. If unresolved, I will escalate to the National Credit Regulator.\n\nCase reference (my record): {{case_ref}}\n\nYours faithfully,\n{{redacted_name}}",
+      "body": "To {{bureau}},\n\nRE: DISPUTE OF CREDIT LISTING. {{redacted_name}}, ID {{redacted_id}}\n\nI dispute the listing by {{lender_name}}. The listing is incorrect because {{reason}}.\n\nUnder the National Credit Act, I request that you investigate and correct or remove this listing. If unresolved, I will escalate to the National Credit Regulator.\n\nCase reference (my record): {{case_ref}}\n\nYours faithfully,\n{{redacted_name}}",
       "not_advice": "This is a self-prepared dispute, not legal advice."
     },
     "small_claims_statement": {
-      "title": "Letter of demand / claim — Small Claims Court",
+      "title": "Letter of demand / claim: Small Claims Court",
       "addressee": "The Small Claims Court (via a letter of demand first)",
       "legal_basis": "Small Claims Courts Act 61 of 1984. A letter of demand is required before lodging; you represent yourself (no advocate).",
       "body": "LETTER OF DEMAND\n\nTo {{lender_name}},\n\nI, {{redacted_name}}, demand payment of R {{claim_amount}}.\n\nThe claim arises as follows: on {{dates}}, {{what_happened}}.\nThe amount is calculated as: {{claim_basis}}.\n\nUnless payment is made within 14 days of this letter, I will lodge a claim against you in the Small Claims Court, where I am entitled to appear in person without an attorney.\n\nEvidence I hold: {{evidence_list}}.\n\nCase reference (my record): {{case_ref}}\nContact: {{redacted_contact}}\n\nDated: ______________\n{{redacted_name}}",

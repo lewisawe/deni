@@ -5,23 +5,23 @@ let LANG = "en";
 let COUNTRY = "ke";
 
 /* ---------- UI string dictionary (real interface translation, en/sw/sheng) ----------
-   The whole interface translates on toggle — not just the AI explanation — so a
+   The whole interface translates on toggle, not just the AI explanation, so a
    Kiswahili- or Sheng-only speaker can navigate. Works fully offline (no AI needed). */
 const I18N = {
   en: {
     hero_pre: "Know your ", hero_hl: "rights", hero_post: " as a borrower.",
-    hero_lead: "Deni helps you understand what a lender can and can't do, check whether they're licensed, see what a loan really costs, and take action with the right public body — on any phone, in your language. Not legal advice; every fact is sourced.",
+    hero_lead: "Deni helps you understand what a lender can and can't do, check whether they're licensed, see what a loan really costs, and take action with the right public body, on any phone, in your language. Not legal advice; every fact is sourced.",
     door_rights: "Know your rights", door_lender: "Check a lender", door_cost: "Check a loan's cost",
-    rights_intro: "Read what Kenyan law says about how lenders must treat you — before anything goes wrong.",
+    rights_intro: "Read what Kenyan law says about how lenders must treat you, before anything goes wrong.",
     loading_rights: "Loading your rights…",
     lender_label: "Is this lender licensed by the Central Bank?",
     lender_ph: "e.g. Tala, Mogo, QuickCash", lender_btn: "Check the register",
-    cost_intro_pre: "See what a loan will ", cost_intro_hl: "really", cost_intro_post: " cost — the true price behind the daily/weekly framing.",
-    pick_loan: "Pick a loan", or_paste: "— or paste the SMS the lender sent you —",
+    cost_intro_pre: "See what a loan will ", cost_intro_hl: "really", cost_intro_post: " cost. The true price behind the daily/weekly framing.",
+    pick_loan: "Pick a loan", or_paste: "or paste the SMS the lender sent you",
     sms_ph: "e.g. Congrats! You qualify for KES 1,000. Repay KES 1,150 in 30 days.",
     parse_btn: "Read my offer",
     action_title: "Something already went wrong? Take action.",
-    action_intro: "Harassment, repossession, a wrongful CRB listing, or money you want back? Describe it — Deni tells you the law, which public body handles it, and drafts your complaint or claim with a case reference.",
+    action_intro: "Harassment, repossession, a wrongful CRB listing, or money you want back? Describe it. Deni tells you the law, which public body handles it, and drafts your complaint or claim with a case reference.",
     problem_ph: "e.g. They are calling everyone in my phone and threatening to take my boda.",
     recourse_btn: "Show me what to do",
     whatnext_title: "What you can do next", wn_rights: "Know your rights",
@@ -31,18 +31,18 @@ const I18N = {
   },
   sw: {
     hero_pre: "Fahamu ", hero_hl: "haki zako", hero_post: " kama mkopaji.",
-    hero_lead: "Deni inakusaidia kuelewa mkopeshaji anaweza na hawezi kufanya nini, kuangalia kama ana leseni, kuona gharama halisi ya mkopo, na kuchukua hatua na taasisi ya umma inayohusika — kwenye simu yoyote, kwa lugha yako. Si ushauri wa kisheria; kila ukweli una chanzo.",
+    hero_lead: "Deni inakusaidia kuelewa mkopeshaji anaweza na hawezi kufanya nini, kuangalia kama ana leseni, kuona gharama halisi ya mkopo, na kuchukua hatua na taasisi ya umma inayohusika, kwenye simu yoyote, kwa lugha yako. Si ushauri wa kisheria; kila ukweli una chanzo.",
     door_rights: "Fahamu haki zako", door_lender: "Angalia mkopeshaji", door_cost: "Angalia gharama ya mkopo",
-    rights_intro: "Soma sheria ya Kenya inavyosema kuhusu jinsi wakopeshaji wanavyopaswa kukutendea — kabla mambo hayajaharibika.",
+    rights_intro: "Soma sheria ya Kenya inavyosema kuhusu jinsi wakopeshaji wanavyopaswa kukutendea, kabla mambo hayajaharibika.",
     loading_rights: "Inapakia haki zako…",
     lender_label: "Je, mkopeshaji huyu ana leseni ya Benki Kuu?",
     lender_ph: "mf. Tala, Mogo, QuickCash", lender_btn: "Angalia rejista",
-    cost_intro_pre: "Ona mkopo utakugharimu ", cost_intro_hl: "kiasi gani hasa", cost_intro_post: " — bei halisi nyuma ya maelezo ya kila siku/wiki.",
-    pick_loan: "Chagua mkopo", or_paste: "— au bandika SMS uliyotumiwa na mkopeshaji —",
+    cost_intro_pre: "Ona mkopo utakugharimu ", cost_intro_hl: "kiasi gani hasa", cost_intro_post: ". Bei halisi nyuma ya maelezo ya kila siku/wiki.",
+    pick_loan: "Chagua mkopo", or_paste: "au bandika SMS uliyotumiwa na mkopeshaji",
     sms_ph: "mf. Hongera! Umestahili KES 1,000. Lipa KES 1,150 katika siku 30.",
     parse_btn: "Soma ofa yangu",
     action_title: "Kuna kilichoharibika tayari? Chukua hatua.",
-    action_intro: "Unyanyaswaji, kunyang'anywa mali, kuorodheshwa vibaya CRB, au pesa unazotaka kurudishiwa? Eleza — Deni inakuambia sheria, taasisi ya umma inayohusika, na kuandaa malalamiko au madai yako yenye nambari ya kumbukumbu.",
+    action_intro: "Unyanyaswaji, kunyang'anywa mali, kuorodheshwa vibaya CRB, au pesa unazotaka kurudishiwa? Eleza. Deni inakuambia sheria, taasisi ya umma inayohusika, na kuandaa malalamiko au madai yako yenye nambari ya kumbukumbu.",
     problem_ph: "mf. Wanapiga simu kila mtu kwenye simu yangu na kutishia kuchukua boda yangu.",
     recourse_btn: "Nionyeshe la kufanya",
     whatnext_title: "Unachoweza kufanya sasa", wn_rights: "Fahamu haki zako",
@@ -52,18 +52,18 @@ const I18N = {
   },
   sheng: {
     hero_pre: "Jua ", hero_hl: "haki zako", hero_post: " kama mtu wa mkopo.",
-    hero_lead: "Deni inakusaidia kuelewa venye lender anaweza na hawezi kufanya, kucheki kama ako na leseni, kuona mkopo itakugharimu pesa ngapi kwa uhalisia, na kuchukua hatua na ile ofisi ya serikali inafaa — kwa simu yoyote, kwa lugha yako. Si ushauri wa mawakili; kila kitu kina chanzo.",
+    hero_lead: "Deni inakusaidia kuelewa venye lender anaweza na hawezi kufanya, kucheki kama ako na leseni, kuona mkopo itakugharimu pesa ngapi kwa uhalisia, na kuchukua hatua na ile ofisi ya serikali inafaa, kwa simu yoyote, kwa lugha yako. Si ushauri wa mawakili; kila kitu kina chanzo.",
     door_rights: "Jua haki zako", door_lender: "Cheki lender", door_cost: "Cheki gharama ya mkopo",
-    rights_intro: "Soma vile sheria ya Kenya inasema kuhusu venye malenda wanafaa kukutreat — kabla mambo iharibike.",
+    rights_intro: "Soma vile sheria ya Kenya inasema kuhusu venye malenda wanafaa kukutreat, kabla mambo iharibike.",
     loading_rights: "Inaload haki zako…",
     lender_label: "Huyu lender ako na leseni ya Central Bank?",
     lender_ph: "mf. Tala, Mogo, QuickCash", lender_btn: "Cheki rejista",
-    cost_intro_pre: "Ona mkopo itakugharimu ", cost_intro_hl: "pesa ngapi kwa ukweli", cost_intro_post: " — bei halisi nyuma ya story ya kila siku/wiki.",
-    pick_loan: "Chagua mkopo", or_paste: "— ama paste SMS ile lender alikutumia —",
+    cost_intro_pre: "Ona mkopo itakugharimu ", cost_intro_hl: "pesa ngapi kwa ukweli", cost_intro_post: ". Bei halisi nyuma ya story ya kila siku/wiki.",
+    pick_loan: "Chagua mkopo", or_paste: "ama paste SMS ile lender alikutumia",
     sms_ph: "mf. Congrats! Umequalify KES 1,000. Lipa KES 1,150 kwa siku 30.",
     parse_btn: "Soma offer yangu",
     action_title: "Kuna kitu tayari imeharibika? Chukua hatua.",
-    action_intro: "Wanakusumbua, wamechukua mali yako, umelistiwa vibaya CRB, ama kuna doo unataka urudishiwe? Elezea — Deni inakuambia sheria, ofisi gani ya serikali inashughulikia, na inaandaa complaint ama claim yako na reference number.",
+    action_intro: "Wanakusumbua, wamechukua mali yako, umelistiwa vibaya CRB, ama kuna doo unataka urudishiwe? Elezea. Deni inakuambia sheria, ofisi gani ya serikali inashughulikia, na inaandaa complaint ama claim yako na reference number.",
     problem_ph: "mf. Wanapigia kila mtu kwa simu yangu na kutishia kuchukua boda yangu.",
     recourse_btn: "Nionyeshe nifanye aje",
     whatnext_title: "Vitu unaweza fanya sasa", wn_rights: "Jua haki zako",
@@ -184,7 +184,7 @@ async function explainInto(el, cost) {
     if (e.available && e.text) {
       el.innerHTML = `<p style="margin:var(--spacing-8) 0 0;font-style:italic;">${e.text}</p>`;
     }
-  } catch (_) { /* AI optional — silent */ }
+  } catch (_) { /* AI optional, silent */ }
 }
 
 function renderResult(r) {
@@ -194,7 +194,7 @@ function renderResult(r) {
       <p style="margin:0 0 var(--spacing-8);font-family:var(--font-geist-mono);text-transform:uppercase;font-size:var(--text-caption);">True cost</p>
       <p class="stat-number" style="font-size:50px;margin:0;line-height:1;">${c.apr_pct}% <span style="font-size:24px;">APR</span></p>
       <p style="margin:var(--spacing-16) 0 0;font-size:var(--text-subheading);">
-        You pay <strong>KES ${fmt(c.total_paid)}</strong> for <strong>KES ${fmt(c.principal)}</strong> of value —
+        You pay <strong>KES ${fmt(c.total_paid)}</strong> for <strong>KES ${fmt(c.principal)}</strong> of value:
         <span class="stat-inline" style="font-size:var(--text-subheading);">${c.markup_pct}%</span> more.
       </p>
       <div id="explain"></div>
@@ -213,7 +213,7 @@ function renderResult(r) {
       <p style="margin:0;">${r.at_risk.note}</p></div>` : ""}
     ${alt ? `<div class="card-hard" style="margin-top:var(--spacing-16);background:var(--color-chartreuse-highlight);">
       <p style="margin:0 0 var(--spacing-8);font-weight:600;">A cheaper licensed option</p>
-      <p style="margin:0;">${alt.label} — <span class="stat-inline" style="color:var(--color-carbon-black);">${alt.cost.apr_pct}% APR</span> instead of ${c.apr_pct}%.</p></div>` : ""}
+      <p style="margin:0;">${alt.label}: <span class="stat-inline" style="color:var(--color-carbon-black);">${alt.cost.apr_pct}% APR</span> instead of ${c.apr_pct}%.</p></div>` : ""}
     <p style="margin-top:var(--spacing-16);font-size:var(--text-caption);color:var(--color-graphite);">${r.disclaimer}</p>`;
   explainInto($("explain"), c);
   $("result").appendChild(shareBar("cost", r));
@@ -362,7 +362,7 @@ async function loadRights() {
         <summary style="cursor:pointer;font-weight:600;">${r.title}</summary>
         <p style="margin:var(--spacing-8) 0 0;">${r.law_statement}</p>
         ${r.condition ? `<p style="margin:var(--spacing-8) 0 0;font-size:var(--text-caption);color:var(--color-graphite);"><em>${r.condition}</em></p>` : ""}
-        ${r.forum && r.forum.name ? `<p style="margin:var(--spacing-8) 0 0;"><strong>Where to go:</strong> ${r.forum.name}${r.forum.handles ? ` — ${r.forum.handles}` : ""}</p>` : ""}
+        ${r.forum && r.forum.name ? `<p style="margin:var(--spacing-8) 0 0;"><strong>Where to go:</strong> ${r.forum.name}${r.forum.handles ? `: ${r.forum.handles}` : ""}</p>` : ""}
         <p style="margin:var(--spacing-8) 0 0;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);">
           ${t("source")}: <a href="${r.citation}" target="_blank" rel="noopener">${r.citation}</a>${r.citation_date ? ` · ${r.citation_date}` : ""}
         </p>
@@ -429,5 +429,5 @@ loadProducts();
 })();
 fetch("/api/ai-status").then((r) => r.json()).then((s) => {
   if (!s.available) $("parse-btn").insertAdjacentHTML("afterend",
-    '<p style="font-size:var(--text-caption);color:var(--color-graphite);">AI reading is offline — use the picker or enter numbers.</p>');
+    '<p style="font-size:var(--text-caption);color:var(--color-graphite);">AI reading is offline. Use the picker or enter numbers.</p>');
 });

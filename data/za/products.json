@@ -1,7 +1,7 @@
 {
   "_meta": {
     "country": "ZA",
-    "description": "Modelled products for the demo. Figures are illustrative of common South African consumer-credit structures; exact terms change, so each product names its data date. The cost engine computes markup/APR from these inputs — no figure is asserted without its inputs shown.",
+    "description": "Modelled products for the demo. Figures are illustrative of common South African consumer-credit structures; exact terms change, so each product names its data date. The cost engine computes markup/APR from these inputs; no figure is asserted without its inputs shown.",
     "note": "amounts in ZAR. principal = value received today (cash received, or cash price of the asset).",
     "last_updated": "2026-09-16"
   },
@@ -10,7 +10,7 @@
       "id": "za-shortterm-loan",
       "lender_id": "sa_unregistered_demo",
       "category": "app-cash",
-      "label": "QuickRand 30-day loan (unregistered — demo)",
+      "label": "QuickRand 30-day loan (unregistered, demo)",
       "principal": 1000,
       "cash_price": null,
       "deposit": 0,

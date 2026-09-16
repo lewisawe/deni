@@ -1,7 +1,7 @@
 {
   "_meta": {
     "country": "KE",
-    "description": "Modelled products for the demo. Figures are representative of publicly advertised structures; exact terms change, so each product names its data date. The cost engine computes the markup/APR from these inputs — no figure is asserted without its inputs shown.",
+    "description": "Modelled products for the demo. Figures are representative of publicly advertised structures; exact terms change, so each product names its data date. The cost engine computes the markup/APR from these inputs; no figure is asserted without its inputs shown.",
     "note": "amounts in KES. principal = value received today (cash received, or cash price of the asset).",
     "last_updated": "2026-09-14"
   },
@@ -82,7 +82,7 @@
       "term_days": 365,
       "extra_fees": 5000,
       "security_type": "collateral-joint-registration",
-      "security_note": "Secured on household assets/a vehicle registered in the lender's joint name, and group-guaranteed — a fellow group member's default can expose your assets.",
+      "security_note": "Secured on household assets/a vehicle registered in the lender's joint name, and group-guaranteed, so a fellow group member's default can expose your assets.",
       "sources": [
         "https://new.kenyalaw.org/akn/ke/judgment/kehc/2026/5105/eng@2026-04-22/source.pdf"
       ],
@@ -92,7 +92,7 @@
       "id": "quickcash-30d",
       "lender_id": "quickcash_demo",
       "category": "app-cash",
-      "label": "QuickCash 30-day app loan (unlicensed — demo)",
+      "label": "QuickCash 30-day app loan (unlicensed, demo)",
       "principal": 1000,
       "cash_price": null,
       "deposit": 0,

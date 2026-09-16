@@ -19,8 +19,8 @@
     {
       "key": "repossession",
       "title": "They are taking / threatening to take your financed asset",
-      "law_statement": "A financier generally cannot seize a financed asset by self-help without following lawful process (valid default, proper notice, and lawful seizure — often via licensed auctioneers or a court). Kenyan courts have declared repossessions 'illegal, null and void' where done without proper notice or process.",
-      "condition": "Your repossession MAY be unlawful IF no proper default notice was served, or the seizure did not follow lawful process. This depends on your contract and the facts — verify before acting.",
+      "law_statement": "A financier generally cannot seize a financed asset by self-help without following lawful process (valid default, proper notice, and lawful seizure, often via licensed auctioneers or a court). Kenyan courts have declared repossessions 'illegal, null and void' where done without proper notice or process.",
+      "condition": "Your repossession MAY be unlawful IF no proper default notice was served, or the seizure did not follow lawful process. This depends on your contract and the facts; verify before acting.",
       "forum_key": "court",
       "citation": "https://new.kenyalaw.org/akn/ke/judgment/kehc/2024/13055/eng@2024-10-22/source.pdf",
       "citation_date": "2024 High Court rulings"
@@ -37,7 +37,7 @@
     {
       "key": "unlicensed_chasing",
       "title": "An unlicensed lender is chasing you for repayment",
-      "law_statement": "A digital lender must be licensed by the CBK (CBK Act s.33S / Digital Credit Providers Regulations 2022). A Kenyan court has blocked unlicensed digital lenders from enforcing repayment — an unlicensed lender may not be able to lawfully pursue you.",
+      "law_statement": "A digital lender must be licensed by the CBK (CBK Act s.33S / Digital Credit Providers Regulations 2022). A Kenyan court has blocked unlicensed digital lenders from enforcing repayment; an unlicensed lender may not be able to lawfully pursue you.",
       "condition": "Applies IF the lender is not on the CBK licensed DCP list. Confirm licence status first (Deni checks this).",
       "forum_key": "cbk",
       "citation": "https://weetracker.com/2026/07/27/kenyan-court-delivers-blow-to-unlicensed-loan-apps-seeking-debt-repayment/",

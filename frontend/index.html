@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Deni — know your rights as a borrower</title>
+  <title>Deni. Know your rights as a borrower</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
@@ -33,7 +33,7 @@
     <p data-i18n="hero_lead" style="margin:0 0 var(--spacing-24);font-size:var(--text-subheading);color:var(--color-graphite);">
       Deni helps you understand what a lender can and can't do, check whether they're
       licensed, see what a loan really costs, and take action with the right public
-      body — on any phone, in your language. Not legal advice; every fact is sourced.
+      body, on any phone, in your language. Not legal advice; every fact is sourced.
     </p>
 
     <!-- Civic doors -->
@@ -44,13 +44,13 @@
       <button class="door-btn" role="tab" data-panel="cost" aria-selected="false" data-i18n="door_cost">Check a loan's cost</button>
     </div>
 
-    <!-- PANEL: Know your rights (browse — access to information) -->
+    <!-- PANEL: Know your rights (browse: access to information) -->
     <section id="panel-rights" role="tabpanel" aria-label="Know your rights">
-      <p data-i18n="rights_intro" style="margin:0 0 var(--spacing-16);">Read what Kenyan law says about how lenders must treat you — before anything goes wrong.</p>
+      <p data-i18n="rights_intro" style="margin:0 0 var(--spacing-16);">Read what Kenyan law says about how lenders must treat you, before anything goes wrong.</p>
       <div id="rights-list" aria-live="polite"><p data-i18n="loading_rights" style="font-family:var(--font-geist-mono);">Loading your rights…</p></div>
     </section>
 
-    <!-- PANEL: Check a lender (accountability — a public fact) -->
+    <!-- PANEL: Check a lender (accountability: a public fact) -->
     <section id="panel-lender" role="tabpanel" aria-label="Check a lender" hidden>
       <label for="lender-name" data-i18n="lender_label" style="display:block;font-weight:600;margin-bottom:var(--spacing-8);">Is this lender licensed by the Central Bank?</label>
       <input id="lender-name" data-i18n-ph="lender_ph" placeholder="e.g. Tala, Mogo, QuickCash"
@@ -61,13 +61,13 @@
 
     <!-- PANEL: Check a loan's cost (the money proof) -->
     <section id="panel-cost" role="tabpanel" aria-label="Check a loan's true cost" hidden>
-      <p style="margin:0 0 var(--spacing-16);"><span data-i18n="cost_intro_pre">See what a loan will </span><span style="color:var(--color-signal-orange);font-weight:600;" data-i18n="cost_intro_hl">really</span><span data-i18n="cost_intro_post"> cost — the true price behind the daily/weekly framing.</span></p>
+      <p style="margin:0 0 var(--spacing-16);"><span data-i18n="cost_intro_pre">See what a loan will </span><span style="color:var(--color-signal-orange);font-weight:600;" data-i18n="cost_intro_hl">really</span><span data-i18n="cost_intro_post"> cost. The true price behind the daily/weekly framing.</span></p>
       <label for="product" data-i18n="pick_loan" style="display:block;font-weight:600;margin-bottom:var(--spacing-8);">Pick a loan</label>
       <select id="product" style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);background:var(--color-paper-white);">
         <option value="">Loading…</option>
       </select>
 
-      <p data-i18n="or_paste" style="text-align:center;font-family:var(--font-geist-mono);font-size:var(--text-caption);margin:var(--spacing-16) 0;">— or paste the SMS the lender sent you —</p>
+      <p data-i18n="or_paste" style="text-align:center;font-family:var(--font-geist-mono);font-size:var(--text-caption);margin:var(--spacing-16) 0;">or paste the SMS the lender sent you</p>
       <textarea id="sms" rows="3" data-i18n-ph="sms_ph" placeholder="e.g. Congrats! You qualify for KES 1,000. Repay KES 1,150 in 30 days."
         style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);"></textarea>
       <button id="parse-btn" class="btn-primary" data-i18n="parse_btn" style="margin-top:var(--spacing-8);">Read my offer</button>
@@ -76,10 +76,10 @@
       <div id="result" style="margin-top:var(--spacing-24);" aria-live="polite"></div>
     </section>
 
-    <!-- DURING/AFTER flow — always available, framed as taking action -->
+    <!-- DURING/AFTER flow: always available, framed as taking action -->
     <hr style="margin:var(--spacing-40) 0;border:none;border-top:1px solid var(--color-carbon-black);" />
     <h2 data-i18n="action_title" style="font-size:var(--text-heading);font-weight:600;margin:0 0 var(--spacing-8);">Something already went wrong? Take action.</h2>
-    <p data-i18n="action_intro" style="margin:0 0 var(--spacing-16);">Harassment, repossession, a wrongful CRB listing, or money you want back? Describe it — Deni tells you the law, which public body handles it, and drafts your complaint or claim with a case reference.</p>
+    <p data-i18n="action_intro" style="margin:0 0 var(--spacing-16);">Harassment, repossession, a wrongful CRB listing, or money you want back? Describe it. Deni tells you the law, which public body handles it, and drafts your complaint or claim with a case reference.</p>
     <textarea id="problem" rows="3" data-i18n-ph="problem_ph" placeholder="e.g. They are calling everyone in my phone and threatening to take my boda."
       style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);"></textarea>
     <button id="recourse-btn" class="btn-primary" data-i18n="recourse_btn" style="margin-top:var(--spacing-8);">Show me what to do</button>

@@ -14,34 +14,34 @@
     },
     "cbk_conduct_complaint": {
       "title": "Digital lender conduct report (CBK)",
-      "addressee": "Central Bank of Kenya — Digital Credit Providers supervision",
+      "addressee": "Central Bank of Kenya, Digital Credit Providers supervision",
       "legal_basis": "Central Bank of Kenya Act s.33S; Central Bank of Kenya (Digital Credit Providers) Regulations, 2022.",
       "body": "To the Central Bank of Kenya,\n\nI wish to report {{lender_name}} regarding its conduct as a digital credit provider.\n\n{{licence_note}}\n\nThe conduct complained of: {{what_happened}}, on {{dates}}.\n\nI request that CBK review this lender's licensing and conduct under the Digital Credit Providers Regulations 2022.\n\nCase reference (my record): {{case_ref}}\n\nYours faithfully,\n{{redacted_name}}",
       "not_advice": "This is a self-prepared report, not legal advice."
     },
     "cak_consumer_complaint": {
-      "title": "Consumer complaint — misleading terms (CAK)",
+      "title": "Consumer complaint: misleading terms (CAK)",
       "addressee": "Competition Authority of Kenya",
       "legal_basis": "Competition Act (consumer protection: false/misleading representations, unconscionable conduct); Article 46, Constitution of Kenya (consumer right to information).",
       "body": "To the Competition Authority of Kenya,\n\nI wish to complain about {{lender_name}} concerning misleading representations in a loan/financing product.\n\nI was told: {{what_told}}. The actual terms were: {{actual_terms}}. The true cost was not adequately disclosed to me before signing.\n\nI request that the Authority investigate this conduct under the Competition Act and Article 46.\n\nCase reference (my record): {{case_ref}}\n\nYours faithfully,\n{{redacted_name}}",
       "not_advice": "This is a self-prepared complaint, not legal advice."
     },
     "repossession_demand": {
-      "title": "Demand letter — wrongful repossession",
+      "title": "Demand letter: wrongful repossession",
       "addressee": "{{lender_name}}",
       "legal_basis": "Kenyan courts have held that repossession without a valid default notice and lawful process is illegal, null and void (e.g. High Court rulings, 2024).",
-      "body": "To {{lender_name}},\n\nRE: {{asset}} — DEMAND FOR RETURN / CESSATION OF UNLAWFUL REPOSSESSION\n\nYou have {{what_happened}} on {{dates}}. {{notice_status}}\n\nRepossession carried out without a valid default notice and lawful process is unlawful. I demand {{demand}} within 7 days, failing which I will pursue the matter in court and claim damages and costs.\n\nCase reference (my record): {{case_ref}}\n\nYours faithfully,\n{{redacted_name}}",
+      "body": "To {{lender_name}},\n\nRE: {{asset}}. DEMAND FOR RETURN / CESSATION OF UNLAWFUL REPOSSESSION\n\nYou have {{what_happened}} on {{dates}}. {{notice_status}}\n\nRepossession carried out without a valid default notice and lawful process is unlawful. I demand {{demand}} within 7 days, failing which I will pursue the matter in court and claim damages and costs.\n\nCase reference (my record): {{case_ref}}\n\nYours faithfully,\n{{redacted_name}}",
       "not_advice": "This is a self-prepared demand letter, not legal advice. Consider consulting a lawyer or legal aid; whether repossession was unlawful depends on your contract and the facts."
     },
     "crb_dispute": {
       "title": "CRB listing dispute",
       "addressee": "{{bureau}} (licensed Credit Reference Bureau)",
       "legal_basis": "Banking (Credit Reference Bureau) Regulations, 2020 (Legal Notice 55 of 2020).",
-      "body": "To {{bureau}},\n\nRE: DISPUTE OF CREDIT LISTING — {{redacted_name}}, ID {{redacted_id}}\n\nI dispute the listing by {{lender_name}}. The listing is incorrect because {{reason}}.\n\nUnder the Banking (Credit Reference Bureau) Regulations 2020, I request that you investigate and correct or remove this listing.\n\nCase reference (my record): {{case_ref}}\n\nYours faithfully,\n{{redacted_name}}",
+      "body": "To {{bureau}},\n\nRE: DISPUTE OF CREDIT LISTING. {{redacted_name}}, ID {{redacted_id}}\n\nI dispute the listing by {{lender_name}}. The listing is incorrect because {{reason}}.\n\nUnder the Banking (Credit Reference Bureau) Regulations 2020, I request that you investigate and correct or remove this listing.\n\nCase reference (my record): {{case_ref}}\n\nYours faithfully,\n{{redacted_name}}",
       "not_advice": "This is a self-prepared dispute, not legal advice."
     },
     "small_claims_statement": {
-      "title": "Statement of claim — Small Claims Court",
+      "title": "Statement of claim: Small Claims Court",
       "addressee": "The Small Claims Court",
       "legal_basis": "Small Claims Court Act, 2016 (Cap. 10A), as amended by Act No. 5 of 2020 (monetary jurisdiction up to KES 1,000,000). Article 48 and 169(1) of the Constitution (access to justice; subordinate courts).",
       "body": "IN THE SMALL CLAIMS COURT AT [court station]\n\nCLAIM NO. ______ OF [year]\n\nBETWEEN\n{{redacted_name}} .............................................. CLAIMANT\nAND\n{{lender_name}} .............................................. RESPONDENT\n\nSTATEMENT OF CLAIM\n\n1. The Claimant claims from the Respondent the sum of KES {{claim_amount}}.\n2. The claim arises as follows: on {{dates}}, {{what_happened}}.\n3. The amount claimed is calculated as: {{claim_basis}}.\n4. The Claimant has evidence in support: {{evidence_list}}.\n5. The Claimant therefore prays for judgment against the Respondent for KES {{claim_amount}}, costs, and any other relief the Court deems just.\n\nThe Claimant confirms this claim does not exceed the Court's monetary limit and that the Claimant may appear in person.\n\nCase reference (my record): {{case_ref}}\nContact: {{redacted_contact}}\n\nDated at __________ this ____ day of __________, [year].\n\nSigned: {{redacted_name}} (Claimant)",

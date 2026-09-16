@@ -18,8 +18,8 @@
     {
       "key": "repossession",
       "title": "They are taking / threatening to take your financed asset",
-      "law_statement": "Under the National Credit Act 34 of 2005, a credit provider must follow lawful enforcement — including a section 129 default notice — before enforcing or repossessing. Repossession without following the Act's process can be challenged.",
-      "condition": "Your repossession MAY be unlawful IF no proper section 129 notice was served or the process was not followed. This depends on your agreement and the facts — verify before acting.",
+      "law_statement": "Under the National Credit Act 34 of 2005, a credit provider must follow lawful enforcement, including a section 129 default notice, before enforcing or repossessing. Repossession without following the Act's process can be challenged.",
+      "condition": "Your repossession MAY be unlawful IF no proper section 129 notice was served or the process was not followed. This depends on your agreement and the facts; verify before acting.",
       "forum_key": "ncr",
       "citation": "https://www1.saflii.org/za/legis/consol_act/nca34o2005171.pdf",
       "citation_date": "National Credit Act 34 of 2005"
@@ -54,7 +54,7 @@
     {
       "key": "small_claims_recovery",
       "title": "You want to recover money (a refund, an overpayment, or a small debt)",
-      "law_statement": "The Small Claims Court hears civil money claims up to a set limit (R20,000 at the time of writing) with no lawyer required — you represent yourself. It is a direct, low-cost route to recover money owed to you.",
+      "law_statement": "The Small Claims Court hears civil money claims up to a set limit (R20,000 at the time of writing) with no lawyer required; you represent yourself. It is a direct, low-cost route to recover money owed to you.",
       "condition": "Applies where your claim is for money within the Small Claims Court limit. Confirm the current monetary limit and procedure with the court before filing.",
       "forum_key": "small_claims",
       "citation": "https://www.justice.gov.za/scc/scc.htm",

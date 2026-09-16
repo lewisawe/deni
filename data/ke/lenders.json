@@ -1,7 +1,7 @@
 {
   "_meta": {
     "country": "KE",
-    "description": "Lender registry: licence status + regulator/court findings. Each fact carries a source and date. Facts only — no unsourced accusations.",
+    "description": "Lender registry: licence status + regulator/court findings. Each fact carries a source and date. Facts only, no unsourced accusations.",
     "cbk_dcp_list_note": "Licence status reflects CBK's published Digital Credit Providers list. DCP licensing applies to app-based digital lenders; asset financiers and microfinance banks are licensed under different regimes (noted per lender).",
     "licence_authority": {
       "field": "cbk_dcp_licensed",
@@ -87,7 +87,7 @@
       "findings": [
         {
           "body": "High Court of Kenya",
-          "summary": "Collateral vehicle (KCN 925C) was registered in the lender's joint name and enforced via court process — illustrates asset-seizure exposure in secured microfinance.",
+          "summary": "Collateral vehicle (KCN 925C) was registered in the lender's joint name and enforced via court process, illustrating asset-seizure exposure in secured microfinance.",
           "citation": "https://new.kenyalaw.org/akn/ke/judgment/kehc/2026/5105/eng@2026-04-22/source.pdf",
           "date": "2026-04-22"
         }
@@ -95,7 +95,7 @@
     },
     {
       "id": "quickcash_demo",
-      "name": "QuickCash (unlicensed app — demo)",
+      "name": "QuickCash (unlicensed app, demo)",
       "type": "app-cash",
       "regime": "App-based digital lender. NOT on CBK's licensed DCP list (illustrative demo lender).",
       "cbk_dcp_licensed": false,
@@ -103,7 +103,7 @@
       "findings": [
         {
           "body": "Court (general precedent)",
-          "summary": "Kenyan court blocked unlicensed digital lenders from enforcing repayment — an unlicensed lender may not be able to lawfully pursue a borrower.",
+          "summary": "Kenyan court blocked unlicensed digital lenders from enforcing repayment; an unlicensed lender may not be able to lawfully pursue a borrower.",
           "citation": "https://weetracker.com/2026/07/27/kenyan-court-delivers-blow-to-unlicensed-loan-apps-seeking-debt-repayment/",
           "date": "2026-07-27"
         }
