@@ -45,6 +45,7 @@ def _product_result(country: str, product_id: str) -> str:
         return "END Product not found."
     b = compute_cost(_offer(p))
     lender = get_lender(country, p["lender_id"]) or {}
+    cur = load_pack(country)["products"].get("_meta", {}).get("currency", {}).get("symbol", "KES")
     lic = lender.get("cbk_dcp_licensed")
     if lic is False:
         lic_line = "NOT on CBK licensed list. May not be able to legally chase you."
@@ -54,7 +55,7 @@ def _product_result(country: str, product_id: str) -> str:
         lic_line = "Not a CBK digital lender."
     return (
         f"END {p['label']}\n"
-        f"Pay KES {b.total_paid} for KES {b.principal}\n"
+        f"Pay {cur} {b.total_paid} for {cur} {b.principal}\n"
         f"= {b.markup_pct}% more (APR {b.apr_pct}%)\n"
         f"{lic_line}\n"
         f"Deni: know before you borrow."

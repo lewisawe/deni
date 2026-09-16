@@ -6,7 +6,7 @@ from __future__ import annotations
 from decimal import Decimal
 
 from .cost_engine import CostBreakdown, LoanOffer, compute_cost
-from .data_pack import get_lender, get_product, licence_authority, load_pack
+from .data_pack import currency, get_lender, get_product, licence_authority, load_pack
 
 SECURITY_RISK = {
     "device-lock": "Miss a payment and the device is locked remotely until you clear arrears.",
@@ -101,6 +101,7 @@ def evaluate_product(country: str, product_id: str) -> dict:
         },
         "alternative": cheaper_alternative(country, product),
         "sources": product.get("sources", []),
+        "currency": currency(country),
         "data_date": load_pack(country)["products"]["_meta"].get("last_updated"),
         "disclaimer": "Figures computed from the shown inputs. Not financial or legal advice.",
     }
@@ -108,7 +109,7 @@ def evaluate_product(country: str, product_id: str) -> dict:
 
 def evaluate_offer(principal, term_days, *, repay_total=None, deposit=0,
                    instalment_amount=0, instalment_frequency="monthly",
-                   num_instalments=0, extra_fees=0) -> dict:
+                   num_instalments=0, extra_fees=0, country="ke") -> dict:
     """BEFORE assessment for a raw offer (no known product/lender)."""
     kw = dict(principal=Decimal(str(principal)), term_days=int(term_days),
               deposit=Decimal(str(deposit)),
@@ -119,4 +120,5 @@ def evaluate_offer(principal, term_days, *, repay_total=None, deposit=0,
     if repay_total is not None:
         kw["repay_total"] = Decimal(str(repay_total))
     return {"cost": _breakdown_dict(compute_cost(LoanOffer(**kw))),
+            "currency": currency(country),
             "disclaimer": "Figures computed from the inputs you gave. Not financial or legal advice."}

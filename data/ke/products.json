@@ -3,6 +3,7 @@
     "country": "KE",
     "description": "Modelled products for the demo. Figures are representative of publicly advertised structures; exact terms change, so each product names its data date. The cost engine computes the markup/APR from these inputs; no figure is asserted without its inputs shown.",
     "note": "amounts in KES. principal = value received today (cash received, or cash price of the asset).",
+    "currency": {"code": "KES", "symbol": "KES", "locale": "en-KE"},
     "last_updated": "2026-09-14"
   },
   "products": [

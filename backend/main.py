@@ -73,6 +73,7 @@ class OfferIn(BaseModel):
     instalment_frequency: str = "monthly"
     num_instalments: int = 0
     extra_fees: float = 0
+    country: str = "ke"
 
 
 @app.post("/api/cost")

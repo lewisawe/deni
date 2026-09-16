@@ -16,6 +16,7 @@ def cost_receipt(evaluation: dict, lang: str = "en") -> dict:
     c = evaluation["cost"]
     lic = evaluation.get("licence", {})
     prod = evaluation.get("product", {})
+    cur = evaluation.get("currency", {}).get("symbol", "KES")
     ref = "DENI-" + uuid.uuid4().hex[:8].upper()
     lines = [
         "DENI: LOAN COST CHECK",
@@ -25,8 +26,8 @@ def cost_receipt(evaluation: dict, lang: str = "en") -> dict:
     if prod.get("label"):
         lines.append(f"Loan: {prod['label']}")
     lines += [
-        f"You pay: KES {c['total_paid']} for KES {c['principal']} of value",
-        f"True cost: KES {c['total_cost']}  ({c['markup_pct']}% more)",
+        f"You pay: {cur} {c['total_paid']} for {cur} {c['principal']} of value",
+        f"True cost: {cur} {c['total_cost']}  ({c['markup_pct']}% more)",
         f"APR: {c['apr_pct']}%",
     ]
     if lic:

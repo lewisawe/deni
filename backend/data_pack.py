@@ -21,6 +21,12 @@ def load_pack(country: str = "ke") -> dict:
     return pack
 
 
+def currency(country: str) -> dict:
+    """The pack-declared currency (code, symbol, locale). Defaults to KES."""
+    meta = load_pack(country)["products"].get("_meta", {})
+    return meta.get("currency", {"code": "KES", "symbol": "KES", "locale": "en-KE"})
+
+
 def get_product(country: str, product_id: str) -> dict | None:
     for p in load_pack(country)["products"]["products"]:
         if p["id"] == product_id:

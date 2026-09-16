@@ -1,6 +1,8 @@
 // Deni UI: before-flow (pick or paste), multilingual explain, during-flow recourse.
 const $ = (id) => document.getElementById(id);
-const fmt = (n) => Number(n).toLocaleString("en-KE", { maximumFractionDigits: 0 });
+let CURRENCY = { code: "KES", symbol: "KES", locale: "en-KE" };
+const fmt = (n) => Number(n).toLocaleString(CURRENCY.locale || "en-KE", { maximumFractionDigits: 0 });
+const money = (n) => `${CURRENCY.symbol} ${fmt(n)}`;
 let LANG = "en";
 let COUNTRY = "ke";
 
@@ -189,12 +191,13 @@ async function explainInto(el, cost) {
 
 function renderResult(r) {
   const c = r.cost, alt = r.alternative;
+  if (r.currency) CURRENCY = r.currency;
   $("result").innerHTML = `
     <div class="card-hard">
       <p style="margin:0 0 var(--spacing-8);font-family:var(--font-geist-mono);text-transform:uppercase;font-size:var(--text-caption);">True cost</p>
       <p class="stat-number" style="font-size:50px;margin:0;line-height:1;">${c.apr_pct}% <span style="font-size:24px;">APR</span></p>
       <p style="margin:var(--spacing-16) 0 0;font-size:var(--text-subheading);">
-        You pay <strong>KES ${fmt(c.total_paid)}</strong> for <strong>KES ${fmt(c.principal)}</strong> of value:
+        You pay <strong>${money(c.total_paid)}</strong> for <strong>${money(c.principal)}</strong> of value:
         <span class="stat-inline" style="font-size:var(--text-subheading);">${c.markup_pct}%</span> more.
       </p>
       <div id="explain"></div>
