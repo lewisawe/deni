@@ -12,7 +12,8 @@
       "unregistered_label": "NOT registered with the NCR",
       "registered_note": "is registered with the National Credit Regulator under the National Credit Act (verify current status at ncr.org.za).",
       "unregistered_note": "is not registered with the NCR. Providing credit without NCR registration is unlawful, and such credit's enforceability is challengeable.",
-      "not_applicable_note": "is not an NCR-registered credit provider under this regime."
+      "not_applicable_note": "is not an NCR-registered credit provider under this regime.",
+      "examples": "e.g. a bank, a vehicle financier, QuickRand"
     },
     "last_updated": "2026-09-16"
   },

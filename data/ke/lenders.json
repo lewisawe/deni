@@ -12,7 +12,8 @@
       "unregistered_label": "NOT on CBK licensed list",
       "registered_note": "is on CBK's licensed Digital Credit Providers list (verify current status at cbk.go.ke).",
       "unregistered_note": "is not on CBK's licensed DCP list. Under a 2026 court ruling, an unlicensed digital lender may not be able to lawfully enforce repayment.",
-      "not_applicable_note": "is not a CBK Digital Credit Provider under this regime."
+      "not_applicable_note": "is not a CBK Digital Credit Provider under this regime.",
+      "examples": "e.g. Tala, Mogo, QuickCash"
     },
     "last_updated": "2026-09-14"
   },

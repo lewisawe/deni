@@ -55,6 +55,21 @@ def check_lender(name: str = "", country: str = "ke") -> dict:
     return _check_lender(country, name)
 
 
+@app.get("/api/meta")
+def meta(country: str = "ke") -> dict:
+    """Country meta the UI needs to adapt labels: the licensing authority + examples."""
+    from .data_pack import currency, licence_authority
+    la = licence_authority(country)
+    return {
+        "country": country,
+        "authority_short": la.get("authority_short", "the regulator"),
+        "authority_name": la.get("authority_name", "the regulator"),
+        "register_name": la.get("register_name", "the register"),
+        "examples": la.get("examples", "e.g. a lender's name"),
+        "currency": currency(country),
+    }
+
+
 @app.get("/api/evaluate/{product_id}")
 def evaluate(product_id: str, country: str = "ke") -> dict:
     """BEFORE assessment for a known product (cost + licence + risk + alternative)."""

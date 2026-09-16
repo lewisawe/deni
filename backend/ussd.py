@@ -17,7 +17,7 @@ from __future__ import annotations
 from decimal import Decimal
 
 from .cost_engine import LoanOffer, compute_cost
-from .data_pack import get_forum, get_lender, get_product, load_pack
+from .data_pack import get_forum, get_lender, get_product, licence_authority, load_pack
 
 # USSD-friendly short product menu (subset for the small screen).
 USSD_PRODUCTS = [
@@ -45,14 +45,17 @@ def _product_result(country: str, product_id: str) -> str:
         return "END Product not found."
     b = compute_cost(_offer(p))
     lender = get_lender(country, p["lender_id"]) or {}
+    la = licence_authority(country)
+    field = la["field"]
     cur = load_pack(country)["products"].get("_meta", {}).get("currency", {}).get("symbol", "KES")
-    lic = lender.get("cbk_dcp_licensed")
+    lic = lender.get(field)
+    auth = la["authority_short"]
     if lic is False:
-        lic_line = "NOT on CBK licensed list. May not be able to legally chase you."
+        lic_line = f"NOT registered with {auth}. May not be able to legally chase you."
     elif lic is True:
-        lic_line = "Licensed by CBK."
+        lic_line = f"Registered with {auth}."
     else:
-        lic_line = "Not a CBK digital lender."
+        lic_line = f"Not a {auth}-listed lender."
     return (
         f"END {p['label']}\n"
         f"Pay {cur} {b.total_paid} for {cur} {b.principal}\n"
@@ -63,17 +66,20 @@ def _product_result(country: str, product_id: str) -> str:
 
 
 def _check_lender(country: str, name: str) -> str:
+    la = licence_authority(country)
+    field = la["field"]
+    auth = la["authority_short"]
     name_l = name.strip().lower()
     for ld in load_pack(country)["lenders"]["lenders"]:
         if name_l and name_l in ld["name"].lower():
-            lic = ld.get("cbk_dcp_licensed")
+            lic = ld.get(field)
             if lic is True:
-                return f"END {ld['name']}: Licensed by CBK."
+                return f"END {ld['name']}: Registered with {auth}."
             if lic is False:
-                return (f"END {ld['name']}: NOT on CBK licensed list. "
-                        f"An unlicensed lender may not legally enforce repayment.")
-            return f"END {ld['name']}: not a CBK digital lender. {ld.get('regime','')}"
-    return "END Lender not found in Deni's list. Check CBK's licensed DCP register."
+                return (f"END {ld['name']}: NOT registered with {auth}. "
+                        f"An unregistered lender may not legally enforce repayment.")
+            return f"END {ld['name']}: not a {auth}-listed lender. {ld.get('regime','')}"
+    return f"END Lender not found in Deni's list. Check the {auth} register."
 
 
 def handle(text: str, country: str = "ke") -> str:
