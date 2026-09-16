@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deni — know your rights as a borrower</title>
+  <meta name="description" content="Deni helps Kenyan borrowers understand their rights, check if a lender is licensed, see a loan's true cost, and act with the right public body. On WhatsApp and USSD, in English, Kiswahili, and Sheng." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    /* Landing-only layout helpers (reuse tokens from styles.css) */
+    .wrap { max-width: var(--page-max-width); margin: 0 auto; padding: 0 var(--spacing-24); }
+    .section { padding: var(--spacing-80) 0; }
+    .eyebrow { font-family: var(--font-geist-mono); text-transform: uppercase; letter-spacing: 0.08em; font-size: var(--text-caption); color: var(--color-orange-text); font-weight: 600; }
+    .hero-title { font-size: var(--text-heading-lg); font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; margin: var(--spacing-16) 0; }
+    .lead { font-size: var(--text-subheading); color: var(--color-graphite); max-width: 620px; }
+    .cta-row { display: flex; gap: var(--spacing-16); flex-wrap: wrap; margin-top: var(--spacing-32); }
+    .btn-ghost { background: var(--color-paper-white); color: var(--color-carbon-black); border: 1px solid var(--color-carbon-black); border-radius: var(--radius-buttons); font-weight: 600; font-size: var(--text-body); padding: 10px 24px; cursor: pointer; text-decoration: none; display: inline-block; }
+    .btn-ghost:hover { background: var(--color-chartreuse-highlight); }
+    a.btn-primary { text-decoration: none; display: inline-block; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-24); }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-16); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-40); align-items: center; }
+    .big-number { font-size: var(--text-display); line-height: 1; }
+    .section-title { font-size: var(--text-heading); font-weight: 600; letter-spacing: -0.02em; margin: 0 0 var(--spacing-8); }
+    .muted { color: var(--color-graphite); }
+    .divider { border: none; border-top: 1px solid var(--color-carbon-black); margin: 0; }
+    footer { border-top: 1px solid var(--color-carbon-black); }
+    @media (max-width: 860px) {
+      .grid-3, .grid-4, .grid-2 { grid-template-columns: 1fr; }
+      .hero-title { font-size: 40px; }
+      .big-number { font-size: 56px; }
+      .section { padding: var(--spacing-56) 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header style="border-bottom:1px solid var(--color-carbon-black);background:var(--color-paper-white);position:sticky;top:0;z-index:10;">
+    <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:var(--spacing-16);padding-top:var(--spacing-16);padding-bottom:var(--spacing-16);">
+      <span style="font-family:var(--font-geist-mono);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Deni</span>
+      <a href="/app" class="btn-primary" style="padding:8px 20px;">Open Deni</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="grid-bg">
+    <div class="wrap section">
+      <p class="eyebrow">Information you can trust · OSF × Andela</p>
+      <h1 class="hero-title">Know your <span style="color:var(--color-signal-orange);">rights</span> as a borrower.</h1>
+      <p class="lead">
+        Deni helps Kenyan borrowers understand what a lender can and can't legally do,
+        check whether it's licensed, see what a loan really costs, and take action with
+        the right public body. On WhatsApp and USSD, in English, Kiswahili, and Sheng.
+      </p>
+      <div class="cta-row">
+        <a href="/app#rights" class="btn-primary">Know your rights</a>
+        <a href="/app#cost" class="btn-ghost">Check a loan's true cost</a>
+      </div>
+      <p class="muted" style="font-size:var(--text-caption);margin-top:var(--spacing-24);">
+        Not legal advice. Every fact is sourced and dated. No login. Nothing you enter is stored on our servers.
+      </p>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- Problem: the stakes -->
+  <section class="section">
+    <div class="wrap grid-2">
+      <div>
+        <p class="eyebrow">The problem</p>
+        <p class="big-number stat-number">8,000,000+</p>
+        <p style="font-size:var(--text-subheading);margin:var(--spacing-8) 0 0;">
+          Kenyans are blacklisted by credit bureaus — most over mobile loans, many
+          under KES 200.
+        </p>
+      </div>
+      <div>
+        <p style="margin:0 0 var(--spacing-16);">
+          A credit listing locks people out of the formal economy: jobs, rent, further
+          credit. Borrowers can't see a loan's true cost, don't know whether a lender is
+          even licensed, and don't know the rights they already have.
+        </p>
+        <p class="muted" style="margin:0;">
+          Then comes harassment, contact-scraping, and repossession — household distress
+          at scale. The rights and public facts exist. They're just invisible to the
+          people who need them.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- Why it's invisible -->
+  <section class="section grid-bg">
+    <div class="wrap">
+      <p class="eyebrow">Why the harm is invisible</p>
+      <h2 class="section-title">Two facts are hidden at the moment you decide.</h2>
+      <div class="grid-2" style="margin-top:var(--spacing-32);align-items:stretch;">
+        <div class="card-hard">
+          <p style="margin:0 0 var(--spacing-8);font-weight:600;">The cost</p>
+          <p style="margin:0;">"Borrow 1,000, repay 1,150 in 30 days" <em>looks</em> like 15%. It is
+            <span class="stat-inline">182.5% APR.</span> A phone at "KES 60/day" is
+            <span class="stat-inline">KES 23,900 for a KES 12,000 phone — 99% more.</span></p>
+        </div>
+        <div class="card-hard">
+          <p style="margin:0 0 var(--spacing-8);font-weight:600;">The right</p>
+          <p style="margin:0;">Is the lender licensed by CBK? Can they legally chase you?
+            What can they lawfully take if you miss a payment? Almost no borrower knows to ask.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- What Deni does -->
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">What Deni does</p>
+      <h2 class="section-title">Turns a right and a public fact into something you can act on.</h2>
+      <div class="grid-4" style="margin-top:var(--spacing-32);">
+        <a href="/app#rights" class="card-hard" style="text-decoration:none;color:inherit;">
+          <p style="margin:0 0 var(--spacing-8);font-weight:600;">Know your rights</p>
+          <p class="muted" style="margin:0;">Read what a lender can and can't legally do — each backed by the law and the body that enforces it.</p>
+        </a>
+        <a href="/app#lender" class="card-hard" style="text-decoration:none;color:inherit;">
+          <p style="margin:0 0 var(--spacing-8);font-weight:600;">Check a lender</p>
+          <p class="muted" style="margin:0;">Is it on CBK's licensed register? A public fact, made instant.</p>
+        </a>
+        <a href="/app#cost" class="card-hard" style="text-decoration:none;color:inherit;">
+          <p style="margin:0 0 var(--spacing-8);font-weight:600;">Check a loan's cost</p>
+          <p class="muted" style="margin:0;">The real price behind the daily/weekly framing — the math shown, never guessed.</p>
+        </a>
+        <a href="/app" class="card-hard" style="text-decoration:none;color:inherit;">
+          <p style="margin:0 0 var(--spacing-8);font-weight:600;">Take action</p>
+          <p class="muted" style="margin:0;">Harassment, repossession, a wrong CRB listing, or money to recover → the law, the right forum, and a drafted complaint or claim.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- Trust -->
+  <section class="section grid-bg">
+    <div class="wrap">
+      <p class="eyebrow">Trust by design</p>
+      <h2 class="section-title">Built to be verified, not believed.</h2>
+      <div class="grid-3" style="margin-top:var(--spacing-32);">
+        <div>
+          <p style="font-weight:600;margin:0 0 4px;">The money is math, shown</p>
+          <p class="muted" style="margin:0;">Every figure is computed in code and the arithmetic is displayed. No AI computes a number.</p>
+        </div>
+        <div>
+          <p style="font-weight:600;margin:0 0 4px;">Every claim is sourced</p>
+          <p class="muted" style="margin:0;">Each right and fact cites the Act, regulator, or court ruling — with a date. Facts only, never "scam."</p>
+        </div>
+        <div>
+          <p style="font-weight:600;margin:0 0 4px;">Private by default</p>
+          <p class="muted" style="margin:0;">No login. Nothing you enter is stored on our servers. Complaints redact your details.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- Works on any phone -->
+  <section class="section">
+    <div class="wrap grid-2">
+      <div>
+        <p class="eyebrow">Works on any phone</p>
+        <h2 class="section-title">No smartphone, no data, no problem.</h2>
+        <p class="muted" style="margin:0;">
+          Deni runs over USSD on a basic feature phone — check a loan's true cost, verify
+          a lender, and read your rights in plain text, in English, Kiswahili, or Sheng.
+          The same civic tool, reachable by everyone.
+        </p>
+      </div>
+      <div class="card-hard" style="font-family:var(--font-geist-mono);font-size:var(--text-caption);white-space:pre-line;background:var(--color-carbon-black);color:var(--color-paper-white);">
+Deni - know your rights
+1. M-KOPA phone
+2. Watu boda
+3. App loan 1000/30d
+4. Check if lender is licensed
+5. Know your rights
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- Final CTA -->
+  <section class="section grid-bg" style="text-align:center;">
+    <div class="wrap">
+      <h2 class="hero-title" style="margin-top:0;">Know the real cost. Know your rights.</h2>
+      <p class="lead" style="margin:0 auto;">Then hold them to account — with the right public body and the paperwork ready.</p>
+      <div class="cta-row" style="justify-content:center;">
+        <a href="/app#rights" class="btn-primary">Open Deni</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="wrap" style="padding-top:var(--spacing-24);padding-bottom:var(--spacing-24);display:flex;justify-content:space-between;gap:var(--spacing-16);flex-wrap:wrap;">
+      <span style="font-family:var(--font-geist-mono);font-size:var(--text-caption);">Deni · OSF × Andela hackathon</span>
+      <span class="muted" style="font-size:var(--text-caption);">Not legal or financial advice. Information is sourced and dated; verify before acting.</span>
+    </div>
+  </footer>
+</body>
+</html>
