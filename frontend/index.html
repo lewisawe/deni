@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Deni — know the real cost before you borrow</title>
+  <title>Deni — know your rights as a borrower</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
@@ -11,7 +11,7 @@
 <body class="grid-bg">
   <header style="border-bottom:1px solid var(--color-carbon-black);background:var(--color-paper-white);">
     <div style="max-width:var(--page-max-width);margin:0 auto;padding:var(--spacing-16) var(--spacing-24);display:flex;align-items:center;justify-content:space-between;gap:var(--spacing-16);flex-wrap:wrap;">
-      <span style="font-family:var(--font-geist-mono);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Deni</span>
+      <span style="font-family:var(--font-geist-mono);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;"><a href="/" style="color:inherit;text-decoration:none;">Deni</a></span>
       <div id="lang" role="group" aria-label="Language" style="display:flex;gap:6px;">
         <button data-lang="en" class="lang-btn" aria-pressed="true">English</button>
         <button data-lang="sw" class="lang-btn" aria-pressed="false">Kiswahili</button>
@@ -22,30 +22,61 @@
 
   <main style="max-width:760px;margin:0 auto;padding:var(--spacing-40) var(--spacing-24);">
     <h1 style="font-size:var(--text-heading-lg);font-weight:600;letter-spacing:-0.03em;line-height:1.1;margin:0 0 var(--spacing-16);">
-      What will this loan <span style="color:var(--color-signal-orange);">really</span> cost you?
+      Know your <span style="color:var(--color-signal-orange);">rights</span> as a borrower.
     </h1>
+    <p style="margin:0 0 var(--spacing-24);font-size:var(--text-subheading);color:var(--color-graphite);">
+      Deni helps you understand what a lender can and can't do, check whether they're
+      licensed, see what a loan really costs, and take action with the right public
+      body — on any phone, in your language. Not legal advice; every fact is sourced.
+    </p>
 
-    <!-- Input: pick a known loan, or paste an SMS offer -->
-    <label for="product" style="display:block;font-weight:600;margin-bottom:var(--spacing-8);">Pick a loan</label>
-    <select id="product" style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);background:var(--color-paper-white);">
-      <option value="">Loading…</option>
-    </select>
+    <!-- Civic doors -->
+    <div id="doors" role="tablist" aria-label="What do you want to do"
+      style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:var(--spacing-24);">
+      <button class="door-btn" role="tab" data-panel="rights" aria-selected="true">Know your rights</button>
+      <button class="door-btn" role="tab" data-panel="lender" aria-selected="false">Check a lender</button>
+      <button class="door-btn" role="tab" data-panel="cost" aria-selected="false">Check a loan's cost</button>
+    </div>
 
-    <p style="text-align:center;font-family:var(--font-geist-mono);font-size:var(--text-caption);margin:var(--spacing-16) 0;">— or paste the SMS the lender sent you —</p>
-    <textarea id="sms" rows="3" placeholder="e.g. Congrats! You qualify for KES 1,000. Repay KES 1,150 in 30 days."
-      style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);"></textarea>
-    <button id="parse-btn" class="btn-primary" style="margin-top:var(--spacing-8);">Read my offer</button>
+    <!-- PANEL: Know your rights (browse — access to information) -->
+    <section id="panel-rights" role="tabpanel" aria-label="Know your rights">
+      <p style="margin:0 0 var(--spacing-16);">Read what Kenyan law says about how lenders must treat you — before anything goes wrong.</p>
+      <div id="rights-list" aria-live="polite"><p style="font-family:var(--font-geist-mono);">Loading your rights…</p></div>
+    </section>
 
-    <div id="confirm" style="margin-top:var(--spacing-16);"></div>
-    <div id="result" style="margin-top:var(--spacing-24);" aria-live="polite"></div>
+    <!-- PANEL: Check a lender (accountability — a public fact) -->
+    <section id="panel-lender" role="tabpanel" aria-label="Check a lender" hidden>
+      <label for="lender-name" style="display:block;font-weight:600;margin-bottom:var(--spacing-8);">Is this lender licensed by the Central Bank?</label>
+      <input id="lender-name" placeholder="e.g. Tala, Mogo, QuickCash"
+        style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);" />
+      <button id="lender-btn" class="btn-primary" style="margin-top:var(--spacing-8);">Check the register</button>
+      <div id="lender-result" style="margin-top:var(--spacing-16);" aria-live="polite"></div>
+    </section>
 
-    <!-- DURING flow -->
+    <!-- PANEL: Check a loan's cost (the money proof) -->
+    <section id="panel-cost" role="tabpanel" aria-label="Check a loan's true cost" hidden>
+      <p style="margin:0 0 var(--spacing-16);">See what a loan will <span style="color:var(--color-signal-orange);font-weight:600;">really</span> cost — the true price behind the daily/weekly framing.</p>
+      <label for="product" style="display:block;font-weight:600;margin-bottom:var(--spacing-8);">Pick a loan</label>
+      <select id="product" style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);background:var(--color-paper-white);">
+        <option value="">Loading…</option>
+      </select>
+
+      <p style="text-align:center;font-family:var(--font-geist-mono);font-size:var(--text-caption);margin:var(--spacing-16) 0;">— or paste the SMS the lender sent you —</p>
+      <textarea id="sms" rows="3" placeholder="e.g. Congrats! You qualify for KES 1,000. Repay KES 1,150 in 30 days."
+        style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);"></textarea>
+      <button id="parse-btn" class="btn-primary" style="margin-top:var(--spacing-8);">Read my offer</button>
+
+      <div id="confirm" style="margin-top:var(--spacing-16);"></div>
+      <div id="result" style="margin-top:var(--spacing-24);" aria-live="polite"></div>
+    </section>
+
+    <!-- DURING/AFTER flow — always available, framed as taking action -->
     <hr style="margin:var(--spacing-40) 0;border:none;border-top:1px solid var(--color-carbon-black);" />
-    <h2 style="font-size:var(--text-heading);font-weight:600;margin:0 0 var(--spacing-8);">Already in trouble with a loan?</h2>
-    <p style="margin:0 0 var(--spacing-16);">Being harassed, threatened with repossession, or wrongly listed? Describe it — Deni tells you the law, who to contact, and drafts your complaint.</p>
+    <h2 style="font-size:var(--text-heading);font-weight:600;margin:0 0 var(--spacing-8);">Something already went wrong? Take action.</h2>
+    <p style="margin:0 0 var(--spacing-16);">Harassment, repossession, a wrongful CRB listing, or money you want back? Describe it — Deni tells you the law, which public body handles it, and drafts your complaint or claim with a case reference.</p>
     <textarea id="problem" rows="3" placeholder="e.g. They are calling everyone in my phone and threatening to take my boda."
       style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);"></textarea>
-    <button id="recourse-btn" class="btn-primary" style="margin-top:var(--spacing-8);">Know my rights</button>
+    <button id="recourse-btn" class="btn-primary" style="margin-top:var(--spacing-8);">Show me what to do</button>
     <div id="recourse" style="margin-top:var(--spacing-24);" aria-live="polite"></div>
   </main>
 

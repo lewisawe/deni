@@ -135,3 +135,23 @@ html, body {
   background: var(--color-carbon-black);
   color: var(--color-paper-white);
 }
+
+/* Civic doors (tabs): equal-weight entry points. Selected = black fill. */
+.door-btn {
+  background: var(--color-paper-white);
+  border: 1px solid var(--color-carbon-black);
+  border-radius: var(--radius-smallbuttons);
+  font-family: var(--font-geist);
+  font-weight: 600;
+  font-size: var(--text-body);
+  padding: 12px 8px;
+  cursor: pointer;
+  text-align: center;
+}
+.door-btn[aria-selected="true"] {
+  background: var(--color-carbon-black);
+  color: var(--color-paper-white);
+}
+@media (max-width: 520px) {
+  #doors { grid-template-columns: 1fr; }
+}
