@@ -125,17 +125,21 @@ def check_lender(country: str, name: str) -> dict:
     for ld in load_pack(country)["lenders"]["lenders"]:
         if name_l in ld["name"].lower():
             lic = ld.get(field)
+            findings = ld.get("findings", [])
             if lic is True:
                 return {"status": "licensed", "label": la["registered_label"],
                         "matched": ld["name"], "authority": la["authority_short"],
-                        "note": f"{ld['name']} {la['registered_note']}"}
+                        "note": f"{ld['name']} {la['registered_note']}",
+                        "findings": findings, "regime": ld.get("regime")}
             if lic is False:
                 return {"status": "unlicensed", "label": la["unregistered_label"],
                         "matched": ld["name"], "authority": la["authority_short"],
-                        "note": f"{ld['name']} {la['unregistered_note']}"}
+                        "note": f"{ld['name']} {la['unregistered_note']}",
+                        "findings": findings, "regime": ld.get("regime")}
             return {"status": "not-applicable", "label": f"Not a {la['authority_short']}-listed lender",
                     "matched": ld["name"], "authority": la["authority_short"],
-                    "note": f"{ld['name']}: {ld.get('regime', la['not_applicable_note'])}"}
-    return {"status": "unknown", "label": "Not in Deni's list",
+                    "note": f"{ld['name']}: {ld.get('regime', la['not_applicable_note'])}",
+                    "findings": findings, "regime": ld.get("regime")}
+    return {"status": "unknown", "label": "Not in Deni's list", "findings": [],
             "note": f"This lender isn't in Deni's dataset. Check the {la['register_name']} "
                     f"directly to confirm."}
