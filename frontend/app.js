@@ -3,12 +3,102 @@ const $ = (id) => document.getElementById(id);
 const fmt = (n) => Number(n).toLocaleString("en-KE", { maximumFractionDigits: 0 });
 let LANG = "en";
 
+/* ---------- UI string dictionary (real interface translation, en/sw/sheng) ----------
+   The whole interface translates on toggle — not just the AI explanation — so a
+   Kiswahili- or Sheng-only speaker can navigate. Works fully offline (no AI needed). */
+const I18N = {
+  en: {
+    hero_pre: "Know your ", hero_hl: "rights", hero_post: " as a borrower.",
+    hero_lead: "Deni helps you understand what a lender can and can't do, check whether they're licensed, see what a loan really costs, and take action with the right public body — on any phone, in your language. Not legal advice; every fact is sourced.",
+    door_rights: "Know your rights", door_lender: "Check a lender", door_cost: "Check a loan's cost",
+    rights_intro: "Read what Kenyan law says about how lenders must treat you — before anything goes wrong.",
+    loading_rights: "Loading your rights…",
+    lender_label: "Is this lender licensed by the Central Bank?",
+    lender_ph: "e.g. Tala, Mogo, QuickCash", lender_btn: "Check the register",
+    cost_intro_pre: "See what a loan will ", cost_intro_hl: "really", cost_intro_post: " cost — the true price behind the daily/weekly framing.",
+    pick_loan: "Pick a loan", or_paste: "— or paste the SMS the lender sent you —",
+    sms_ph: "e.g. Congrats! You qualify for KES 1,000. Repay KES 1,150 in 30 days.",
+    parse_btn: "Read my offer",
+    action_title: "Something already went wrong? Take action.",
+    action_intro: "Harassment, repossession, a wrongful CRB listing, or money you want back? Describe it — Deni tells you the law, which public body handles it, and drafts your complaint or claim with a case reference.",
+    problem_ph: "e.g. They are calling everyone in my phone and threatening to take my boda.",
+    recourse_btn: "Show me what to do",
+    whatnext_title: "What you can do next", wn_rights: "Know your rights",
+    wn_report: "Report this lender to CBK", wn_action: "Take action on a problem",
+    computing: "Computing…", finding: "Finding your rights…", reading: "Reading…",
+    source: "Source", go_to: "Go to",
+  },
+  sw: {
+    hero_pre: "Fahamu ", hero_hl: "haki zako", hero_post: " kama mkopaji.",
+    hero_lead: "Deni inakusaidia kuelewa mkopeshaji anaweza na hawezi kufanya nini, kuangalia kama ana leseni, kuona gharama halisi ya mkopo, na kuchukua hatua na taasisi ya umma inayohusika — kwenye simu yoyote, kwa lugha yako. Si ushauri wa kisheria; kila ukweli una chanzo.",
+    door_rights: "Fahamu haki zako", door_lender: "Angalia mkopeshaji", door_cost: "Angalia gharama ya mkopo",
+    rights_intro: "Soma sheria ya Kenya inavyosema kuhusu jinsi wakopeshaji wanavyopaswa kukutendea — kabla mambo hayajaharibika.",
+    loading_rights: "Inapakia haki zako…",
+    lender_label: "Je, mkopeshaji huyu ana leseni ya Benki Kuu?",
+    lender_ph: "mf. Tala, Mogo, QuickCash", lender_btn: "Angalia rejista",
+    cost_intro_pre: "Ona mkopo utakugharimu ", cost_intro_hl: "kiasi gani hasa", cost_intro_post: " — bei halisi nyuma ya maelezo ya kila siku/wiki.",
+    pick_loan: "Chagua mkopo", or_paste: "— au bandika SMS uliyotumiwa na mkopeshaji —",
+    sms_ph: "mf. Hongera! Umestahili KES 1,000. Lipa KES 1,150 katika siku 30.",
+    parse_btn: "Soma ofa yangu",
+    action_title: "Kuna kilichoharibika tayari? Chukua hatua.",
+    action_intro: "Unyanyaswaji, kunyang'anywa mali, kuorodheshwa vibaya CRB, au pesa unazotaka kurudishiwa? Eleza — Deni inakuambia sheria, taasisi ya umma inayohusika, na kuandaa malalamiko au madai yako yenye nambari ya kumbukumbu.",
+    problem_ph: "mf. Wanapiga simu kila mtu kwenye simu yangu na kutishia kuchukua boda yangu.",
+    recourse_btn: "Nionyeshe la kufanya",
+    whatnext_title: "Unachoweza kufanya sasa", wn_rights: "Fahamu haki zako",
+    wn_report: "Ripoti mkopeshaji huyu CBK", wn_action: "Chukua hatua kuhusu tatizo",
+    computing: "Inakokotoa…", finding: "Inatafuta haki zako…", reading: "Inasoma…",
+    source: "Chanzo", go_to: "Nenda",
+  },
+  sheng: {
+    hero_pre: "Jua ", hero_hl: "haki zako", hero_post: " kama mtu wa mkopo.",
+    hero_lead: "Deni inakusaidia kuelewa venye lender anaweza na hawezi kufanya, kucheki kama ako na leseni, kuona mkopo itakugharimu pesa ngapi kwa uhalisia, na kuchukua hatua na ile ofisi ya serikali inafaa — kwa simu yoyote, kwa lugha yako. Si ushauri wa mawakili; kila kitu kina chanzo.",
+    door_rights: "Jua haki zako", door_lender: "Cheki lender", door_cost: "Cheki gharama ya mkopo",
+    rights_intro: "Soma vile sheria ya Kenya inasema kuhusu venye malenda wanafaa kukutreat — kabla mambo iharibike.",
+    loading_rights: "Inaload haki zako…",
+    lender_label: "Huyu lender ako na leseni ya Central Bank?",
+    lender_ph: "mf. Tala, Mogo, QuickCash", lender_btn: "Cheki rejista",
+    cost_intro_pre: "Ona mkopo itakugharimu ", cost_intro_hl: "pesa ngapi kwa ukweli", cost_intro_post: " — bei halisi nyuma ya story ya kila siku/wiki.",
+    pick_loan: "Chagua mkopo", or_paste: "— ama paste SMS ile lender alikutumia —",
+    sms_ph: "mf. Congrats! Umequalify KES 1,000. Lipa KES 1,150 kwa siku 30.",
+    parse_btn: "Soma offer yangu",
+    action_title: "Kuna kitu tayari imeharibika? Chukua hatua.",
+    action_intro: "Wanakusumbua, wamechukua mali yako, umelistiwa vibaya CRB, ama kuna doo unataka urudishiwe? Elezea — Deni inakuambia sheria, ofisi gani ya serikali inashughulikia, na inaandaa complaint ama claim yako na reference number.",
+    problem_ph: "mf. Wanapigia kila mtu kwa simu yangu na kutishia kuchukua boda yangu.",
+    recourse_btn: "Nionyeshe nifanye aje",
+    whatnext_title: "Vitu unaweza fanya sasa", wn_rights: "Jua haki zako",
+    wn_report: "Report huyu lender kwa CBK", wn_action: "Chukua hatua kuhusu shida",
+    computing: "Inakalmap…", finding: "Inatafuta haki zako…", reading: "Inasoma…",
+    source: "Chanzo", go_to: "Nenda",
+  },
+};
+const BCP = { en: "en", sw: "sw", sheng: "sw" };
+function t(key) { return (I18N[LANG] && I18N[LANG][key]) || I18N.en[key] || key; }
+
+/* Apply the current language to every marked element + the document lang attribute. */
+function applyLang() {
+  document.documentElement.lang = BCP[LANG] || "en";
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const k = el.getAttribute("data-i18n");
+    if (I18N[LANG] && I18N[LANG][k] != null) el.textContent = I18N[LANG][k];
+  });
+  document.querySelectorAll("[data-i18n-ph]").forEach((el) => {
+    const k = el.getAttribute("data-i18n-ph");
+    if (I18N[LANG] && I18N[LANG][k] != null) el.setAttribute("placeholder", I18N[LANG][k]);
+  });
+}
+
 /* ---------- language toggle ---------- */
 document.querySelectorAll(".lang-btn").forEach((b) => {
   b.addEventListener("click", () => {
     LANG = b.dataset.lang;
     document.querySelectorAll(".lang-btn").forEach((x) =>
       x.setAttribute("aria-pressed", String(x === b)));
+    applyLang();
+    // Re-render the rights library in the new language (it's fetched fresh per language).
+    RIGHTS_LOADED = false;
+    if (document.querySelector('.door-btn[data-panel="rights"]').getAttribute("aria-selected") === "true") {
+      loadRights();
+    }
   });
 });
 
@@ -138,11 +228,11 @@ function whatNextCivic(r) {
   el.className = "card-hard";
   el.style.marginTop = "var(--spacing-16)";
   el.style.background = "var(--color-chartreuse-highlight)";
-  el.innerHTML = `<p style="margin:0 0 8px;font-weight:600;">What you can do next</p>
+  el.innerHTML = `<p style="margin:0 0 8px;font-weight:600;">${t("whatnext_title")}</p>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn-primary" data-go="rights" style="padding:6px 16px;">Know your rights</button>
-      ${unlicensed ? `<button class="btn-primary" data-go="report" style="padding:6px 16px;">Report this lender to CBK</button>` : ""}
-      <button class="btn-primary" data-go="action" style="padding:6px 16px;">Take action on a problem</button>
+      <button class="btn-primary" data-go="rights" style="padding:6px 16px;">${t("wn_rights")}</button>
+      ${unlicensed ? `<button class="btn-primary" data-go="report" style="padding:6px 16px;">${t("wn_report")}</button>` : ""}
+      <button class="btn-primary" data-go="action" style="padding:6px 16px;">${t("wn_action")}</button>
     </div>`;
   el.querySelector("[data-go='rights']").addEventListener("click", () => selectDoor("rights"));
   const act = el.querySelector("[data-go='action']");
@@ -173,7 +263,7 @@ $("product").addEventListener("change", async (e) => {
   const id = e.target.value;
   $("confirm").innerHTML = "";
   if (!id) { $("result").innerHTML = ""; return; }
-  $("result").innerHTML = '<p style="font-family:var(--font-geist-mono);">Computing…</p>';
+  $("result").innerHTML = `<p style="font-family:var(--font-geist-mono);">${t("computing")}</p>`;
   renderResult(await (await fetch(`/api/evaluate/${id}`)).json());
 });
 
@@ -181,7 +271,7 @@ $("product").addEventListener("change", async (e) => {
 $("parse-btn").addEventListener("click", async () => {
   const text = $("sms").value.trim();
   if (!text) return;
-  $("confirm").innerHTML = '<p style="font-family:var(--font-geist-mono);">Reading…</p>';
+  $("confirm").innerHTML = `<p style="font-family:var(--font-geist-mono);">${t("reading")}</p>`;
   const p = await (await fetch("/api/parse", {
     method: "POST", body: new URLSearchParams({ text }),
   })).json();
@@ -203,7 +293,7 @@ $("parse-btn").addEventListener("click", async () => {
       term_days: Number($("f-term").value),
       repay_total: $("f-repay").value ? Number($("f-repay").value) : null,
     };
-    $("result").innerHTML = '<p style="font-family:var(--font-geist-mono);">Computing…</p>';
+    $("result").innerHTML = `<p style="font-family:var(--font-geist-mono);">${t("computing")}</p>`;
     renderResult(await (await fetch("/api/cost", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -215,7 +305,7 @@ $("parse-btn").addEventListener("click", async () => {
 $("recourse-btn").addEventListener("click", async () => {
   const text = $("problem").value.trim();
   if (!text) return;
-  $("recourse").innerHTML = '<p style="font-family:var(--font-geist-mono);">Finding your rights…</p>';
+  $("recourse").innerHTML = `<p style="font-family:var(--font-geist-mono);">${t("finding")}</p>`;
   try {
     const r = await (await fetch("/api/recourse", {
       method: "POST", headers: { "Content-Type": "application/json" },
@@ -273,7 +363,7 @@ async function loadRights() {
         ${r.condition ? `<p style="margin:var(--spacing-8) 0 0;font-size:var(--text-caption);color:var(--color-graphite);"><em>${r.condition}</em></p>` : ""}
         ${r.forum && r.forum.name ? `<p style="margin:var(--spacing-8) 0 0;"><strong>Where to go:</strong> ${r.forum.name}${r.forum.handles ? ` — ${r.forum.handles}` : ""}</p>` : ""}
         <p style="margin:var(--spacing-8) 0 0;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);">
-          Source: <a href="${r.citation}" target="_blank" rel="noopener">${r.citation}</a>${r.citation_date ? ` · ${r.citation_date}` : ""}
+          ${t("source")}: <a href="${r.citation}" target="_blank" rel="noopener">${r.citation}</a>${r.citation_date ? ` · ${r.citation_date}` : ""}
         </p>
       </details>`).join("") +
       `<p style="font-size:var(--text-caption);color:var(--color-graphite);">${data.disclaimer}${data.last_updated ? ` Last updated: ${data.last_updated}.` : ""}</p>`;
@@ -315,6 +405,7 @@ $("lender-btn").addEventListener("click", async () => {
 });
 
 /* ---------- init ---------- */
+applyLang();           // render UI in the current language (default en) + set <html lang>
 loadProducts();
 // Open the door named in the URL hash (from the landing page CTAs), else default to rights.
 (function initDoor() {
