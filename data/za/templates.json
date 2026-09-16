@@ -1,0 +1,37 @@
+{
+  "_meta": {
+    "country": "ZA",
+    "description": "Complaint/demand/dispute templates for South Africa. Legal basis, addressee, and framing are FIXED here (not AI-generated). The generator fills only the {{fact}} slots with the user's details. Redact by default. Not legal advice.",
+    "last_updated": "2026-09-16"
+  },
+  "templates": {
+    "popia_complaint": {
+      "title": "POPIA complaint (Information Regulator)",
+      "addressee": "The Information Regulator (South Africa)",
+      "legal_basis": "Protection of Personal Information Act 4 of 2013 (POPIA).",
+      "body": "To the Information Regulator,\n\nI wish to lodge a complaint against {{lender_name}} regarding the unlawful processing of my personal information in the course of debt collection.\n\nOn {{dates}}, {{lender_name}} {{what_happened}}. This included {{data_misused}}.\n\nUnder POPIA, this processing was carried out without a lawful basis and in a manner that is unfair and excessive. I request that the Regulator investigate and direct that this processing stop.\n\nCase reference (my record): {{case_ref}}\nContact: {{redacted_contact}}\n\nYours faithfully,\n{{redacted_name}}",
+      "not_advice": "This is a self-prepared complaint, not legal advice. Verify details and the current complaint form (Form 5) before filing."
+    },
+    "ncr_complaint": {
+      "title": "Complaint to the National Credit Regulator",
+      "addressee": "National Credit Regulator (NCR)",
+      "legal_basis": "National Credit Act 34 of 2005 (registration, reckless-credit and enforcement provisions).",
+      "body": "To the National Credit Regulator,\n\nI wish to complain about {{lender_name}} regarding its conduct as a credit provider.\n\n{{licence_note}}\n\nThe conduct complained of: {{what_happened}}, on {{dates}}.\n\nI request that the NCR review this provider's registration and conduct under the National Credit Act 34 of 2005.\n\nCase reference (my record): {{case_ref}}\n\nYours faithfully,\n{{redacted_name}}",
+      "not_advice": "This is a self-prepared complaint, not legal advice."
+    },
+    "bureau_dispute": {
+      "title": "Credit bureau listing dispute",
+      "addressee": "{{bureau}} (credit bureau)",
+      "legal_basis": "National Credit Act 34 of 2005 and POPIA (right to accurate credit information; right to dispute).",
+      "body": "To {{bureau}},\n\nRE: DISPUTE OF CREDIT LISTING — {{redacted_name}}, ID {{redacted_id}}\n\nI dispute the listing by {{lender_name}}. The listing is incorrect because {{reason}}.\n\nUnder the National Credit Act, I request that you investigate and correct or remove this listing. If unresolved, I will escalate to the National Credit Regulator.\n\nCase reference (my record): {{case_ref}}\n\nYours faithfully,\n{{redacted_name}}",
+      "not_advice": "This is a self-prepared dispute, not legal advice."
+    },
+    "small_claims_statement": {
+      "title": "Letter of demand / claim — Small Claims Court",
+      "addressee": "The Small Claims Court (via a letter of demand first)",
+      "legal_basis": "Small Claims Courts Act 61 of 1984. A letter of demand is required before lodging; you represent yourself (no advocate).",
+      "body": "LETTER OF DEMAND\n\nTo {{lender_name}},\n\nI, {{redacted_name}}, demand payment of R {{claim_amount}}.\n\nThe claim arises as follows: on {{dates}}, {{what_happened}}.\nThe amount is calculated as: {{claim_basis}}.\n\nUnless payment is made within 14 days of this letter, I will lodge a claim against you in the Small Claims Court, where I am entitled to appear in person without an attorney.\n\nEvidence I hold: {{evidence_list}}.\n\nCase reference (my record): {{case_ref}}\nContact: {{redacted_contact}}\n\nDated: ______________\n{{redacted_name}}",
+      "not_advice": "This is a self-prepared letter of demand, not legal advice. Confirm the current Small Claims Court monetary limit, your nearest court, and the required procedure before lodging. A letter of demand must be sent before you can lodge."
+    }
+  }
+}

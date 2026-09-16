@@ -1,0 +1,64 @@
+{
+  "_meta": {
+    "country": "ZA",
+    "description": "Scenario -> legal statement, condition, forum, citation. The recourse router reads the law from here; AI only classifies the scenario and phrases the output. No legal conclusion is AI-generated. Not legal advice. This is a demonstration pack (lighter than the Kenya pack) proving the model ports to South Africa by swapping data.",
+    "disclaimer": "This information is not legal advice. Recourse depends on the specific facts. Statements are conditional.",
+    "last_updated": "2026-09-16"
+  },
+  "scenarios": [
+    {
+      "key": "harassment_contacts",
+      "title": "A lender is harassing you or misusing your personal information",
+      "law_statement": "The Protection of Personal Information Act 4 of 2013 (POPIA) governs how your personal information may be processed. Misusing your data or contacts to harass or shame you can breach POPIA, which the Information Regulator enforces.",
+      "condition": "Applies where a lender processed your personal information without a lawful basis, or used it for abusive collection.",
+      "forum_key": "inforegulator",
+      "citation": "https://inforegulator.org.za/complaints/",
+      "citation_date": "POPIA, Act 4 of 2013; Information Regulator complaints (Form 5)"
+    },
+    {
+      "key": "repossession",
+      "title": "They are taking / threatening to take your financed asset",
+      "law_statement": "Under the National Credit Act 34 of 2005, a credit provider must follow lawful enforcement — including a section 129 default notice — before enforcing or repossessing. Repossession without following the Act's process can be challenged.",
+      "condition": "Your repossession MAY be unlawful IF no proper section 129 notice was served or the process was not followed. This depends on your agreement and the facts — verify before acting.",
+      "forum_key": "ncr",
+      "citation": "https://www1.saflii.org/za/legis/consol_act/nca34o2005171.pdf",
+      "citation_date": "National Credit Act 34 of 2005"
+    },
+    {
+      "key": "misleading_terms",
+      "title": "The lender misled you, hid the cost, or lent recklessly",
+      "law_statement": "The National Credit Act 34 of 2005 requires clear cost-of-credit disclosure and prohibits reckless credit granting (lending without proper affordability assessment). Reckless credit can be set aside or the debt re-arranged by a court or the National Consumer Tribunal.",
+      "condition": "Applies where cost/terms were not properly disclosed, or credit was granted without a proper affordability assessment.",
+      "forum_key": "ncr",
+      "citation": "https://www.saflii.org/za/journals/PER/2018/1.pdf",
+      "citation_date": "National Credit Act 34 of 2005 (reckless-credit provisions)"
+    },
+    {
+      "key": "unlicensed_chasing",
+      "title": "An unregistered lender is chasing you for repayment",
+      "law_statement": "Credit providers must be registered with the National Credit Regulator (NCR) under the National Credit Act. An unregistered provider operates unlawfully, and the enforceability of such credit is challengeable.",
+      "condition": "Applies IF the lender is not registered with the NCR. Confirm registration status first.",
+      "forum_key": "ncr",
+      "citation": "https://www.ncr.org.za/",
+      "citation_date": "National Credit Act 34 of 2005 (registration requirement)"
+    },
+    {
+      "key": "wrongful_crb",
+      "title": "You were wrongly listed by a credit bureau",
+      "law_statement": "Credit bureaus are regulated under the National Credit Act and POPIA. You have the right to dispute inaccurate credit information; the bureau must investigate, and unresolved disputes can be taken to the National Credit Regulator.",
+      "condition": "Applies where a listing is inaccurate, based on a disputed debt, or made without a proper basis.",
+      "forum_key": "credit_bureau",
+      "citation": "https://www.ncr.org.za/documents/GUIDELINES%20FOR%20THE%20SUBMISSION%20OF%20COMPLAINTS%20RELATING%20TO%20DISPUTED%20CONSUMER%20CREDIT%20INFORMATION%20(002)%20(002).pdf",
+      "citation_date": "National Credit Act; NCR credit-information dispute guidelines"
+    },
+    {
+      "key": "small_claims_recovery",
+      "title": "You want to recover money (a refund, an overpayment, or a small debt)",
+      "law_statement": "The Small Claims Court hears civil money claims up to a set limit (R20,000 at the time of writing) with no lawyer required — you represent yourself. It is a direct, low-cost route to recover money owed to you.",
+      "condition": "Applies where your claim is for money within the Small Claims Court limit. Confirm the current monetary limit and procedure with the court before filing.",
+      "forum_key": "small_claims",
+      "citation": "https://www.justice.gov.za/scc/scc.htm",
+      "citation_date": "Small Claims Courts Act 61 of 1984 (limit set by the Minister; verify current amount)"
+    }
+  ]
+}

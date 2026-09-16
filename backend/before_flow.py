@@ -6,7 +6,7 @@ from __future__ import annotations
 from decimal import Decimal
 
 from .cost_engine import CostBreakdown, LoanOffer, compute_cost
-from .data_pack import get_lender, get_product, load_pack
+from .data_pack import get_lender, get_product, licence_authority, load_pack
 
 SECURITY_RISK = {
     "device-lock": "Miss a payment and the device is locked remotely until you clear arrears.",
@@ -43,18 +43,18 @@ def _breakdown_dict(b: CostBreakdown) -> dict:
     }
 
 
-def _licence_view(lender: dict) -> dict:
-    licensed = lender.get("cbk_dcp_licensed")
+def _licence_view(country: str, lender: dict) -> dict:
+    la = licence_authority(country)
+    licensed = lender.get(la["field"])
     if licensed is True:
-        status, note = "licensed", "On CBK's licensed Digital Credit Providers list."
+        status = "licensed"
+        note = f"{la['registered_label']}. {lender['name']} {la['registered_note']}"
     elif licensed is False:
         status = "unlicensed"
-        note = ("Not on CBK's licensed DCP list. An unlicensed digital lender may not "
-                "be able to lawfully enforce repayment against you (Kenyan court, 2026).")
+        note = f"{lender['name']} {la['unregistered_note']}"
     else:
         status = "not-applicable"
-        note = (f"{lender['name']} is not a CBK Digital Credit Provider. "
-                f"{lender.get('regime', '')}")
+        note = f"{lender['name']}: {lender.get('regime', la['not_applicable_note'])}"
     return {
         "status": status,
         "note": note,
@@ -63,14 +63,15 @@ def _licence_view(lender: dict) -> dict:
 
 
 def cheaper_alternative(country: str, product: dict) -> dict | None:
-    """Find a cheaper LICENSED product in the same category (R5)."""
+    """Find a cheaper LICENSED/REGISTERED product in the same category (R5)."""
+    field = licence_authority(country)["field"]
     this_cost = compute_cost(_offer_from_product(product))
     best = None
     for p in load_pack(country)["products"]["products"]:
         if p["id"] == product["id"] or p["category"] != product["category"]:
             continue
         lender = get_lender(country, p["lender_id"]) or {}
-        if lender.get("cbk_dcp_licensed") is not True:
+        if lender.get(field) is not True:
             continue
         b = compute_cost(_offer_from_product(p))
         if b.apr_pct < this_cost.apr_pct and (best is None or b.apr_pct < best[1].apr_pct):
@@ -92,7 +93,7 @@ def evaluate_product(country: str, product_id: str) -> dict:
         "product": {"id": product["id"], "label": product["label"],
                     "category": product["category"], "lender": lender.get("name")},
         "cost": _breakdown_dict(cost),
-        "licence": _licence_view(lender),
+        "licence": _licence_view(country, lender),
         "at_risk": {
             "security_type": product.get("security_type", "none"),
             "note": product.get("security_note")

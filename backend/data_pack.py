@@ -84,33 +84,52 @@ def list_rights(country: str = "ke") -> dict:
     }
 
 
-def check_lender(country: str, name: str) -> dict:
-    """Look up a lender by (partial) name and return its CBK licence status.
+def licence_authority(country: str) -> dict:
+    """The pack-declared licensing authority config (makes licence checks country-agnostic).
 
-    Checks a public fact: is this lender on CBK's licensed Digital Credit Providers
-    register? Facts only — never an unsourced accusation.
+    Falls back to the Kenya CBK/DCP defaults if a pack doesn't declare one.
     """
-    name_l = (name or "").strip().lower()
-    if not name_l:
+    meta = load_pack(country)["lenders"].get("_meta", {})
+    la = meta.get("licence_authority")
+    if la:
+        return la
+    return {
+        "field": "cbk_dcp_licensed", "authority_short": "CBK",
+        "authority_name": "the Central Bank of Kenya (CBK)",
+        "register_name": "CBK licensed Digital Credit Providers register",
+        "registered_label": "Licensed by CBK", "unregistered_label": "NOT on CBK licensed list",
+        "registered_note": "is on CBK's licensed register.",
+        "unregistered_note": "is not on CBK's licensed register.",
+        "not_applicable_note": "is licensed under a different regime.",
+    }
+
+
+def check_lender(country: str, name: str) -> dict:
+    """Look up a lender by (partial) name and return its licence/registration status.
+
+    Checks a public fact against the pack-declared licensing authority (CBK in Kenya,
+    NCR in South Africa, etc). Facts only — never an unsourced accusation.
+    """
+    la = licence_authority(country)
+    field = la["field"]
+    if not (name or "").strip():
         return {"status": "unknown", "label": "Enter a lender name",
-                "note": "Type a lender's name to check the CBK register."}
+                "note": f"Type a lender's name to check the {la['register_name']}."}
+    name_l = name.strip().lower()
     for ld in load_pack(country)["lenders"]["lenders"]:
         if name_l in ld["name"].lower():
-            lic = ld.get("cbk_dcp_licensed")
+            lic = ld.get(field)
             if lic is True:
-                return {"status": "licensed", "label": "Licensed by CBK",
-                        "matched": ld["name"],
-                        "note": f"{ld['name']} is on CBK's licensed Digital Credit "
-                                f"Providers list (verify current status at cbk.go.ke)."}
+                return {"status": "licensed", "label": la["registered_label"],
+                        "matched": ld["name"], "authority": la["authority_short"],
+                        "note": f"{ld['name']} {la['registered_note']}"}
             if lic is False:
-                return {"status": "unlicensed", "label": "NOT on CBK licensed list",
-                        "matched": ld["name"],
-                        "note": f"{ld['name']} is not on CBK's licensed DCP list. Under a "
-                                f"2026 court ruling, an unlicensed digital lender may not "
-                                f"be able to lawfully enforce repayment."}
-            return {"status": "not-applicable", "label": "Not a CBK digital lender",
-                    "matched": ld["name"],
-                    "note": f"{ld['name']}: {ld.get('regime', 'licensed under a different regime')}"}
+                return {"status": "unlicensed", "label": la["unregistered_label"],
+                        "matched": ld["name"], "authority": la["authority_short"],
+                        "note": f"{ld['name']} {la['unregistered_note']}"}
+            return {"status": "not-applicable", "label": f"Not a {la['authority_short']}-listed lender",
+                    "matched": ld["name"], "authority": la["authority_short"],
+                    "note": f"{ld['name']}: {ld.get('regime', la['not_applicable_note'])}"}
     return {"status": "unknown", "label": "Not in Deni's list",
-            "note": "This lender isn't in Deni's dataset. Check CBK's licensed DCP "
-                    "register directly at cbk.go.ke to confirm."}
+            "note": f"This lender isn't in Deni's dataset. Check the {la['register_name']} "
+                    f"directly to confirm."}

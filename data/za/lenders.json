@@ -1,0 +1,62 @@
+{
+  "_meta": {
+    "country": "ZA",
+    "description": "Lender registry: licence/registration status + regulator findings. Each fact carries a source and date. Facts only — no unsourced accusations. This is a demonstration pack showing that Deni's Kenya model ports to another country by swapping data; it is lighter than the Kenya pack and figures are illustrative.",
+    "ncr_note": "In South Africa, credit providers must be registered with the National Credit Regulator (NCR) under the National Credit Act 34 of 2005. This is the analogue of Kenya's CBK licensing.",
+    "licence_authority": {
+      "field": "ncr_registered",
+      "authority_short": "NCR",
+      "authority_name": "the National Credit Regulator (NCR)",
+      "register_name": "NCR register of credit providers",
+      "registered_label": "Registered with the NCR",
+      "unregistered_label": "NOT registered with the NCR",
+      "registered_note": "is registered with the National Credit Regulator under the National Credit Act (verify current status at ncr.org.za).",
+      "unregistered_note": "is not registered with the NCR. Providing credit without NCR registration is unlawful, and such credit's enforceability is challengeable.",
+      "not_applicable_note": "is not an NCR-registered credit provider under this regime."
+    },
+    "last_updated": "2026-09-16"
+  },
+  "lenders": [
+    {
+      "id": "sa_bank_personal",
+      "name": "Registered bank personal loan (representative)",
+      "type": "app-cash",
+      "regime": "Registered credit provider under the National Credit Act 34 of 2005 (NCR-registered).",
+      "ncr_registered": true,
+      "security_model": "none",
+      "findings": []
+    },
+    {
+      "id": "sa_unregistered_demo",
+      "name": "QuickRand (unregistered lender — demo)",
+      "type": "app-cash",
+      "regime": "Illustrative lender NOT registered with the NCR. Providing credit without NCR registration is unlawful under the National Credit Act.",
+      "ncr_registered": false,
+      "security_model": "none",
+      "findings": [
+        {
+          "body": "National Credit Act 34 of 2005",
+          "summary": "The Act prohibits reckless credit granting and requires credit providers to be registered; an unregistered provider operates unlawfully.",
+          "citation": "https://www.parliament.gov.za/storage/app/media/Acts/2005/Act_34_of_2005_National_Credit_Act.pdf",
+          "date": "2005"
+        }
+      ]
+    },
+    {
+      "id": "sa_vehicle_finance",
+      "name": "Vehicle asset finance provider (representative)",
+      "type": "moto-car",
+      "regime": "NCR-registered credit provider; vehicle finance secured on the vehicle.",
+      "ncr_registered": true,
+      "security_model": "repossession",
+      "findings": [
+        {
+          "body": "National Credit Act 34 of 2005",
+          "summary": "Repossession and enforcement must follow the NCA process (notice under s.129, and lawful procedure); reckless credit is prohibited.",
+          "citation": "https://www1.saflii.org/za/legis/consol_act/nca34o2005171.pdf",
+          "date": "2005"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "_meta": {
+    "country": "ZA",
+    "description": "Modelled products for the demo. Figures are illustrative of common South African consumer-credit structures; exact terms change, so each product names its data date. The cost engine computes markup/APR from these inputs — no figure is asserted without its inputs shown.",
+    "note": "amounts in ZAR. principal = value received today (cash received, or cash price of the asset).",
+    "last_updated": "2026-09-16"
+  },
+  "products": [
+    {
+      "id": "za-shortterm-loan",
+      "lender_id": "sa_unregistered_demo",
+      "category": "app-cash",
+      "label": "QuickRand 30-day loan (unregistered — demo)",
+      "principal": 1000,
+      "cash_price": null,
+      "deposit": 0,
+      "instalment_amount": 0,
+      "instalment_frequency": "lump",
+      "num_instalments": 0,
+      "repay_total": 1150,
+      "term_days": 30,
+      "extra_fees": 0,
+      "security_type": "none",
+      "security_note": "No asset security. Providing credit without NCR registration is unlawful; an unregistered provider's enforcement is challengeable.",
+      "sources": [
+        "https://www.parliament.gov.za/storage/app/media/Acts/2005/Act_34_of_2005_National_Credit_Act.pdf"
+      ],
+      "figures_note": "Illustrative unregistered-lender offer for the demo."
+    },
+    {
+      "id": "za-bank-loan",
+      "lender_id": "sa_bank_personal",
+      "category": "app-cash",
+      "label": "Registered bank 30-day loan (registered alternative)",
+      "principal": 1000,
+      "cash_price": null,
+      "deposit": 0,
+      "instalment_amount": 0,
+      "instalment_frequency": "lump",
+      "num_instalments": 0,
+      "repay_total": 1100,
+      "term_days": 30,
+      "extra_fees": 0,
+      "security_type": "none",
+      "security_note": "NCR-registered credit provider; shown as a cheaper registered alternative.",
+      "sources": [
+        "https://www.ncr.org.za/"
+      ],
+      "figures_note": "Illustrative registered-lender offer for comparison."
+    },
+    {
+      "id": "za-vehicle-finance",
+      "lender_id": "sa_vehicle_finance",
+      "category": "moto-car",
+      "label": "Vehicle asset finance (representative)",
+      "principal": 180000,
+      "cash_price": 180000,
+      "deposit": 20000,
+      "instalment_amount": 4800,
+      "instalment_frequency": "monthly",
+      "num_instalments": 60,
+      "term_days": 1825,
+      "extra_fees": 0,
+      "security_type": "repossession",
+      "security_note": "Secured on the vehicle. Enforcement must follow the National Credit Act (s.129 notice and lawful process); reckless credit is prohibited.",
+      "sources": [
+        "https://www1.saflii.org/za/legis/consol_act/nca34o2005171.pdf"
+      ],
+      "figures_note": "Representative structure for the demo; verify current pricing at demo time."
+    }
+  ]
+}

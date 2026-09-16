@@ -2,6 +2,7 @@
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Number(n).toLocaleString("en-KE", { maximumFractionDigits: 0 });
 let LANG = "en";
+let COUNTRY = "ke";
 
 /* ---------- UI string dictionary (real interface translation, en/sw/sheng) ----------
    The whole interface translates on toggle — not just the AI explanation — so a
@@ -254,7 +255,7 @@ function whatNextCivic(r) {
 async function loadProducts() {
   const sel = $("product");
   try {
-    const { products } = await (await fetch("/api/products")).json();
+    const { products } = await (await fetch("/api/products?country=" + COUNTRY)).json();
     sel.innerHTML = '<option value="">Choose a loan…</option>' +
       products.map((p) => `<option value="${p.id}">${p.label}</option>`).join("");
   } catch (_) { sel.innerHTML = '<option value="">Could not load</option>'; }
@@ -264,7 +265,7 @@ $("product").addEventListener("change", async (e) => {
   $("confirm").innerHTML = "";
   if (!id) { $("result").innerHTML = ""; return; }
   $("result").innerHTML = `<p style="font-family:var(--font-geist-mono);">${t("computing")}</p>`;
-  renderResult(await (await fetch(`/api/evaluate/${id}`)).json());
+  renderResult(await (await fetch(`/api/evaluate/${id}?country=${COUNTRY}`)).json());
 });
 
 /* ---------- before: paste an SMS -> parse -> confirm -> compute ---------- */
@@ -309,7 +310,7 @@ $("recourse-btn").addEventListener("click", async () => {
   try {
     const r = await (await fetch("/api/recourse", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text, lang: LANG }),
+      body: JSON.stringify({ text, lang: LANG, country: COUNTRY }),
     })).json();
     renderRecourse(r);
   } catch (_) { $("recourse").innerHTML = "<p>Could not process that. Try rephrasing.</p>"; }
@@ -355,7 +356,7 @@ async function loadRights() {
   if (RIGHTS_LOADED) return;
   const box = $("rights-list");
   try {
-    const data = await (await fetch("/api/rights")).json();
+    const data = await (await fetch("/api/rights?country=" + COUNTRY)).json();
     box.innerHTML = data.rights.map((r) => `
       <details class="card-hard" style="margin-bottom:var(--spacing-16);">
         <summary style="cursor:pointer;font-weight:600;">${r.title}</summary>
@@ -380,7 +381,7 @@ $("lender-btn").addEventListener("click", async () => {
   const box = $("lender-result");
   box.innerHTML = '<p style="font-family:var(--font-geist-mono);">Checking CBK register…</p>';
   try {
-    const r = await (await fetch("/api/check-lender?name=" + encodeURIComponent(name))).json();
+    const r = await (await fetch("/api/check-lender?country=" + COUNTRY + "&name=" + encodeURIComponent(name))).json();
     const map = {
       licensed: ["var(--color-chartreuse-highlight)", "var(--color-carbon-black)"],
       unlicensed: ["var(--color-signal-orange)", "var(--color-paper-white)"],
@@ -402,6 +403,20 @@ $("lender-btn").addEventListener("click", async () => {
       $("recourse-btn").click();
     });
   } catch (_) { box.innerHTML = "<p>Could not check that lender. Try again.</p>"; }
+});
+
+/* ---------- country selector (scalability: swap the data pack) ---------- */
+$("country").addEventListener("change", (e) => {
+  COUNTRY = e.target.value;
+  // Reload the data-driven surfaces for the new country.
+  loadProducts();
+  RIGHTS_LOADED = false;
+  if (document.querySelector('.door-btn[data-panel="rights"]').getAttribute("aria-selected") === "true") {
+    loadRights();
+  }
+  // Clear stale results from the previous country.
+  $("result").innerHTML = ""; $("confirm").innerHTML = "";
+  $("lender-result").innerHTML = ""; $("recourse").innerHTML = "";
 });
 
 /* ---------- init ---------- */

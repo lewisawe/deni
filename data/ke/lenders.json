@@ -3,6 +3,17 @@
     "country": "KE",
     "description": "Lender registry: licence status + regulator/court findings. Each fact carries a source and date. Facts only — no unsourced accusations.",
     "cbk_dcp_list_note": "Licence status reflects CBK's published Digital Credit Providers list. DCP licensing applies to app-based digital lenders; asset financiers and microfinance banks are licensed under different regimes (noted per lender).",
+    "licence_authority": {
+      "field": "cbk_dcp_licensed",
+      "authority_short": "CBK",
+      "authority_name": "the Central Bank of Kenya (CBK)",
+      "register_name": "CBK licensed Digital Credit Providers register",
+      "registered_label": "Licensed by CBK",
+      "unregistered_label": "NOT on CBK licensed list",
+      "registered_note": "is on CBK's licensed Digital Credit Providers list (verify current status at cbk.go.ke).",
+      "unregistered_note": "is not on CBK's licensed DCP list. Under a 2026 court ruling, an unlicensed digital lender may not be able to lawfully enforce repayment.",
+      "not_applicable_note": "is not a CBK Digital Credit Provider under this regime."
+    },
     "last_updated": "2026-09-14"
   },
   "lenders": [

@@ -115,12 +115,13 @@ def ai_status() -> dict:
 class RecourseIn(BaseModel):
     text: str
     lang: str = "en"
+    country: str = "ke"
 
 
 @app.post("/api/recourse")
 def recourse(payload: RecourseIn) -> dict:
     """DURING/AFTER: classify a problem -> law + forum + prepared complaint (R6,R13)."""
-    return recourse_mod.recourse(payload.text, payload.lang)
+    return recourse_mod.recourse(payload.text, payload.lang, payload.country)
 
 
 class ReceiptIn(BaseModel):

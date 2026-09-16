@@ -1,0 +1,45 @@
+{
+  "_meta": {
+    "country": "ZA",
+    "description": "Public bodies Deni routes citizens to in South Africa. Each is a real institution with a documented mandate. Verify current contact details at demo/use time.",
+    "last_updated": "2026-09-16"
+  },
+  "forums": [
+    {
+      "key": "inforegulator",
+      "name": "Information Regulator (South Africa)",
+      "handles": "Misuse of personal information, abusive data-driven collection, POPIA breaches.",
+      "channel": "Complaint to the Information Regulator (Form 5) via inforegulator.org.za or its online portal.",
+      "what_to_include": ["Your name and contact", "Lender name", "What personal information was used and how (screenshots of messages)", "Dates and times", "What you want stopped"],
+      "template_id": "popia_complaint",
+      "source": "https://inforegulator.org.za/complaints/"
+    },
+    {
+      "key": "ncr",
+      "name": "National Credit Regulator (NCR)",
+      "handles": "Credit-provider registration and conduct, reckless credit, enforcement/repossession under the National Credit Act, unregistered lenders.",
+      "channel": "Complaint to the NCR (ncr.org.za).",
+      "what_to_include": ["Lender name", "Whether the lender is NCR-registered", "The conduct (cost disclosure, reckless credit, enforcement)", "Your credit agreement", "Evidence"],
+      "template_id": "ncr_complaint",
+      "source": "https://www.ncr.org.za/"
+    },
+    {
+      "key": "credit_bureau",
+      "name": "Credit bureau (TransUnion / Experian / others) via the NCR",
+      "handles": "Disputing inaccurate credit information.",
+      "channel": "Dispute directly with the bureau; if unresolved, escalate to the NCR under its credit-information dispute guidelines.",
+      "what_to_include": ["Your name and ID", "The lender and listing", "Why it is wrong (paid / disputed / unregistered lender)", "Evidence"],
+      "template_id": "bureau_dispute",
+      "source": "https://www.ncr.org.za/documents/GUIDELINES%20FOR%20THE%20SUBMISSION%20OF%20COMPLAINTS%20RELATING%20TO%20DISPUTED%20CONSUMER%20CREDIT%20INFORMATION%20(002)%20(002).pdf"
+    },
+    {
+      "key": "small_claims",
+      "name": "Small Claims Court (South Africa)",
+      "handles": "Civil money claims up to the Small Claims Court limit — refunds, overpayments, small debts. You represent yourself; no lawyer.",
+      "channel": "Lodge your claim at a Small Claims Court after sending a letter of demand. No advocate is used; a Commissioner hears the matter.",
+      "what_to_include": ["Your name and contact", "The other party's name and address", "The amount claimed and how you calculated it", "What happened and the dates", "Evidence (agreement, payment records, messages)", "Proof you sent a letter of demand"],
+      "template_id": "small_claims_statement",
+      "source": "https://www.justice.gov.za/scc/scc.htm"
+    }
+  ]
+}
