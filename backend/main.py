@@ -166,13 +166,26 @@ async def ussd_callback(text: str = Form(""), sessionId: str = Form(""),
 class WhatsAppIn(BaseModel):
     sender: str
     message: str
+    country: str = "ke"
 
 
 @app.post("/webhook/whatsapp")
 def whatsapp_webhook(payload: WhatsAppIn) -> dict:
-    """WhatsApp inbound webhook (R8), same menu engine as USSD, turn-based.
-    A provider (AT WhatsApp / Meta Cloud API / Twilio) would POST here; we reply."""
-    return {"reply": whatsapp.handle_message(payload.sender, payload.message)}
+    """WhatsApp inbound webhook (JSON form, used by tests and generic providers)."""
+    return {"reply": whatsapp.handle_message(payload.sender, payload.message, payload.country)}
+
+
+@app.post("/webhook/twilio", response_class=PlainTextResponse)
+async def twilio_whatsapp(From: str = Form(""), Body: str = Form(""),
+                          country: str = "ke") -> str:
+    """Twilio WhatsApp sandbox webhook: form-encoded From/Body in, TwiML XML out.
+
+    Point the Twilio sandbox 'when a message comes in' webhook at this URL. Twilio
+    delivers the reply we return in the <Message> element back to the user's WhatsApp.
+    """
+    reply = whatsapp.handle_message(From or "unknown", Body or "", country)
+    safe = (reply.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+    return f'<?xml version="1.0" encoding="UTF-8"?><Response><Message>{safe}</Message></Response>'
 
 
 # Serve the SPA. Mounted last so API routes take precedence.

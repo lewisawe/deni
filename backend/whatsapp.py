@@ -1,48 +1,157 @@
-"""WhatsApp channel (Deni R8): same idea as USSD.
+"""WhatsApp channel (Deni R8): a richer conversational surface than USSD.
 
-A WhatsApp provider (Africa's Talking WhatsApp, Meta Cloud API, or Twilio) POSTs each
-inbound message to a webhook; we reply with text. WhatsApp is turn-based (no persistent
-USSD session), so we keep a tiny per-sender state and feed the SAME stateless USSD menu
-engine by reconstructing the accumulated 'text' path. One engine, two channels.
+A provider (Twilio, Meta Cloud API, or Africa's Talking WhatsApp) POSTs each inbound
+message to a webhook; we reply with text. Unlike USSD (menu-only, ~182 chars), WhatsApp
+allows free text and long replies, so this engine does more than the USSD menu:
+
+  - a numbered menu for structured navigation (shared idea with USSD);
+  - "paste a loan": if the message looks like a loan offer, parse it and reply with the
+    true cost + licence view;
+  - "describe a problem": if the message describes harassment/repossession/etc., reply
+    with the law + the public body + the prepared complaint text.
 
 HONESTY: going live needs an approved WhatsApp Business number (provider + Meta
-verification), not obtainable in the sprint. This webhook is real and works against a
-simulated provider POST, the same way USSD is demoed on the Africa's Talking simulator.
+verification). This webhook is real and works against a provider's SANDBOX (e.g. the
+Twilio WhatsApp sandbox) exactly as it would in production.
 """
 from __future__ import annotations
 
-from . import ussd
+import re
+from decimal import Decimal
 
-# sender -> list of accumulated menu choices (in-memory; fine for demo, no PII stored long-term)
-_SESSIONS: dict[str, list[str]] = {}
+from . import recourse as recourse_mod
+from . import ussd
+from .cost_engine import LoanOffer, compute_cost
+from .data_pack import currency, licence_authority
+
+# sender -> conversational state (in-memory; fine for a demo, no long-term PII).
+_SESSIONS: dict[str, dict] = {}
 _RESET_WORDS = {"hi", "hello", "menu", "start", "deni", "restart", "0"}
 
+_MENU = (
+    "*Deni*: know your rights as a borrower.\n\n"
+    "Reply with:\n"
+    "1. Check a loan's true cost (paste the lender's SMS)\n"
+    "2. Check if a lender is licensed (type its name)\n"
+    "3. Know your rights / take action (describe your problem)\n\n"
+    "Or just paste a loan SMS, or describe what's happening, any time."
+)
 
-def handle_message(sender: str, message: str) -> str:
+
+def handle_message(sender: str, message: str, country: str = "ke") -> str:
     """Handle one inbound WhatsApp message; return the reply text."""
     msg = (message or "").strip()
     low = msg.lower()
+    st = _SESSIONS.setdefault(sender, {"mode": None})
 
-    # greeting / reset -> fresh menu
-    if low in _RESET_WORDS or sender not in _SESSIONS:
-        _SESSIONS[sender] = []
-        return _to_whatsapp(ussd.handle(""))
+    if low in _RESET_WORDS:
+        _SESSIONS[sender] = {"mode": None}
+        return _MENU
 
-    path = _SESSIONS[sender]
-    path.append(msg)
-    reply = ussd.handle("*".join(path))
+    # Explicit menu choices set a mode; otherwise we infer intent from the text.
+    if msg == "1":
+        st["mode"] = "cost"
+        return "Paste the loan SMS the lender sent you (or type: amount, repay, days).\nExample: 1000, 1150, 30"
+    if msg == "2":
+        st["mode"] = "lender"
+        return f"Type the lender's name ({licence_authority(country)['examples']})."
+    if msg == "3":
+        st["mode"] = "rights"
+        return "Describe what's happening (e.g. 'they are calling my contacts', 'they took my bike', 'I want a refund')."
 
-    # If the engine ended the session (END), reset so the next message starts over.
-    if reply.startswith("END"):
-        _SESSIONS[sender] = []
-    return _to_whatsapp(reply)
+    # Mode-directed handling.
+    if st.get("mode") == "lender":
+        st["mode"] = None
+        return _lender_reply(country, msg)
+    if st.get("mode") == "rights":
+        st["mode"] = None
+        return _recourse_reply(country, msg)
+    if st.get("mode") == "cost":
+        st["mode"] = None
+        return _cost_reply(country, msg)
+
+    # No mode: infer intent from the message itself.
+    if _looks_like_loan(msg):
+        return _cost_reply(country, msg)
+    if _looks_like_problem(low):
+        return _recourse_reply(country, msg)
+
+    # Fallback: show the menu.
+    return _MENU
 
 
-def _to_whatsapp(ussd_reply: str) -> str:
-    """Turn a USSD CON/END reply into a natural WhatsApp message."""
-    body = ussd_reply[3:].strip() if ussd_reply[:3] in ("CON", "END") else ussd_reply
-    if ussd_reply.startswith("CON"):
-        body += "\n\n(Reply with a number. Send 'menu' to restart.)"
+# ---------- intent detection ----------
+_PROBLEM_WORDS = ("harass", "calling", "contact", "shame", "threaten", "repossess",
+                  "took my", "take my", "seize", "bike", "boda", "crb", "blacklist",
+                  "listed", "refund", "owe me", "overpaid", "mislead", "unlicensed")
+
+
+def _looks_like_loan(msg: str) -> bool:
+    # Two or more numbers present suggests a loan offer (amount/repay/term).
+    nums = re.findall(r"\d[\d,]*", msg)
+    return len(nums) >= 2
+
+
+def _looks_like_problem(low: str) -> bool:
+    return any(w in low for w in _PROBLEM_WORDS)
+
+
+# ---------- replies ----------
+def _nums(msg: str) -> list[int]:
+    return [int(n.replace(",", "")) for n in re.findall(r"\d[\d,]*", msg)]
+
+
+def _cost_reply(country: str, msg: str) -> str:
+    """Parse a pasted loan (numeric-first; AI parse if available) and reply with cost."""
+    nums = _nums(msg)
+    cur = currency(country)["symbol"]
+    # Simple heuristic: "borrow X repay Y in Z days" -> principal, repay_total, term.
+    if len(nums) >= 3:
+        principal, repay, days = nums[0], nums[1], nums[2]
+    elif len(nums) == 2:
+        principal, repay, days = nums[0], nums[1], 30
     else:
-        body += "\n\nSend 'menu' to check another loan."
-    return body
+        return ("I couldn't read the numbers. Send it as: amount, repay, days.\n"
+                "Example: 1000, 1150, 30")
+    try:
+        b = compute_cost(LoanOffer(principal=Decimal(principal), term_days=int(days),
+                                   repay_total=Decimal(repay)))
+    except Exception:  # noqa: BLE001
+        return "Those numbers didn't compute. Send: amount, repay, days (e.g. 1000, 1150, 30)."
+    return (
+        f"*True cost*\n"
+        f"You pay {cur} {b.total_paid} for {cur} {b.principal}.\n"
+        f"That's {b.markup_pct}% more. *{b.apr_pct}% APR*.\n\n"
+        f"{b.steps[-1]}\n\n"
+        f"Reply 2 to check if the lender is licensed, or 3 to know your rights. "
+        f"Not financial or legal advice."
+    )
+
+
+def _lender_reply(country: str, name: str) -> str:
+    from .data_pack import check_lender
+    r = check_lender(country, name)
+    lines = [f"*{r['label']}*", r.get("note", "")]
+    for f in (r.get("findings") or [])[:2]:
+        lines.append(f"\n• {f.get('body','')} ({f.get('date','')}): {f.get('summary','')}")
+    lines.append("\nReply 3 to take action, or 'menu'. Facts only, each sourced.")
+    return "\n".join(x for x in lines if x)
+
+
+def _recourse_reply(country: str, text: str) -> str:
+    r = recourse_mod.recourse(text, "en", country)
+    if not r.get("matched"):
+        return (r.get("message") or "Couldn't match that. Describe what the lender is "
+                "doing (e.g. calling your contacts, taking your bike, wrong CRB listing).")
+    forums = r.get("forums") or ([{"name": r["forum"]["name"]}] if r.get("forum") else [])
+    forum_names = ", ".join(f["name"] for f in forums)
+    out = [
+        f"*{r.get('title','')}*",
+        r.get("law_statement", ""),
+        f"\n_{r.get('condition','')}_" if r.get("condition") else "",
+        f"\n*Where to go:* {forum_names}" if forum_names else "",
+    ]
+    if r.get("complaint"):
+        out.append(f"\n*Your prepared complaint* (case {r.get('case_ref','')}):\n\n{r['complaint']}")
+    out.append("\nEdit the details in [brackets] and send it to the body above. Not legal advice.")
+    return "\n".join(x for x in out if x)
