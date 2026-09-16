@@ -13,7 +13,8 @@
       "condition": "Applies where a lender processed your personal information without a lawful basis, or used it for abusive collection.",
       "forum_key": "inforegulator",
       "citation": "https://inforegulator.org.za/complaints/",
-      "citation_date": "POPIA, Act 4 of 2013; Information Regulator complaints (Form 5)"
+      "citation_date": "POPIA, Act 4 of 2013; Information Regulator complaints (Form 5)",
+      "also": ["ncr"]
     },
     {
       "key": "repossession",

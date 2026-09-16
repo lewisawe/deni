@@ -89,6 +89,27 @@ def recourse(text: str, lang: str = "en", country: str = "ke") -> dict:
     forum = get_forum(country, scenario.get("forum_key", "")) or {}
     case_ref = "DENI-" + uuid.uuid4().hex[:8].upper()
     complaint = _fill_template(country, forum.get("template_id", ""), facts, case_ref)
+
+    # All applicable forums: the primary, plus any 'also' bodies the scenario lists.
+    # Harassment, for example, can breach both data-protection (ODPC) and lender
+    # conduct (CBK): a single problem often has more than one place to act.
+    def _forum_view(fk: str, primary: bool) -> dict | None:
+        f = get_forum(country, fk)
+        if not f:
+            return None
+        return {"key": fk, "name": f.get("name"), "handles": f.get("handles"),
+                "channel": f.get("channel"),
+                "what_to_include": f.get("what_to_include", []), "primary": primary}
+    forums = []
+    if scenario.get("forum_key"):
+        pv = _forum_view(scenario["forum_key"], True)
+        if pv:
+            forums.append(pv)
+    for fk in scenario.get("also", []):
+        av = _forum_view(fk, False)
+        if av:
+            forums.append(av)
+
     return {
         "matched": True,
         "scenario": key,
@@ -99,6 +120,7 @@ def recourse(text: str, lang: str = "en", country: str = "ke") -> dict:
         "citation_date": scenario.get("citation_date"),
         "forum": {"name": forum.get("name"), "channel": forum.get("channel"),
                   "what_to_include": forum.get("what_to_include", [])},
+        "forums": forums,
         "complaint": complaint,
         "case_ref": case_ref,
         "disclaimer": "This is information and a self-prepared document, not legal advice. "
