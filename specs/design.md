@@ -96,7 +96,7 @@ Per-country pack (Kenya first), each file isolatable for R12:
 
 ## AI integration (AWS Bedrock): R14
 
-- Access: profile `simi-ops`, region `us-east-1` (verified working 14 Sep).
+- Access: set `AWS_PROFILE` and `AWS_REGION` in your environment; region `us-east-1` (verified working 14 Sep).
 - Converse API. Model IDs (verified):
   - Parse/explain/translate → `us.amazon.nova-2-lite-v1:0` (fallback bare
     `amazon.nova-lite-v1:0`).

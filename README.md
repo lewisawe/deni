@@ -60,7 +60,7 @@ bash run.sh
 ```
 
 `run.sh` creates a venv, installs deps, and starts the server. AI features use AWS
-Bedrock. Set `AWS_PROFILE` and `AWS_REGION` (defaults: `simi-ops`, `us-east-1`). If
+Bedrock. Set `AWS_PROFILE` and `AWS_REGION` (default region `us-east-1`). If
 Bedrock is unreachable, the deterministic core (cost + licence + recourse via keyword
 fallback) still works.
 

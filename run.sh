@@ -14,7 +14,9 @@ source .venv/bin/activate
 echo "Installing dependencies..."
 pip install -q -r requirements.txt
 
-export AWS_PROFILE="${AWS_PROFILE:-simi-ops}"
+# AI features use AWS Bedrock. Set AWS_PROFILE / AWS_REGION in your environment
+# (or a .env) to enable them. If unset, the deterministic core still runs and the
+# AI parse/explain features degrade gracefully.
 export AWS_REGION="${AWS_REGION:-us-east-1}"
 
 echo "Starting Deni on http://127.0.0.1:8000"
