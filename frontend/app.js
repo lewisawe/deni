@@ -20,7 +20,7 @@ const I18N = {
     lender_label: "Is this lender licensed/registered with {authority}?",
     lender_ph: "e.g. Tala, Mogo, QuickCash", lender_btn: "Check the register",
     cost_intro_pre: "See what a loan will ", cost_intro_hl: "really", cost_intro_post: " cost. The true price behind the daily/weekly framing.",
-    pick_loan: "Pick a loan", or_paste: "or paste the SMS the lender sent you",
+    pick_loan: "Pick a loan", or_paste: "or paste the SMS the lender sent you", or_snap: "or upload a screenshot of the SMS",
     sms_ph: "e.g. Congrats! You qualify for KES 1,000. Repay KES 1,150 in 30 days.",
     parse_btn: "Read my offer",
     action_title: "Something already went wrong? Take action.",
@@ -55,7 +55,7 @@ const I18N = {
     lender_label: "Je, mkopeshaji huyu amesajiliwa na {authority}?",
     lender_ph: "mf. Tala, Mogo, QuickCash", lender_btn: "Angalia rejista",
     cost_intro_pre: "Ona mkopo utakugharimu ", cost_intro_hl: "kiasi gani hasa", cost_intro_post: ". Bei halisi nyuma ya maelezo ya kila siku/wiki.",
-    pick_loan: "Chagua mkopo", or_paste: "au bandika SMS uliyotumiwa na mkopeshaji",
+    pick_loan: "Chagua mkopo", or_paste: "au bandika SMS uliyotumiwa na mkopeshaji", or_snap: "au pakia picha ya SMS",
     sms_ph: "mf. Hongera! Umestahili KES 1,000. Lipa KES 1,150 katika siku 30.",
     parse_btn: "Soma ofa yangu",
     action_title: "Kuna kilichoharibika tayari? Chukua hatua.",
@@ -91,7 +91,7 @@ const I18N = {
     lender_label: "Huyu lender ako na leseni/amesajiliwa na {authority}?",
     lender_ph: "mf. Tala, Mogo, QuickCash", lender_btn: "Cheki rejista",
     cost_intro_pre: "Ona mkopo itakugharimu ", cost_intro_hl: "pesa ngapi kwa ukweli", cost_intro_post: ". Bei halisi nyuma ya story ya kila siku/wiki.",
-    pick_loan: "Chagua mkopo", or_paste: "ama paste SMS ile lender alikutumia",
+    pick_loan: "Chagua mkopo", or_paste: "ama paste SMS ile lender alikutumia", or_snap: "ama upload screenshot ya SMS",
     sms_ph: "mf. Congrats! Umequalify KES 1,000. Lipa KES 1,150 kwa siku 30.",
     parse_btn: "Soma offer yangu",
     action_title: "Kuna kitu tayari imeharibika? Chukua hatua.",
@@ -429,14 +429,17 @@ $("product").addEventListener("change", async (e) => {
   renderResult(await (await fetch(`/api/evaluate/${id}?country=${COUNTRY}`)).json()); reveal("result");
 });
 
-/* ---------- before: paste an SMS -> parse -> confirm -> compute ---------- */
+/* ---------- before: paste an SMS or upload a screenshot -> parse -> confirm -> compute ---------- */
 $("parse-btn").addEventListener("click", async () => {
   const text = $("sms").value.trim();
-  if (!text) return;
+  const file = $("sms-image") && $("sms-image").files && $("sms-image").files[0];
+  if (!text && !file) return;
   $("confirm").innerHTML = spinner(t("reading"));
-  const p = await (await fetch("/api/parse", {
-    method: "POST", body: new URLSearchParams({ text }),
-  })).json();
+  // Use multipart FormData so the backend's /api/parse can read text and/or image.
+  const fd = new FormData();
+  if (text) fd.append("text", text);
+  if (file) fd.append("image", file);
+  const p = await (await fetch("/api/parse", { method: "POST", body: fd })).json();
   if (!p.available) { $("confirm").innerHTML = `<p>${p.reason}</p>`; return; }
   const f = p.fields;
   $("confirm").innerHTML = `

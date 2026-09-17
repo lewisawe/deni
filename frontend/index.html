@@ -87,6 +87,9 @@
       <p data-i18n="or_paste" style="text-align:center;font-family:var(--font-geist-mono);font-size:var(--text-caption);margin:var(--spacing-16) 0;">or paste the SMS the lender sent you</p>
       <textarea id="sms" rows="3" data-i18n-ph="sms_ph" placeholder="e.g. Congrats! You qualify for KES 1,000. Repay KES 1,150 in 30 days."
         style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);"></textarea>
+      <label for="sms-image" data-i18n="or_snap" style="display:block;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);margin:var(--spacing-8) 0 4px;">or upload a screenshot of the SMS</label>
+      <input id="sms-image" type="file" accept="image/*"
+        style="width:100%;font-family:var(--font-geist-mono);font-size:var(--text-caption);" />
       <button id="parse-btn" class="btn-primary" data-i18n="parse_btn" style="margin-top:var(--spacing-8);">Read my offer</button>
 
       <div id="confirm" style="margin-top:var(--spacing-16);"></div>

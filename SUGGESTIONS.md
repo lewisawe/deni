@@ -3,20 +3,33 @@
 Ideas surfaced during the build, kept here so they don't get lost. Grouped by the
 brief's own criteria. Not all are for the sprint; the sprint-critical ones are marked.
 
-## In progress
+## Done this session (2026-09-17)
 
-- **Real UI translation (en/sw/sheng).** [SPRINT] The language toggle currently only
-  translates the AI explanation text; every button, label, and heading is hardcoded
-  English, and it does nothing when AI is offline. Externalize all UI strings into a
-  per-language dictionary, render the interface from it, re-render on toggle, and set
-  `document.documentElement.lang`. This makes the multilingual claim (constraint 5) and
-  the inclusion claim (constraint 3) actually true.
+- **Real UI translation (en/sw/sheng).** DONE. All UI strings live in a per-language
+  dictionary (`I18N` in `app.js`), the interface re-renders on toggle, and
+  `document.documentElement.lang` is set. Works fully offline.
+- **Number-first visual comparison.** DONE. A "value received vs you pay" bar now sits
+  under the APR in every cost result (and in the landing hero + three-channel preview),
+  so the cost ratio is graspable without reading prose.
+- **On-device redaction + "not stored" notice.** DONE. The problem text is redacted in
+  the browser (phone, ID, email, name) and again server-side, so WhatsApp/USSD are
+  covered too; a privacy banner states nothing is stored and lists what was stripped.
+- **Stop-contact / cease-and-desist letter.** DONE. A direct-to-lender protective letter
+  (Data Protection Act / POPIA) alongside the slow regulator complaint.
+- **Helper / multi-case workspace.** DONE, and it is the Stability & Social Cohesion
+  feature (see that section below): a paralegal/chief/CSO keeps several borrowers' cases
+  on-device.
+- **Trust hardening.** DONE. Findings split into official (regulator/court) vs reported
+  (press); licence results show the register's as-of date and a verify-live deep link;
+  a no-match problem returns a general-body safety net; a source-integrity link checker
+  (`backend/check_sources.py`) guards citations.
+
+## In progress
 
 ## Inclusion (constraint 3: literacy, digital confidence, device access)
 
-- **Number-first visual comparison.** [nice-to-have] Add a simple bar showing
-  "you pay" vs "value received" so the cost ratio is graspable without reading prose,
-  serves low-literacy users. The big APR number already leads; this reinforces it.
+- **Number-first visual comparison.** DONE (see "Done this session"). The value-vs-pay
+  bar now reinforces the APR across the result, hero, and channel previews.
 - **Plainer language pass.** Keep sentences short and jargon-light across all three
   languages for low digital confidence.
 - **Feature-phone reach is an inclusion feature, not just low-bandwidth.** The USSD
@@ -62,9 +75,11 @@ brief's own criteria. Not all are for the sprint; the sprint-critical ones are m
 
 ## Stability & Social Cohesion (track)
 
-- This track is currently argued (blacklisting → household distress → exclusion) rather
-  than built as a distinct feature. If time allows, a feature that visibly reduces
-  household-level friction would move it from claim to demonstration.
+- **DONE (2026-09-17): the helper / multi-case workspace is this track's built feature.**
+  A chief, paralegal, or CSO worker can hold several borrowers' cases in one place, on
+  their device only (localStorage, never a server), and run the same civic engine per
+  person. This is community-level coordination, moving the track from an argued claim
+  (blacklisting → household distress → exclusion) to a demonstrated feature.
 
 ## Channels / integrations (post-sprint)
 

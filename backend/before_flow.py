@@ -55,10 +55,18 @@ def _licence_view(country: str, lender: dict) -> dict:
     else:
         status = "not-applicable"
         note = f"{lender['name']}: {lender.get('regime', la['not_applicable_note'])}"
+    official = lender.get("official_findings")
+    reported = lender.get("reported_concerns")
+    if official is None and reported is None:  # legacy flat schema fallback
+        official = lender.get("findings", [])
+        reported = []
     return {
         "status": status,
         "note": note,
-        "findings": lender.get("findings", []),
+        "official_findings": official or [],
+        "reported_concerns": reported or [],
+        # Back-compat combined list for any older caller.
+        "findings": (official or []) + (reported or []),
     }
 
 
