@@ -618,7 +618,7 @@ $("lender-btn").addEventListener("click", async () => {
       <p style="margin:var(--spacing-8) 0 0;">${r.note}</p>
       ${findingsHtml}
       ${r.status === "unlicensed" ? `<button class="btn-primary" style="margin-top:var(--spacing-8);padding:6px 16px;" id="lender-report">${t("wn_report").replace("{authority}", META.authority_short)}</button>` : ""}
-      <p style="margin:var(--spacing-8) 0 0;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);">Facts only, each sourced. Verify current status on the official register.</p>
+      <p style="margin:var(--spacing-8) 0 0;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);">Facts only, each sourced. Verify current status on the official register.${r.register_updated ? ` ${r.register_name || "Register"} as of ${r.register_updated}.` : ""}</p>
     </div>`;
     const rep = document.getElementById("lender-report");
     if (rep) rep.addEventListener("click", () => {
