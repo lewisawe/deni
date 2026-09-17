@@ -31,6 +31,17 @@ const I18N = {
     wn_report: "Report this lender to {authority}", wn_action: "Take action on a problem",
     computing: "Computing…", finding: "Finding your rights…", reading: "Reading…",
     source: "Source", go_to: "Go to",
+    priv_title: "Private by default",
+    priv_body: "Your description is not saved on our server. It stays on this phone; only the kind of problem was sent to find the right law.",
+    priv_stripped: "Removed before sending:",
+    protect_title: "Stop the contact now (direct to the lender)",
+    protect_intro: "The complaint above goes to a public body and takes time. This letter goes straight to the lender and demands they stop, immediately.",
+    protect_btn: "Draft a stop-contact letter",
+    helper_link: "Helper? Manage several people's cases",
+    helper_title: "Helper workspace",
+    helper_intro: "For a chief, paralegal, or CSO worker helping several borrowers. Each case is saved on THIS device only, never on a server. Use initials, not full names.",
+    helper_add: "Add a case", helper_label: "Who you're helping (initials)", helper_none: "No cases yet. Add the first one above.",
+    helper_open: "Open", helper_del: "Remove", helper_back: "← Back to the tool", helper_saved: "Saved on this device",
   },
   sw: {
     hero_pre: "Fahamu ", hero_hl: "haki zako", hero_post: " kama mkopaji.",
@@ -52,6 +63,17 @@ const I18N = {
     wn_report: "Ripoti mkopeshaji huyu kwa {authority}", wn_action: "Chukua hatua kuhusu tatizo",
     computing: "Inakokotoa…", finding: "Inatafuta haki zako…", reading: "Inasoma…",
     source: "Chanzo", go_to: "Nenda",
+    priv_title: "Faragha kwa chaguo-msingi",
+    priv_body: "Maelezo yako hayahifadhiwi kwenye seva yetu. Yanabaki kwenye simu hii; ni aina ya tatizo tu iliyotumwa kupata sheria sahihi.",
+    priv_stripped: "Kimeondolewa kabla ya kutuma:",
+    protect_title: "Simamisha usumbufu sasa (moja kwa moja kwa mkopeshaji)",
+    protect_intro: "Malalamiko hapo juu huenda kwa taasisi ya umma na huchukua muda. Barua hii huenda moja kwa moja kwa mkopeshaji na kudai wasimame, mara moja.",
+    protect_btn: "Andaa barua ya kusimamisha usumbufu",
+    helper_link: "Msaidizi? Simamia kesi za watu kadhaa",
+    helper_title: "Eneo la msaidizi",
+    helper_intro: "Kwa chifu, paralegal, au mfanyakazi wa CSO anayesaidia wakopaji kadhaa. Kila kesi huhifadhiwa kwenye SIMU HII pekee, kamwe si kwenye seva. Tumia herufi za kwanza, si majina kamili.",
+    helper_add: "Ongeza kesi", helper_label: "Unayemsaidia (herufi za kwanza)", helper_none: "Bado hakuna kesi. Ongeza ya kwanza hapo juu.",
+    helper_open: "Fungua", helper_del: "Ondoa", helper_back: "← Rudi kwenye zana", helper_saved: "Imehifadhiwa kwenye simu hii",
   },
   sheng: {
     hero_pre: "Jua ", hero_hl: "haki zako", hero_post: " kama mtu wa mkopo.",
@@ -73,6 +95,17 @@ const I18N = {
     wn_report: "Report huyu lender kwa {authority}", wn_action: "Chukua hatua kuhusu shida",
     computing: "Inakalmap…", finding: "Inatafuta haki zako…", reading: "Inasoma…",
     source: "Chanzo", go_to: "Nenda",
+    priv_title: "Faragha by default",
+    priv_body: "Story yako haisave kwa server yetu. Inabaki kwa hii simu; ni aina ya shida tu ilitumwa kupata sheria sahihi.",
+    priv_stripped: "Ilitolewa kabla ya kutuma:",
+    protect_title: "Stop huyo usumbufu saa hii (direct kwa lender)",
+    protect_intro: "Ile complaint ya juu inaenda kwa ofisi ya serikali na inachukua time. Hii barua inaenda direct kwa lender na inademand wasimame, saa hii.",
+    protect_btn: "Andaa barua ya kustop usumbufu",
+    helper_link: "Wewe ni helper? Manage kesi za watu kadhaa",
+    helper_title: "Workspace ya helper",
+    helper_intro: "Kwa chief, paralegal, ama CSO worker anasaidia wakopaji kadhaa. Kila kesi inasave kwa HII simu pekee, si kwa server. Tumia initials, si majina kamili.",
+    helper_add: "Ongeza kesi", helper_label: "Unamsaidia nani (initials)", helper_none: "Bado hakuna kesi. Ongeza ya kwanza hapo juu.",
+    helper_open: "Fungua", helper_del: "Ondoa", helper_back: "← Rudi kwa tool", helper_saved: "Imesave kwa hii simu",
   },
 };
 const BCP = { en: "en", sw: "sw", sheng: "sw" };
@@ -369,19 +402,60 @@ $("parse-btn").addEventListener("click", async () => {
   });
 });
 
+/* ---------- privacy: redact identifying data BEFORE it leaves the device ----------
+   Track 3 (Safety, Reporting & Protection) prioritises anonymity; constraint 4
+   (privacy) says protect identity. The problem the user types often carries a phone
+   number, an ID, an amount, or a name. We strip those in the browser, so the raw
+   text never reaches the server or the AI model. Classification only needs the
+   *shape* of the problem ("they are calling my contacts"), not who you are. The
+   drafted document has its own [your name] slots you fill in locally and share
+   yourself. Deterministic patterns only; we err towards over-redaction. */
+function redactProblem(text) {
+  const hits = [];
+  let out = text;
+  const sweep = (re, label, mask) => {
+    out = out.replace(re, (m) => { hits.push(label); return mask; });
+  };
+  // Kenyan / SA phone numbers and any long digit run that looks like a number to reach you.
+  sweep(/(?:\+?254|\+?27|0)\d[\d\s-]{7,}\d/g, "phone number", "[redacted phone]");
+  // National ID / passport-like tokens (7-9 digit IDs, alphanumeric passports).
+  sweep(/\b(?:id|passport|national id)\s*(?:no\.?|number|#)?\s*[:.]?\s*[A-Z]?\d{6,9}\b/gi, "ID number", "[redacted ID]");
+  sweep(/\b\d{7,9}\b/g, "ID number", "[redacted ID]");
+  // Email addresses.
+  sweep(/\b[\w.+-]+@[\w-]+\.[\w.-]+\b/g, "email", "[redacted email]");
+  // "my name is X", "I am X Y", "this is X" -> drop the trailing capitalised name(s).
+  sweep(/\b(?:my name is|i am|i'm|this is|name[:]?)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/g, "name", (m => m).call ? "[redacted name]" : "[redacted name]");
+  return { text: out, redacted: [...new Set(hits)] };
+}
+
 /* ---------- during: describe a problem -> recourse ---------- */
 $("recourse-btn").addEventListener("click", async () => {
-  const text = $("problem").value.trim();
-  if (!text) return;
+  const raw = $("problem").value.trim();
+  if (!raw) return;
+  const { text, redacted } = redactProblem(raw);
   $("recourse").innerHTML = spinner(t("finding"));
   try {
     const r = await (await fetch("/api/recourse", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text, lang: LANG, country: COUNTRY }),
     })).json();
+    r._redacted = redacted;   // pass through so the result can show what was protected
     renderRecourse(r);
   } catch (_) { $("recourse").innerHTML = "<p>Could not process that. Try rephrasing.</p>"; }
 });
+
+/* Privacy banner shown on every recourse result: states we don't store the text,
+   and lists what was stripped on-device before anything was sent (Track 3 / R10). */
+function privacyNote(redacted) {
+  const stripped = (redacted && redacted.length)
+    ? `<p style="margin:6px 0 0;font-size:var(--text-caption);">${t("priv_stripped")} <strong>${redacted.join(", ")}</strong>.</p>`
+    : "";
+  return `<div class="card-hard" style="background:var(--color-chartreuse-highlight);margin-bottom:var(--spacing-16);">
+    <p style="margin:0;font-size:var(--text-caption);font-family:var(--font-geist-mono);text-transform:uppercase;letter-spacing:0.03em;">${t("priv_title")}</p>
+    <p style="margin:6px 0 0;font-size:var(--text-caption);">${t("priv_body")}</p>
+    ${stripped}
+  </div>`;
+}
 
 function renderRecourse(r) {
   if (!r || !r.matched) {
@@ -399,6 +473,7 @@ function renderRecourse(r) {
         <div>${f.what_to_include.map((w, i) => `<label style="display:flex;gap:8px;align-items:flex-start;font-size:var(--text-caption);margin-bottom:3px;"><input type="checkbox"> <span>${w}</span></label>`).join("")}</div>` : ""}
     </div>`).join("");
   $("recourse").innerHTML = `
+    ${privacyNote(r._redacted)}
     <div class="card-hard">
       <p style="margin:0 0 var(--spacing-8);font-weight:600;">${r.title}</p>
       <p style="margin:0 0 var(--spacing-8);">${r.law_statement}</p>
