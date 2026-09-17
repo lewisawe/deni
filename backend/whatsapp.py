@@ -27,6 +27,7 @@ from .data_pack import currency, licence_authority
 # sender -> conversational state (in-memory; fine for a demo, no long-term PII).
 _SESSIONS: dict[str, dict] = {}
 _RESET_WORDS = {"hi", "hello", "menu", "start", "deni", "restart", "0"}
+_CONFIRM_WORDS = {"yes", "y", "ndio", "ndiyo", "sawa", "eeh", "confirm", "compute"}
 
 _MENU = (
     "*Deni*: know your rights as a borrower.\n\n"
@@ -48,6 +49,19 @@ def handle_message(sender: str, message: str, country: str = "ke") -> str:
         _SESSIONS[sender] = {"mode": None}
         return _MENU
 
+    # A pending loan is awaiting confirmation: YES computes it, new numbers replace it,
+    # anything else cancels. Mirrors the web app's confirm-before-compute step (R2).
+    if st.get("pending_offer"):
+        if low in _CONFIRM_WORDS:
+            offer = st.pop("pending_offer")
+            st["mode"] = None
+            return _compute_offer(country, offer)
+        if _nums(msg):  # user re-sent corrected numbers
+            return _cost_reply(country, msg)
+        st.pop("pending_offer", None)
+        st["mode"] = None
+        # fall through and re-interpret the message below
+
     # Explicit menu choices set a mode; otherwise we infer intent from the text.
     if msg == "1":
         st["mode"] = "cost"
@@ -68,13 +82,15 @@ def handle_message(sender: str, message: str, country: str = "ke") -> str:
         return _recourse_reply(country, msg)
     if st.get("mode") == "cost":
         st["mode"] = None
-        return _cost_reply(country, msg)
+        return _cost_reply(country, msg, sender)
 
-    # No mode: infer intent from the message itself.
-    if _looks_like_loan(msg):
-        return _cost_reply(country, msg)
+    # No mode: infer intent from the message itself. A problem description wins over
+    # the numeric heuristic, because a report like "they took my bike, I owe 5000"
+    # carries numbers but is not a loan to price.
     if _looks_like_problem(low):
         return _recourse_reply(country, msg)
+    if _looks_like_loan(msg):
+        return _cost_reply(country, msg, sender)
 
     # Fallback: show the menu.
     return _MENU
@@ -101,11 +117,13 @@ def _nums(msg: str) -> list[int]:
     return [int(n.replace(",", "")) for n in re.findall(r"\d[\d,]*", msg)]
 
 
-def _cost_reply(country: str, msg: str) -> str:
-    """Parse a pasted loan (numeric-first; AI parse if available) and reply with cost."""
+def _cost_reply(country: str, msg: str, sender: str = "") -> str:
+    """Parse a pasted loan and ask the user to confirm the figures BEFORE computing.
+
+    The web app shows parsed fields and waits for confirmation (R2); WhatsApp mirrors
+    that here instead of silently pricing whatever numbers it grabbed. The parsed offer
+    is held in the session; a YES computes it, corrected numbers replace it."""
     nums = _nums(msg)
-    cur = currency(country)["symbol"]
-    # Simple heuristic: "borrow X repay Y in Z days" -> principal, repay_total, term.
     if len(nums) >= 3:
         principal, repay, days = nums[0], nums[1], nums[2]
     elif len(nums) == 2:
@@ -113,9 +131,32 @@ def _cost_reply(country: str, msg: str) -> str:
     else:
         return ("I couldn't read the numbers. Send it as: amount, repay, days.\n"
                 "Example: 1000, 1150, 30")
+    if repay < principal:
+        return ("I read the amount received as larger than the repayment, which can't "
+                "be right. Send it as: amount received, total repaid, days.\n"
+                "Example: 1000, 1150, 30")
+    cur = currency(country)["symbol"]
+    offer = {"principal": principal, "repay": repay, "days": days}
+    if sender:
+        _SESSIONS.setdefault(sender, {"mode": None})["pending_offer"] = offer
+    days_note = "" if len(nums) >= 3 else " (assuming 30 days, send the term if different)"
+    return (
+        f"Let me check I read this right:\n"
+        f"• Amount received: {cur} {principal}\n"
+        f"• Total to repay: {cur} {repay}\n"
+        f"• Term: {days} days{days_note}\n\n"
+        f"Reply *YES* to see the true cost, or send the correct numbers as "
+        f"amount, repay, days."
+    )
+
+
+def _compute_offer(country: str, offer: dict) -> str:
+    """Compute and format a confirmed offer (the second half of the R2 flow)."""
+    cur = currency(country)["symbol"]
     try:
-        b = compute_cost(LoanOffer(principal=Decimal(principal), term_days=int(days),
-                                   repay_total=Decimal(repay)))
+        b = compute_cost(LoanOffer(principal=Decimal(offer["principal"]),
+                                   term_days=int(offer["days"]),
+                                   repay_total=Decimal(offer["repay"])))
     except Exception:  # noqa: BLE001
         return "Those numbers didn't compute. Send: amount, repay, days (e.g. 1000, 1150, 30)."
     return (

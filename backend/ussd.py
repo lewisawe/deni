@@ -26,6 +26,29 @@ USSD_PRODUCTS = [
     ("App loan 1000/30d", "quickcash-30d"),
 ]
 
+# USSD gateways cap a single response body (commonly ~160-182 chars). We keep END
+# screens within a safe ceiling so a long product label or legal statement is never
+# cut mid-word by the gateway.
+USSD_MAX = 160
+
+
+def _clip(text: str, limit: int = USSD_MAX) -> str:
+    """Trim to `limit` chars without breaking a word; add an ellipsis if trimmed."""
+    if len(text) <= limit:
+        return text
+    cut = text[: limit - 1]
+    if " " in cut:
+        cut = cut[: cut.rfind(" ")]
+    return cut.rstrip() + "…"
+
+
+def _end(body: str) -> str:
+    """Format an END response, clipping the body under the USSD ceiling.
+
+    The 'END ' prefix is a protocol token the gateway strips, so the ceiling applies
+    to the message the user actually sees (the body)."""
+    return "END " + _clip(body)
+
 
 def _offer(p: dict) -> LoanOffer:
     kw = dict(principal=Decimal(str(p["principal"])), term_days=int(p["term_days"]),
@@ -42,7 +65,7 @@ def _offer(p: dict) -> LoanOffer:
 def _product_result(country: str, product_id: str) -> str:
     p = get_product(country, product_id)
     if not p:
-        return "END Product not found."
+        return _end("Product not found.")
     b = compute_cost(_offer(p))
     lender = get_lender(country, p["lender_id"]) or {}
     la = licence_authority(country)
@@ -56,8 +79,8 @@ def _product_result(country: str, product_id: str) -> str:
         lic_line = f"Registered with {auth}."
     else:
         lic_line = f"Not a {auth}-listed lender."
-    return (
-        f"END {p['label']}\n"
+    return _end(
+        f"{p['label']}\n"
         f"Pay {cur} {b.total_paid} for {cur} {b.principal}\n"
         f"= {b.markup_pct}% more (APR {b.apr_pct}%)\n"
         f"{lic_line}\n"
@@ -74,12 +97,12 @@ def _check_lender(country: str, name: str) -> str:
         if name_l and name_l in ld["name"].lower():
             lic = ld.get(field)
             if lic is True:
-                return f"END {ld['name']}: Registered with {auth}."
+                return _end(f"{ld['name']}: Registered with {auth}.")
             if lic is False:
-                return (f"END {ld['name']}: NOT registered with {auth}. "
-                        f"An unregistered lender may not legally enforce repayment.")
-            return f"END {ld['name']}: not a {auth}-listed lender. {ld.get('regime','')}"
-    return f"END Lender not found in Deni's list. Check the {auth} register."
+                return _end(f"{ld['name']}: NOT registered with {auth}. "
+                            f"An unregistered lender may not legally enforce repayment.")
+            return _end(f"{ld['name']}: not a {auth}-listed lender. {ld.get('regime','')}")
+    return _end(f"Lender not found in Deni's list. Check the {auth} register.")
 
 
 def handle(text: str, country: str = "ke") -> str:
@@ -124,10 +147,12 @@ def _rights_menu(country: str, rest: list[str]) -> str:
         return "END Invalid choice."
     s = scenarios[idx]
     forum = get_forum(country, s.get("forum_key", "")) or {}
-    law = s.get("law_statement", "")[:200]
-    return (
-        f"END {s['title'][:40]}\n"
-        f"{law}\n"
-        f"Go to: {forum.get('name', 'the relevant body')}\n"
-        f"Not legal advice."
-    )
+    # Build the body, then let _end() clip to the USSD ceiling as a whole so we never
+    # cut mid-word. Reserve room for the title + forum line by trimming the law text.
+    law = s.get("law_statement", "")
+    title = s["title"][:40]
+    forum_line = f"Go to: {forum.get('name', 'the relevant body')}"
+    fixed = f"{title}\n\n{forum_line}\nNot legal advice."
+    room = max(0, USSD_MAX - len(fixed) - 2)
+    law = _clip(law, room) if room else ""
+    return _end(f"{title}\n{law}\n{forum_line}\nNot legal advice.")
