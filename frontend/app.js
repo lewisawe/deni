@@ -298,6 +298,30 @@ async function explainInto(el, cost) {
   } catch (_) { /* AI optional, silent */ }
 }
 
+/* Value-received vs you-pay bar: the money shot. One glance shows how much more you
+   repay than you received, for users who don't read the prose. Two stacked segments,
+   widths proportional to the amounts; the extra (what the credit costs) is the orange
+   overhang. Labelled with the amounts so it's not colour-only. */
+function costBar(c) {
+  const principal = Number(c.principal), paid = Number(c.total_paid);
+  if (!(paid > 0) || !(principal >= 0)) return "";
+  const valuePct = Math.max(2, Math.min(100, Math.round((principal / paid) * 100)));
+  return `
+    <div style="margin:var(--spacing-16) 0 0;" aria-hidden="false">
+      <div style="display:flex;justify-content:space-between;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-graphite);margin-bottom:4px;">
+        <span>Value you received</span><span>What you repay</span>
+      </div>
+      <div role="img" aria-label="You repay ${money(paid)} for ${money(principal)} of value"
+           style="position:relative;height:28px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);background:var(--color-signal-orange);overflow:hidden;">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:${valuePct}%;background:var(--color-carbon-black);"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-family:var(--font-geist-mono);font-size:var(--text-caption);margin-top:4px;">
+        <span style="color:var(--color-carbon-black);font-weight:600;">${money(principal)}</span>
+        <span style="color:var(--color-orange-text);font-weight:600;">${money(paid)}</span>
+      </div>
+    </div>`;
+}
+
 function renderResult(r) {
   const c = r.cost, alt = r.alternative;
   if (r.currency) CURRENCY = r.currency;
@@ -309,6 +333,7 @@ function renderResult(r) {
         You pay <strong>${money(c.total_paid)}</strong> for <strong>${money(c.principal)}</strong> of value:
         <span class="stat-inline" style="font-size:var(--text-subheading);">${c.markup_pct}%</span> more.
       </p>
+      ${costBar(c)}
       <div id="explain"></div>
       <details style="margin-top:var(--spacing-16);">
         <summary style="cursor:pointer;font-family:var(--font-geist-mono);font-size:var(--text-caption);">Show the math</summary>
