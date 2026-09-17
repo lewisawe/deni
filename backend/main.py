@@ -143,6 +143,12 @@ def recourse(payload: RecourseIn) -> dict:
     return recourse_mod.recourse(payload.text, payload.lang, payload.country)
 
 
+@app.post("/api/protect-letter")
+def protect_letter(payload: RecourseIn) -> dict:
+    """Draft a stop-contact letter sent DIRECT to the lender (Track 3: protection)."""
+    return recourse_mod.protect_letter(payload.text, payload.lang, payload.country)
+
+
 class ReceiptIn(BaseModel):
     kind: str  # "cost" | "recourse"
     data: dict

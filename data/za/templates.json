@@ -26,6 +26,13 @@
       "body": "To {{bureau}},\n\nRE: DISPUTE OF CREDIT LISTING. {{redacted_name}}, ID {{redacted_id}}\n\nI dispute the listing by {{lender_name}}. The listing is incorrect because {{reason}}.\n\nUnder the National Credit Act, I request that you investigate and correct or remove this listing. If unresolved, I will escalate to the National Credit Regulator.\n\nCase reference (my record): {{case_ref}}\n\nYours faithfully,\n{{redacted_name}}",
       "not_advice": "This is a self-prepared dispute, not legal advice."
     },
+    "cease_contact_letter": {
+      "title": "Stop-contact / cease-and-desist letter (to the lender)",
+      "addressee": "{{lender_name}}",
+      "legal_basis": "Protection of Personal Information Act 4 of 2013 (POPIA): lawful, fair, non-excessive processing; the data subject's right to object (s.11(3)). Abusive collection contact and contacting third parties in your phonebook can be unlawful processing.",
+      "body": "To {{lender_name}},\n\nRE: DEMAND TO CEASE UNLAWFUL CONTACT AND DATA USE\n\nThis is a formal notice. On {{dates}}, you {{what_happened}}. This included {{data_misused}}.\n\nI OBJECT to the processing of my personal information and my contacts for debt collection, and I DEMAND that you immediately:\n1. Stop calling, messaging, or contacting me outside lawful, reasonable hours and channels;\n2. Stop contacting any third party in my phonebook or any person who is not a party to this debt;\n3. Delete contact data you obtained from my device.\n\nUnder POPIA I have the right to object to this processing. Continued abusive contact after this notice will be reported to the Information Regulator and, where applicable, the National Credit Regulator, and may be used as evidence.\n\nThis letter does not admit the debt or waive any of my rights.\n\nCase reference (my record): {{case_ref}}\nDate served: {{dates}}\n\n{{redacted_name}}",
+      "not_advice": "This is a self-prepared letter you send directly to the lender, not legal advice. Keep proof that you sent it (screenshot, delivery receipt). It demands they stop; it does not by itself make them stop."
+    },
     "small_claims_statement": {
       "title": "Letter of demand / claim: Small Claims Court",
       "addressee": "The Small Claims Court (via a letter of demand first)",

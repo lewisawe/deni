@@ -126,3 +126,29 @@ def recourse(text: str, lang: str = "en", country: str = "ke") -> dict:
         "disclaimer": "This is information and a self-prepared document, not legal advice. "
                       "Recourse depends on your specific facts. Verify before acting.",
     }
+
+
+def protect_letter(text: str, lang: str = "en", country: str = "ke") -> dict:
+    """Draft a stop-contact / cease-and-desist letter sent DIRECT to the lender.
+
+    Track 3 (Safety, Reporting & Protection): the regulator complaint is slow and
+    goes to a public body; this letter goes straight to the lender and demands the
+    abusive contact stop now. It is protective and immediate, not accountability.
+    Uses the same fixed template + fact-slot fill; no legal conclusion is AI-made.
+    """
+    _key, facts = _classify(text)
+    case_ref = "DENI-" + uuid.uuid4().hex[:8].upper()
+    body = _fill_template(country, "cease_contact_letter", facts, case_ref)
+    if not body:
+        return {"matched": False,
+                "message": "No stop-contact letter is available for this country pack yet."}
+    tpl = load_pack(country)["templates"]["templates"].get("cease_contact_letter", {})
+    return {
+        "matched": True,
+        "title": tpl.get("title"),
+        "legal_basis": tpl.get("legal_basis"),
+        "letter": body,
+        "case_ref": case_ref,
+        "disclaimer": tpl.get("not_advice",
+                              "This is a self-prepared letter, not legal advice."),
+    }

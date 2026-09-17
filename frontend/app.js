@@ -440,6 +440,7 @@ $("recourse-btn").addEventListener("click", async () => {
       body: JSON.stringify({ text, lang: LANG, country: COUNTRY }),
     })).json();
     r._redacted = redacted;   // pass through so the result can show what was protected
+    r._sentText = text;       // redacted text, reused for the direct stop-contact letter
     renderRecourse(r);
   } catch (_) { $("recourse").innerHTML = "<p>Could not process that. Try rephrasing.</p>"; }
 });
@@ -490,6 +491,12 @@ function renderRecourse(r) {
       <p style="margin:0 0 6px;font-size:var(--text-caption);color:var(--color-graphite);">Edit the details in [brackets], then share. Your changes are kept on this device only.</p>
       <textarea id="complaint-edit" rows="16" aria-label="Editable complaint document" style="width:100%;white-space:pre-wrap;font-family:var(--font-geist);font-size:var(--text-caption);background:var(--color-paper-white);border:1px solid var(--color-ash);border-radius:var(--radius-smallbuttons);padding:12px;"></textarea>
     </div>` : ""}
+    <div class="card-hard" style="margin-top:var(--spacing-16);border-color:var(--color-signal-orange);">
+      <p style="margin:0 0 4px;font-weight:600;">${t("protect_title")}</p>
+      <p style="margin:0 0 var(--spacing-8);font-size:var(--text-caption);color:var(--color-graphite);">${t("protect_intro")}</p>
+      <button id="protect-btn" class="btn-primary" style="padding:6px 16px;">${t("protect_btn")}</button>
+      <div id="protect-out" style="margin-top:var(--spacing-16);" aria-live="polite"></div>
+    </div>
     <p style="margin-top:var(--spacing-16);font-size:var(--text-caption);color:var(--color-graphite);">${r.disclaimer}</p>`;
   // Fill the editable document and keep r.complaint in sync so the share bar uses edits.
   const edit = $("complaint-edit");
@@ -497,6 +504,30 @@ function renderRecourse(r) {
     edit.value = r.complaint;
     edit.addEventListener("input", () => { r.complaint = edit.value; });
   }
+  // Direct stop-contact letter to the lender (protective, immediate).
+  const pbtn = $("protect-btn");
+  if (pbtn) pbtn.addEventListener("click", async () => {
+    const out = $("protect-out");
+    out.innerHTML = spinner(t("reading"));
+    try {
+      const p = await (await fetch("/api/protect-letter", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: r._sentText || "", lang: LANG, country: COUNTRY }),
+      })).json();
+      if (!p.matched) { out.innerHTML = `<p style="font-size:var(--text-caption);">${p.message || "Not available."}</p>`; return; }
+      out.innerHTML = `
+        <p style="font-family:var(--font-geist-mono);font-size:var(--text-caption);margin:0 0 var(--spacing-8);">Case ref: <span class="stat-inline" style="color:var(--color-carbon-black);">${p.case_ref}</span></p>
+        <p style="margin:0 0 6px;font-size:var(--text-caption);color:var(--color-graphite);">Edit the [bracketed] details, then send it to the lender yourself and keep proof. Kept on this device only.</p>
+        <textarea id="protect-edit" rows="14" aria-label="Editable stop-contact letter" style="width:100%;white-space:pre-wrap;font-family:var(--font-geist);font-size:var(--text-caption);background:var(--color-paper-white);border:1px solid var(--color-ash);border-radius:var(--radius-smallbuttons);padding:12px;"></textarea>
+        <p style="margin:var(--spacing-8) 0 0;font-size:var(--text-caption);color:var(--color-graphite);">${p.disclaimer}</p>`;
+      const pe = $("protect-edit");
+      pe.value = p.letter;
+      const shareData = { title: p.title, complaint: p.letter, case_ref: p.case_ref,
+                          law_statement: p.legal_basis, forums: [] };
+      pe.addEventListener("input", () => { shareData.complaint = pe.value; });
+      out.appendChild(shareBar("recourse", shareData));
+    } catch (_) { out.innerHTML = "<p style=\"font-size:var(--text-caption);\">Could not draft that letter. Try again.</p>"; }
+  });
   $("recourse").appendChild(shareBar("recourse", r));
   reveal("recourse");
 }
