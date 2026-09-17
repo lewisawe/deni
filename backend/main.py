@@ -67,6 +67,7 @@ def meta(country: str = "ke") -> dict:
         "authority_short": la.get("authority_short", "the regulator"),
         "authority_name": la.get("authority_name", "the regulator"),
         "register_name": la.get("register_name", "the register"),
+        "register_url": la.get("register_url"),
         "examples": la.get("examples", "e.g. a lender's name"),
         "currency": currency(country),
         "languages": langs,

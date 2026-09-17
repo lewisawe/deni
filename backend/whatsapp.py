@@ -173,8 +173,10 @@ def _lender_reply(country: str, name: str) -> str:
     from .data_pack import check_lender
     r = check_lender(country, name)
     lines = [f"*{r['label']}*", r.get("note", "")]
-    for f in (r.get("findings") or [])[:2]:
-        lines.append(f"\n• {f.get('body','')} ({f.get('date','')}): {f.get('summary','')}")
+    for f in (r.get("official_findings") or [])[:2]:
+        lines.append(f"\n• [official] {f.get('body','')} ({f.get('date','')}): {f.get('summary','')}")
+    for f in (r.get("reported_concerns") or [])[:1]:
+        lines.append(f"\n• [reported] {f.get('body','')} ({f.get('date','')}): {f.get('summary','')}")
     lines.append("\nReply 3 to take action, or 'menu'. Facts only, each sourced.")
     return "\n".join(x for x in lines if x)
 

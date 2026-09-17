@@ -8,6 +8,8 @@
       "authority_short": "NCR",
       "authority_name": "the National Credit Regulator (NCR)",
       "register_name": "NCR register of credit providers",
+      "register_url": "https://www.ncr.org.za/",
+      "register_url_todo": "Point at the NCR's public 'registered credit providers' search/list page rather than the NCR homepage.",
       "registered_label": "Registered with the NCR",
       "unregistered_label": "NOT registered with the NCR",
       "registered_note": "is registered with the National Credit Regulator under the National Credit Act (verify current status at ncr.org.za).",
@@ -25,7 +27,8 @@
       "regime": "Registered credit provider under the National Credit Act 34 of 2005 (NCR-registered).",
       "ncr_registered": true,
       "security_model": "none",
-      "findings": []
+      "official_findings": [],
+      "reported_concerns": []
     },
     {
       "id": "sa_unregistered_demo",
@@ -34,11 +37,13 @@
       "regime": "Illustrative lender NOT registered with the NCR. Providing credit without NCR registration is unlawful under the National Credit Act.",
       "ncr_registered": false,
       "security_model": "none",
-      "findings": [
+      "official_findings": [],
+      "reported_concerns": [
         {
-          "body": "National Credit Act 34 of 2005",
-          "summary": "The Act prohibits reckless credit granting and requires credit providers to be registered; an unregistered provider operates unlawfully.",
+          "body": "National Credit Act 34 of 2005 (statute, general)",
+          "summary": "The Act prohibits reckless credit granting and requires credit providers to be registered; an unregistered provider operates unlawfully. General statute, not a finding against this specific demo lender.",
           "citation": "https://www.parliament.gov.za/storage/app/media/Acts/2005/Act_34_of_2005_National_Credit_Act.pdf",
+          "citation_primary_todo": "This URL returned HTTP 500 in the source check. Replace with a stable NCA source (e.g. gov.za legislation page or the official gazette PDF).",
           "date": "2005"
         }
       ]
@@ -50,11 +55,13 @@
       "regime": "NCR-registered credit provider; vehicle finance secured on the vehicle.",
       "ncr_registered": true,
       "security_model": "repossession",
-      "findings": [
+      "official_findings": [],
+      "reported_concerns": [
         {
-          "body": "National Credit Act 34 of 2005",
-          "summary": "Repossession and enforcement must follow the NCA process (notice under s.129, and lawful procedure); reckless credit is prohibited.",
-          "citation": "https://www1.saflii.org/za/legis/consol_act/nca34o2005171.pdf",
+          "body": "National Credit Act 34 of 2005 (statute, general)",
+          "summary": "Repossession and enforcement must follow the NCA process (a section 129 notice and lawful procedure); reckless credit is prohibited. General statute context, not a finding against this representative lender.",
+          "citation": "https://www.gov.za/documents/national-credit-act",
+          "citation_primary_todo": "saflii PDF returned HTTP 403 to the source check (likely bot-blocking). Confirm a stable, human-reachable NCA URL; gov.za used as placeholder.",
           "date": "2005"
         }
       ]

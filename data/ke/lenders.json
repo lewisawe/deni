@@ -3,11 +3,14 @@
     "country": "KE",
     "description": "Lender registry: licence status + regulator/court findings. Each fact carries a source and date. Facts only, no unsourced accusations.",
     "cbk_dcp_list_note": "Licence status reflects CBK's published Digital Credit Providers list. DCP licensing applies to app-based digital lenders; asset financiers and microfinance banks are licensed under different regimes (noted per lender).",
+    "findings_note": "Two kinds of record are kept separate: official_findings are actions or rulings by a named regulator or court (each with its decision citation); reported_concerns are press or research reporting, clearly labelled as reporting and not a regulatory action.",
     "licence_authority": {
       "field": "cbk_dcp_licensed",
       "authority_short": "CBK",
       "authority_name": "the Central Bank of Kenya (CBK)",
       "register_name": "CBK licensed Digital Credit Providers register",
+      "register_url": "https://www.centralbank.go.ke/",
+      "register_url_todo": "Point at the exact CBK 'Licensed Digital Credit Providers' page/PDF (deep link) rather than the CBK homepage, so users land on the live list.",
       "registered_label": "Licensed by CBK",
       "unregistered_label": "NOT on CBK licensed list",
       "registered_note": "is on CBK's licensed Digital Credit Providers list (verify current status at cbk.go.ke).",
@@ -25,15 +28,16 @@
       "regime": "Not a CBK-DCP; PAYG asset financier (device secured against itself).",
       "cbk_dcp_licensed": null,
       "security_model": "device-lock",
-      "findings": [
+      "official_findings": [],
+      "reported_concerns": [
         {
-          "body": "Regulatory/press",
-          "summary": "PAYG devices are remotely locked if a payment is missed; under scrutiny over hidden costs of the daily-payment model.",
+          "body": "Press",
+          "summary": "PAYG devices are remotely locked if a payment is missed; reporting has raised concern over the hidden cost of the daily-payment model.",
           "citation": "https://mjengohub.co.ke/articles/finance/state-interventions-loom-as-mobile-phone-credit-schemes-face-regulatory-scrutiny-over-hidden-costs",
           "date": "2026"
         },
         {
-          "body": "GSMA",
+          "body": "GSMA (research)",
           "summary": "Financing is secured against the handset, which is 'locked' if payments cease.",
           "citation": "https://www.gsma.com/mobilefordevelopment/wp-content/uploads/2022/04/M-KOPA-Applying-the-pay-as-you-go-model-to-smartphones-in-Africa.pdf",
           "date": "2022"
@@ -47,10 +51,11 @@
       "regime": "Asset financier (motorbike/tuk-tuk logbook financing).",
       "cbk_dcp_licensed": null,
       "security_model": "repossession-tracker",
-      "findings": [
+      "official_findings": [],
+      "reported_concerns": [
         {
-          "body": "Rest of World",
-          "summary": "Boda-boda BNPL model criticised for saddling riders with expensive debt; repossession on default.",
+          "body": "Rest of World (reporting)",
+          "summary": "Boda-boda BNPL model criticised in reporting for saddling riders with expensive debt; repossession on default.",
           "citation": "https://restofworld.org/2023/bike-theft-kenya-bnpl/",
           "date": "2023"
         }
@@ -63,13 +68,16 @@
       "regime": "Asset financier (motorbike/car logbook financing).",
       "cbk_dcp_licensed": null,
       "security_model": "repossession-tracker",
-      "findings": [
+      "official_findings": [
         {
           "body": "Competition Authority of Kenya (CAK)",
           "summary": "CAK found Mogo Auto in violation of the Competition Act for false and misleading representations and unconscionable conduct in its loan products.",
           "citation": "https://www.dawan.africa/news/mogo-faces-fresh-scrutiny-as-parliament-turns-spotlight-on-kenyas-asset-financing-industry",
+          "citation_primary_todo": "Replace with CAK's own decision/notice or the Kenya Gazette notice for this action (news article is secondary).",
           "date": "2024-10"
-        },
+        }
+      ],
+      "reported_concerns": [
         {
           "body": "Press",
           "summary": "Repossession over small arrears documented; tracker used to disable/locate the bike.",
@@ -85,14 +93,15 @@
       "regime": "Microfinance bank (secured + group-guarantee lending).",
       "cbk_dcp_licensed": null,
       "security_model": "collateral-joint-registration",
-      "findings": [
+      "official_findings": [
         {
           "body": "High Court of Kenya",
           "summary": "Collateral vehicle (KCN 925C) was registered in the lender's joint name and enforced via court process, illustrating asset-seizure exposure in secured microfinance.",
           "citation": "https://new.kenyalaw.org/akn/ke/judgment/kehc/2026/5105/eng@2026-04-22/source.pdf",
           "date": "2026-04-22"
         }
-      ]
+      ],
+      "reported_concerns": []
     },
     {
       "id": "quickcash_demo",
@@ -101,11 +110,13 @@
       "regime": "App-based digital lender. NOT on CBK's licensed DCP list (illustrative demo lender).",
       "cbk_dcp_licensed": false,
       "security_model": "none",
-      "findings": [
+      "official_findings": [],
+      "reported_concerns": [
         {
-          "body": "Court (general precedent)",
-          "summary": "Kenyan court blocked unlicensed digital lenders from enforcing repayment; an unlicensed lender may not be able to lawfully pursue a borrower.",
+          "body": "Court (general precedent, not against this lender)",
+          "summary": "A Kenyan court blocked unlicensed digital lenders from enforcing repayment; an unlicensed lender may not be able to lawfully pursue a borrower. This is a general precedent about unlicensed lenders, not a finding against this specific demo lender.",
           "citation": "https://weetracker.com/2026/07/27/kenyan-court-delivers-blow-to-unlicensed-loan-apps-seeking-debt-repayment/",
+          "citation_primary_todo": "Replace with the court judgment (kenyalaw.org) once the specific case is identified; news article is secondary.",
           "date": "2026-07-27"
         }
       ]
@@ -119,7 +130,8 @@
       "cbk_licensed_source": "CBK Digital Credit Providers licensed list (verify current at build/demo time).",
       "cbk_licensed_date": "2026-09-14",
       "security_model": "none",
-      "findings": []
+      "official_findings": [],
+      "reported_concerns": []
     }
   ]
 }

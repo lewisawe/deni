@@ -128,25 +128,34 @@ def check_lender(country: str, name: str) -> dict:
     for ld in load_pack(country)["lenders"]["lenders"]:
         if name_l in ld["name"].lower():
             lic = ld.get(field)
-            findings = ld.get("findings", [])
+            # New schema: official_findings (regulator/court) vs reported_concerns
+            # (press/context). Fall back to a legacy flat `findings` list if present.
+            official = ld.get("official_findings")
+            reported = ld.get("reported_concerns")
+            if official is None and reported is None:
+                official = ld.get("findings", [])
+                reported = []
+            base = {
+                "matched": ld["name"], "authority": la["authority_short"],
+                "register_name": la["register_name"], "register_updated": register_updated,
+                "official_findings": official or [], "reported_concerns": reported or [],
+                # Back-compat: keep a combined `findings` for any caller not yet updated.
+                "findings": (official or []) + (reported or []),
+                "regime": ld.get("regime"),
+            }
             if lic is True:
-                return {"status": "licensed", "label": la["registered_label"],
-                        "matched": ld["name"], "authority": la["authority_short"],
-                        "register_name": la["register_name"], "register_updated": register_updated,
-                        "note": f"{ld['name']} {la['registered_note']}",
-                        "findings": findings, "regime": ld.get("regime")}
+                return {**base, "status": "licensed", "label": la["registered_label"],
+                        "note": f"{ld['name']} {la['registered_note']}"}
             if lic is False:
-                return {"status": "unlicensed", "label": la["unregistered_label"],
-                        "matched": ld["name"], "authority": la["authority_short"],
-                        "register_name": la["register_name"], "register_updated": register_updated,
-                        "note": f"{ld['name']} {la['unregistered_note']}",
-                        "findings": findings, "regime": ld.get("regime")}
-            return {"status": "not-applicable", "label": f"Not a {la['authority_short']}-listed lender",
-                    "matched": ld["name"], "authority": la["authority_short"],
-                    "register_name": la["register_name"], "register_updated": register_updated,
-                    "note": f"{ld['name']}: {ld.get('regime', la['not_applicable_note'])}",
-                    "findings": findings, "regime": ld.get("regime")}
-    return {"status": "unknown", "label": "Not in Deni's list", "findings": [],
+                return {**base, "status": "unlicensed", "label": la["unregistered_label"],
+                        "note": f"{ld['name']} {la['unregistered_note']}"}
+            # not-applicable: lead with the regime it IS regulated under, not "not on list".
+            regime = ld.get("regime") or la["not_applicable_note"]
+            return {**base, "status": "not-applicable",
+                    "label": f"Regulated under a different regime",
+                    "note": f"{ld['name']}: {regime}"}
+    return {"status": "unknown", "label": "Not in Deni's list",
+            "official_findings": [], "reported_concerns": [], "findings": [],
             "register_name": la["register_name"], "register_updated": register_updated,
             "note": f"This lender isn't in Deni's dataset. Check the {la['register_name']} "
                     f"directly to confirm."}

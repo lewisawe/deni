@@ -31,8 +31,11 @@ const I18N = {
     wn_report: "Report this lender to {authority}", wn_action: "Take action on a problem",
     computing: "Computing…", finding: "Finding your rights…", reading: "Reading…",
     source: "Source", go_to: "Go to",
-    priv_title: "Private by default",
-    priv_body: "Your description is not saved on our server. It stays on this phone; only the kind of problem was sent to find the right law.",
+    official_findings: "Official findings (regulator or court)",
+    reported_concerns: "Reported concerns (press / research)",
+    verify_live: "Check the live {authority} register",
+    last_checked: "we last checked",
+    priv_title: "Private by default",    priv_body: "Your description is not saved on our server. It stays on this phone; only the kind of problem was sent to find the right law.",
     priv_stripped: "Removed before sending:",
     protect_title: "Stop the contact now (direct to the lender)",
     protect_intro: "The complaint above goes to a public body and takes time. This letter goes straight to the lender and demands they stop, immediately.",
@@ -63,6 +66,10 @@ const I18N = {
     wn_report: "Ripoti mkopeshaji huyu kwa {authority}", wn_action: "Chukua hatua kuhusu tatizo",
     computing: "Inakokotoa…", finding: "Inatafuta haki zako…", reading: "Inasoma…",
     source: "Chanzo", go_to: "Nenda",
+    official_findings: "Matokeo rasmi (mdhibiti au mahakama)",
+    reported_concerns: "Wasiwasi ulioripotiwa (habari / utafiti)",
+    verify_live: "Angalia rejista hai ya {authority}",
+    last_checked: "tuliangalia mwisho",
     priv_title: "Faragha kwa chaguo-msingi",
     priv_body: "Maelezo yako hayahifadhiwi kwenye seva yetu. Yanabaki kwenye simu hii; ni aina ya tatizo tu iliyotumwa kupata sheria sahihi.",
     priv_stripped: "Kimeondolewa kabla ya kutuma:",
@@ -95,6 +102,10 @@ const I18N = {
     wn_report: "Report huyu lender kwa {authority}", wn_action: "Chukua hatua kuhusu shida",
     computing: "Inakalmap…", finding: "Inatafuta haki zako…", reading: "Inasoma…",
     source: "Chanzo", go_to: "Nenda",
+    official_findings: "Matokeo rasmi (regulator ama court)",
+    reported_concerns: "Concerns zilizoripotiwa (press / research)",
+    verify_live: "Cheki rejista hai ya {authority}",
+    last_checked: "tulicheki mwisho",
     priv_title: "Faragha by default",
     priv_body: "Story yako haisave kwa server yetu. Inabaki kwa hii simu; ni aina ya shida tu ilitumwa kupata sheria sahihi.",
     priv_stripped: "Ilitolewa kabla ya kutuma:",
@@ -610,21 +621,34 @@ $("lender-btn").addEventListener("click", async () => {
       unknown: ["var(--color-paper-white)", "var(--color-carbon-black)"],
     };
     const [bg, fg] = map[r.status] || map.unknown;
-    const findingsHtml = (r.findings && r.findings.length) ? `
+    const renderRecords = (items, heading, isOfficial) => (items && items.length) ? `
       <div style="margin-top:var(--spacing-16);">
-        <p style="margin:0 0 8px;font-weight:600;font-size:var(--text-caption);text-transform:uppercase;font-family:var(--font-geist-mono);">On record against this lender</p>
-        ${r.findings.map((f) => `<div style="border-left:3px solid var(--color-signal-orange);padding-left:12px;margin-bottom:10px;">
+        <p style="margin:0 0 8px;font-weight:600;font-size:var(--text-caption);text-transform:uppercase;font-family:var(--font-geist-mono);">${heading}</p>
+        ${items.map((f) => `<div style="border-left:3px solid ${isOfficial ? "var(--color-signal-orange)" : "var(--color-ash)"};padding-left:12px;margin-bottom:10px;">
           <p style="margin:0;font-size:var(--text-caption);"><strong>${f.body || ""}</strong>${f.date ? ` · ${f.date}` : ""}</p>
           <p style="margin:2px 0 0;font-size:var(--text-caption);">${f.summary || ""}</p>
           ${f.citation ? `<a href="${f.citation}" target="_blank" rel="noopener" style="font-size:var(--text-caption);font-family:var(--font-geist-mono);color:var(--color-steel);word-break:break-all;">${f.citation}</a>` : ""}
         </div>`).join("")}
       </div>` : "";
+    // Official regulator/court actions and press/context are shown SEPARATELY and
+    // labelled, so a news report is never dressed up as a regulatory finding.
+    const officialHtml = renderRecords(r.official_findings, t("official_findings"), true);
+    const reportedHtml = renderRecords(r.reported_concerns, t("reported_concerns"), false);
+    // Verify-live: link straight to the official register so the user can confirm
+    // today's status themselves (a static snapshot becomes a verifiable pointer).
+    const verifyHtml = META.register_url ? `
+      <p style="margin:var(--spacing-8) 0 0;font-size:var(--text-caption);">
+        <a href="${META.register_url}" target="_blank" rel="noopener" style="color:var(--color-signal-orange);font-weight:600;">${t("verify_live").replace("{authority}", META.authority_short)} →</a>
+        ${r.register_updated ? ` <span style="color:var(--color-steel);">(${t("last_checked")} ${r.register_updated})</span>` : ""}
+      </p>` : "";
     box.innerHTML = `<div class="card-hard">
       <span style="display:inline-block;padding:4px 10px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-tags);background:${bg};color:${fg};font-family:var(--font-geist-mono);font-size:var(--text-caption);text-transform:uppercase;font-weight:500;">${r.label}</span>
       <p style="margin:var(--spacing-8) 0 0;">${r.note}</p>
-      ${findingsHtml}
+      ${officialHtml}
+      ${reportedHtml}
       ${r.status === "unlicensed" ? `<button class="btn-primary" style="margin-top:var(--spacing-8);padding:6px 16px;" id="lender-report">${t("wn_report").replace("{authority}", META.authority_short)}</button>` : ""}
-      <p style="margin:var(--spacing-8) 0 0;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);">Facts only, each sourced. Verify current status on the official register.${r.register_updated ? ` ${r.register_name || "Register"} as of ${r.register_updated}.` : ""}</p>
+      ${verifyHtml}
+      <p style="margin:var(--spacing-8) 0 0;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);">Facts only, each sourced.${r.register_updated ? ` ${r.register_name || "Register"} as of ${r.register_updated}.` : ""}</p>
     </div>`;
     const rep = document.getElementById("lender-report");
     if (rep) rep.addEventListener("click", () => {
