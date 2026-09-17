@@ -33,7 +33,19 @@
       .hero-title { font-size: 40px; }
       .big-number { font-size: 56px; }
       .section { padding: var(--spacing-56) 0; }
+      .channels { grid-template-columns: 1fr; }
     }
+    /* Three-channel showcase: the same true-cost answer on every surface. */
+    .channels { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-24); margin-top: var(--spacing-32); align-items: start; }
+    .channel-label { font-family: var(--font-geist-mono); font-size: var(--text-caption); text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-steel); margin: 0 0 var(--spacing-8); }
+    .mock-browser { border: 1px solid var(--color-carbon-black); border-radius: var(--radius-cards); overflow: hidden; box-shadow: var(--shadow-subtle); }
+    .mock-browser-bar { background: var(--color-carbon-black); padding: 8px 10px; display: flex; gap: 5px; }
+    .mock-browser-bar span { width: 9px; height: 9px; border-radius: 50%; background: var(--color-ash); }
+    .mock-browser-body { background: var(--color-paper-white); padding: var(--spacing-16); }
+    .mock-wa { background: #e5ddd5; border-radius: var(--radius-cards); padding: var(--spacing-16); min-height: 150px; }
+    .wa-bubble { background: #fff; border-radius: 10px; padding: 10px 12px; font-size: var(--text-caption); box-shadow: 0 1px 1px rgba(0,0,0,0.15); max-width: 92%; }
+    .wa-bubble.me { background: #dcf8c6; margin-left: auto; }
+    .mock-ussd { background: var(--color-carbon-black); color: var(--color-paper-white); border-radius: var(--radius-cards); padding: var(--spacing-16); font-family: var(--font-geist-mono); font-size: var(--text-caption); white-space: pre-line; min-height: 150px; }
   </style>
 </head>
 <body>
@@ -173,26 +185,52 @@
 
   <hr class="divider" />
 
-  <!-- Works on any phone -->
+  <!-- Works everywhere: one answer, three channels -->
   <section class="section">
-    <div class="wrap grid-2">
-      <div>
-        <p class="eyebrow">Works on any phone</p>
-        <h2 class="section-title">No smartphone, no data, no problem.</h2>
-        <p class="muted" style="margin:0;">
-          Deni runs over USSD on a basic feature phone. Check a loan's true cost, verify
-          a lender, and read your rights in plain text, in English, Kiswahili, or Sheng.
-          The same civic tool, reachable by everyone.
-        </p>
+    <div class="wrap">
+      <p class="eyebrow">Meets people where they are</p>
+      <h2 class="section-title">One answer. Web, WhatsApp, or a basic phone.</h2>
+      <p class="muted" style="margin:var(--spacing-8) 0 0;max-width:620px;">
+        The same civic engine, reachable however you connect. No smartphone or data
+        needed: the true cost, licence check, and your rights all work over USSD.
+      </p>
+      <div class="channels">
+        <!-- Web -->
+        <div>
+          <p class="channel-label">Web</p>
+          <div class="mock-browser">
+            <div class="mock-browser-bar"><span></span><span></span><span></span></div>
+            <div class="mock-browser-body">
+              <p style="margin:0;font-family:var(--font-geist-mono);font-size:11px;text-transform:uppercase;color:var(--color-steel);">True cost</p>
+              <p class="stat-number" style="font-size:36px;margin:2px 0 0;line-height:1;">182.5% <span style="font-size:16px;">APR</span></p>
+              <div style="height:20px;border:1px solid var(--color-carbon-black);border-radius:4px;background:var(--color-signal-orange);position:relative;margin:10px 0 4px;overflow:hidden;">
+                <div style="position:absolute;left:0;top:0;bottom:0;width:87%;background:var(--color-carbon-black);"></div>
+              </div>
+              <p style="margin:0;font-size:11px;font-family:var(--font-geist-mono);">Pay KES 1,150 for KES 1,000</p>
+            </div>
+          </div>
+        </div>
+        <!-- WhatsApp -->
+        <div>
+          <p class="channel-label">WhatsApp</p>
+          <div class="mock-wa">
+            <div class="wa-bubble me" style="margin-bottom:8px;">1000 repay 1150 in 30 days</div>
+            <div class="wa-bubble"><strong>True cost</strong><br>You pay KES 1,150 for KES 1,000.<br>That's 15% more. <strong>182.5% APR</strong>.</div>
+          </div>
+        </div>
+        <!-- USSD -->
+        <div>
+          <p class="channel-label">USSD (any phone)</p>
+          <div class="mock-ussd">App loan 1000/30d
+Pay KES 1150 for KES 1000
+= 15% more (APR 182.5%)
+NOT registered with CBK.
+Deni: know before you borrow.</div>
+        </div>
       </div>
-      <div class="card-hard" style="font-family:var(--font-geist-mono);font-size:var(--text-caption);white-space:pre-line;background:var(--color-carbon-black);color:var(--color-paper-white);">
-Deni - know your rights
-1. M-KOPA phone
-2. Watu boda
-3. App loan 1000/30d
-4. Check if lender is licensed
-5. Know your rights
-      </div>
+      <p class="muted" style="font-size:var(--text-caption);margin-top:var(--spacing-16);">
+        In English, Kiswahili, or Sheng. WhatsApp and USSD run on provider sandboxes for the demo.
+      </p>
     </div>
   </section>
 
