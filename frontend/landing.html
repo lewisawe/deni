@@ -46,6 +46,9 @@
     .wa-bubble { background: #fff; border-radius: 10px; padding: 10px 12px; font-size: var(--text-caption); box-shadow: 0 1px 1px rgba(0,0,0,0.15); max-width: 92%; }
     .wa-bubble.me { background: #dcf8c6; margin-left: auto; }
     .mock-ussd { background: var(--color-carbon-black); color: var(--color-paper-white); border-radius: var(--radius-cards); padding: var(--spacing-16); font-family: var(--font-geist-mono); font-size: var(--text-caption); white-space: pre-line; min-height: 150px; }
+    /* Hero: text left, live product preview right; stacks on small screens. */
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: var(--spacing-40); align-items: center; }
+    @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -60,6 +63,8 @@
   <!-- Hero -->
   <section class="grid-bg">
     <div class="wrap section">
+     <div class="hero-grid">
+      <div>
       <p class="eyebrow">Information you can trust · OSF × Andela</p>
       <h1 class="hero-title">Know your <span style="color:var(--color-signal-orange);">rights</span> as a borrower.</h1>
       <p class="lead">
@@ -77,6 +82,22 @@
       <p class="muted" style="font-size:var(--text-caption);margin-top:var(--spacing-24);">
         Not legal advice. Every fact is sourced and dated. No login. Nothing you enter is stored on our servers.
       </p>
+      </div>
+      <!-- Live product preview: the real result card, so the tool is visible above the fold. -->
+      <div>
+        <div class="card-hard" aria-label="Example of a true-cost result">
+          <p style="margin:0 0 var(--spacing-8);font-family:var(--font-geist-mono);text-transform:uppercase;font-size:var(--text-caption);">True cost · example</p>
+          <p class="stat-number" style="font-size:44px;margin:0;line-height:1;">182.5% <span style="font-size:20px;">APR</span></p>
+          <p style="margin:var(--spacing-16) 0 0;">You pay <strong>KES 1,150</strong> for <strong>KES 1,000</strong> of value: <span class="stat-inline">15%</span> more.</p>
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-geist-mono);font-size:12px;color:var(--color-graphite);margin:var(--spacing-16) 0 4px;"><span>Value you received</span><span>What you repay</span></div>
+          <div role="img" aria-label="You repay KES 1,150 for KES 1,000 of value" style="position:relative;height:28px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);background:var(--color-signal-orange);overflow:hidden;">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:87%;background:var(--color-carbon-black);"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--font-geist-mono);font-size:12px;margin-top:4px;"><span style="font-weight:600;">KES 1,000</span><span style="color:var(--color-orange-text);font-weight:600;">KES 1,150</span></div>
+          <p style="margin:var(--spacing-16) 0 0;font-family:var(--font-geist-mono);font-size:12px;color:var(--color-steel);">The math is shown in-app. Not financial advice.</p>
+        </div>
+      </div>
+     </div>
     </div>
   </section>
 
