@@ -59,7 +59,7 @@ Same civic engine, met where the user is:
   products, lender licence check, and read your rights. Runs on the Africa's Talking
   sandbox.
 
-See `INTEGRATION.md` for the exact sandbox setup for both channels.
+See `../INTEGRATION.md` for the exact sandbox setup for both channels.
 
 ## Two countries, one engine (scalability)
 
@@ -125,9 +125,11 @@ frontend/   landing page + SPA (rights / lender / cost / action) + Timescale tok
 data/ke/    Kenya pack: lenders, products, rules, forums, templates (sourced)
 data/za/    South Africa pack (demonstration): same shape, real SA bodies
 specs/      requirements -> design -> tasks -> ui
-INTEGRATION.md   USSD + WhatsApp sandbox setup
-SUGGESTIONS.md   roadmap and ideas
 ```
+
+Supporting docs live one level up, alongside the submission package:
+`../INTEGRATION.md` (USSD + WhatsApp sandbox setup), `../SUGGESTIONS.md` (roadmap),
+and `../submission/` (demo script, pitch deck, written summary).
 
 ## AI usage summary
 
