@@ -184,8 +184,11 @@ def _lender_reply(country: str, name: str) -> str:
 def _recourse_reply(country: str, text: str) -> str:
     r = recourse_mod.recourse(text, "en", country)
     if not r.get("matched"):
-        return (r.get("message") or "Couldn't match that. Describe what the lender is "
-                "doing (e.g. calling your contacts, taking your bike, wrong CRB listing).")
+        lines = [r.get("message") or "Couldn't match that."]
+        sn = r.get("safety_net") or {}
+        for b in (sn.get("bodies") or [])[:4]:
+            lines.append(f"\n• *{b.get('name','')}*: {b.get('when','')} {b.get('contact','')}")
+        return "\n".join(lines)
     forums = r.get("forums") or ([{"name": r["forum"]["name"]}] if r.get("forum") else [])
     forum_names = ", ".join(f["name"] for f in forums)
     out = [

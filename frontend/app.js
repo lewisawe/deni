@@ -477,7 +477,22 @@ function privacyNote(redacted) {
 
 function renderRecourse(r) {
   if (!r || !r.matched) {
-    $("recourse").innerHTML = `<div class="card-hard"><p style="margin:0;">${(r && r.message) || "Couldn't match that to a known situation. Try describing what the lender is doing."}</p></div>`;
+    const sn = r && r.safety_net;
+    const bodiesHtml = (sn && sn.bodies && sn.bodies.length) ? `
+      <div style="margin-top:var(--spacing-16);">
+        <p style="margin:0 0 var(--spacing-8);font-size:var(--text-caption);">${sn.intro || ""}</p>
+        ${sn.bodies.map((b) => `<div style="border-left:3px solid var(--color-carbon-black);padding-left:12px;margin-bottom:10px;">
+          <p style="margin:0;font-weight:600;font-size:var(--text-caption);">${b.name}</p>
+          ${b.when ? `<p style="margin:2px 0 0;font-size:var(--text-caption);color:var(--color-graphite);">${b.when}</p>` : ""}
+          ${b.contact ? `<p style="margin:2px 0 0;font-size:var(--text-caption);">${b.contact}</p>` : ""}
+        </div>`).join("")}
+      </div>` : "";
+    $("recourse").innerHTML = `
+      ${privacyNote(r && r._redacted)}
+      <div class="card-hard">
+        <p style="margin:0;">${(r && r.message) || "Couldn't match that to a known situation. Try describing what the lender is doing."}</p>
+        ${bodiesHtml}
+      </div>`;
     return;
   }
   const forums = (r.forums && r.forums.length) ? r.forums : (r.forum ? [{ ...r.forum, primary: true }] : []);

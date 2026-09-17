@@ -3,7 +3,16 @@
     "country": "ZA",
     "description": "Scenario -> legal statement, condition, forum, citation. The recourse router reads the law from here; AI only classifies the scenario and phrases the output. No legal conclusion is AI-generated. Not legal advice. This is a demonstration pack (lighter than the Kenya pack) proving the model ports to South Africa by swapping data.",
     "disclaimer": "This information is not legal advice. Recourse depends on the specific facts. Statements are conditional.",
-    "last_updated": "2026-09-16"
+    "last_updated": "2026-09-16",
+    "safety_net": {
+      "intro": "Deni couldn't match that to one of its known lending situations, but you are not out of options. Depending on what is happening, these public bodies can help:",
+      "bodies": [
+        {"name": "Police (SAPS)", "when": "If you are threatened, in danger, or a crime is being committed.", "contact": "SAPS emergency 10111; from a mobile 112.", "source": "https://www.saps.gov.za/"},
+        {"name": "Information Regulator (South Africa)", "when": "If your personal information is being misused in any way (POPIA).", "contact": "inforegulator.org.za", "source": "https://inforegulator.org.za/"},
+        {"name": "National Credit Regulator (NCR)", "when": "If a credit provider is involved and you are unsure of its registration or conduct.", "contact": "ncr.org.za", "source": "https://www.ncr.org.za/"},
+        {"name": "Legal Aid South Africa", "when": "For any legal problem where you need advice and cannot afford a lawyer.", "contact": "Legal Aid SA advice line 0800 110 110.", "source": "https://legal-aid.co.za/"}
+      ]
+    }
   },
   "scenarios": [
     {
@@ -22,7 +31,8 @@
       "law_statement": "Under the National Credit Act 34 of 2005, a credit provider must follow lawful enforcement, including a section 129 default notice, before enforcing or repossessing. Repossession without following the Act's process can be challenged.",
       "condition": "Your repossession MAY be unlawful IF no proper section 129 notice was served or the process was not followed. This depends on your agreement and the facts; verify before acting.",
       "forum_key": "ncr",
-      "citation": "https://www1.saflii.org/za/legis/consol_act/nca34o2005171.pdf",
+      "citation": "https://www.gov.za/documents/national-credit-act",
+      "citation_primary_todo": "saflii NCA PDF returned HTTP 403 to the source check (likely bot-blocking). Confirm a stable, human-reachable NCA source; gov.za used as placeholder.",
       "citation_date": "National Credit Act 34 of 2005"
     },
     {
@@ -31,7 +41,8 @@
       "law_statement": "The National Credit Act 34 of 2005 requires clear cost-of-credit disclosure and prohibits reckless credit granting (lending without proper affordability assessment). Reckless credit can be set aside or the debt re-arranged by a court or the National Consumer Tribunal.",
       "condition": "Applies where cost/terms were not properly disclosed, or credit was granted without a proper affordability assessment.",
       "forum_key": "ncr",
-      "citation": "https://www.saflii.org/za/journals/PER/2018/1.pdf",
+      "citation": "https://www.gov.za/documents/national-credit-act",
+      "citation_primary_todo": "Previously a saflii journal PDF (HTTP 403 to the checker). Cite the NCA reckless-credit sections from a stable source; gov.za used as placeholder.",
       "citation_date": "National Credit Act 34 of 2005 (reckless-credit provisions)"
     },
     {

@@ -108,10 +108,15 @@ def recourse(text: str, lang: str = "en", country: str = "ke") -> dict:
     text, _redacted = redact(text)   # server-side safety net (covers WhatsApp/USSD too)
     key, facts = _classify(text)
     if not key:
+        # No known scenario matched. Never dead-end: point to the general-purpose
+        # bodies anyone can approach (police for danger, the data office, the credit
+        # regulator, free legal aid). Track 3: reporting must lead somewhere.
+        safety = load_pack(country)["rules"].get("_meta", {}).get("safety_net", {})
         return {"matched": False,
-                "message": "Couldn't match that to a known situation. Describe what the "
+                "message": "Couldn't match that to a known lending situation. Describe what the "
                            "lender is doing (e.g. calling your contacts, taking your bike, "
-                           "wrongly listing you on CRB)."}
+                           "wrongly listing you on a credit bureau), or use a general body below.",
+                "safety_net": safety}
     scenario = get_scenario(country, key) or {}
     forum = get_forum(country, scenario.get("forum_key", "")) or {}
     case_ref = "DENI-" + uuid.uuid4().hex[:8].upper()

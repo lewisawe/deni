@@ -3,7 +3,16 @@
     "country": "KE",
     "description": "Scenario -> legal statement, condition, forum, citation. The recourse router reads the LAW from here; AI only classifies the scenario and phrases the output. No legal conclusion is AI-generated. Not legal advice.",
     "disclaimer": "This information is not legal advice. Recourse depends on the specific facts. Statements are conditional.",
-    "last_updated": "2026-09-14"
+    "last_updated": "2026-09-14",
+    "safety_net": {
+      "intro": "Deni couldn't match that to one of its known lending situations, but you are not out of options. Depending on what is happening, these public bodies can help:",
+      "bodies": [
+        {"name": "Police / DCI", "when": "If you are threatened, in danger, or a crime is being committed.", "contact": "Police emergency 999 or 112; DCI hotline 0800 722 203.", "source": "https://www.dci.go.ke/"},
+        {"name": "Office of the Data Protection Commissioner (ODPC)", "when": "If your personal data or contacts are being misused in any way.", "contact": "odpc.go.ke", "source": "https://www.odpc.go.ke/"},
+        {"name": "Central Bank of Kenya (CBK)", "when": "If a digital lender is involved and you are unsure of its licence or conduct.", "contact": "centralbank.go.ke", "source": "https://www.centralbank.go.ke/"},
+        {"name": "Free legal aid (NLAS / Kituo Cha Sheria)", "when": "For any legal problem where you need advice and cannot afford a lawyer.", "contact": "National Legal Aid Service (nlas.go.ke); Kituo Cha Sheria (kituochasheria.or.ke).", "source": "https://www.nlas.go.ke/"}
+      ]
+    }
   },
   "scenarios": [
     {
@@ -32,15 +41,17 @@
       "condition": "Applies where the cost, obligations, or terms were misrepresented or not adequately disclosed to you before signing.",
       "forum_key": "cak",
       "citation": "https://www.dawan.africa/news/mogo-faces-fresh-scrutiny-as-parliament-turns-spotlight-on-kenyas-asset-financing-industry",
+      "citation_primary_todo": "Cite CAK's own decision or notice (or the Kenya Gazette entry) for the Mogo finding; the news article is secondary.",
       "citation_date": "2024-10"
     },
     {
       "key": "unlicensed_chasing",
       "title": "An unlicensed lender is chasing you for repayment",
-      "law_statement": "A digital lender must be licensed by the CBK (CBK Act s.33S / Digital Credit Providers Regulations 2022). A Kenyan court has blocked unlicensed digital lenders from enforcing repayment; an unlicensed lender may not be able to lawfully pursue you.",
-      "condition": "Applies IF the lender is not on the CBK licensed DCP list. Confirm licence status first (Deni checks this).",
+      "law_statement": "A digital lender must be licensed by the CBK (CBK Act s.33S / Digital Credit Providers Regulations 2022). Kenyan court decisions have limited unlicensed digital lenders' ability to enforce repayment, so an unlicensed lender may not be able to lawfully pursue you. This depends on the specific facts and is not settled for every case.",
+      "condition": "Applies IF the lender is not on the CBK licensed DCP list. Confirm licence status first (Deni checks this). Whether a particular debt is unenforceable depends on the facts; treat this as information, not a settled outcome.",
       "forum_key": "cbk",
       "citation": "https://weetracker.com/2026/07/27/kenyan-court-delivers-blow-to-unlicensed-loan-apps-seeking-debt-repayment/",
+      "citation_primary_todo": "Cite the specific court judgment on kenyalaw.org (court, case number, date, and whether it binds generally or on its facts). The news article is secondary and should not be the sole basis for this high-stakes claim.",
       "citation_date": "2026-07-27"
     },
     {
