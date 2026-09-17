@@ -171,6 +171,20 @@ function bindLangButtons() {
 bindLangButtons();
 
 /* ---------- helpers ---------- */
+/* Inline status glyph per licence state, so meaning isn't carried by colour alone
+   (accessibility) and the result is scannable at a glance. currentColor inherits the
+   badge text colour. 16px, decorative (label text carries the meaning). */
+function licenceGlyph(status) {
+  const paths = {
+    licensed: '<path d="M4 8.5l2.5 2.5L12 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+    unlicensed: '<path d="M8 4v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="11.5" r="1" fill="currentColor"/><path d="M8 1.5l6.5 11.5H1.5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>',
+    "not-applicable": '<circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 7v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="4.8" r="1" fill="currentColor"/>',
+    unknown: '<circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6.2 6.2a1.8 1.8 0 113 1.4c-.8.5-1.2.9-1.2 1.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r="1" fill="currentColor"/>',
+  };
+  const p = paths[status] || paths.unknown;
+  return `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false" style="vertical-align:-3px;margin-right:6px;">${p}</svg>`;
+}
+
 function licenceBadge(l) {
   const a = (META && META.authority_short) || "the regulator";
   const map = {
@@ -181,7 +195,7 @@ function licenceBadge(l) {
   const [txt, bg, fg] = map[l.status] || map["not-applicable"];
   return `<span style="display:inline-block;padding:4px 10px;border:1px solid var(--color-carbon-black);
     border-radius:var(--radius-tags);background:${bg};color:${fg};
-    font-family:var(--font-geist-mono);font-size:var(--text-caption);text-transform:uppercase;font-weight:500;">${txt}</span>`;
+    font-family:var(--font-geist-mono);font-size:var(--text-caption);text-transform:uppercase;font-weight:500;">${licenceGlyph(l.status)}${txt}</span>`;
 }
 
 /* ---------- shareable Deni report (Copy / WhatsApp / Image / PDF) ---------- */
@@ -682,7 +696,7 @@ $("lender-btn").addEventListener("click", async () => {
         ${r.register_updated ? ` <span style="color:var(--color-steel);">(${t("last_checked")} ${r.register_updated})</span>` : ""}
       </p>` : "";
     box.innerHTML = `<div class="card-hard">
-      <span style="display:inline-block;padding:4px 10px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-tags);background:${bg};color:${fg};font-family:var(--font-geist-mono);font-size:var(--text-caption);text-transform:uppercase;font-weight:500;">${r.label}</span>
+      <span style="display:inline-block;padding:4px 10px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-tags);background:${bg};color:${fg};font-family:var(--font-geist-mono);font-size:var(--text-caption);text-transform:uppercase;font-weight:500;">${licenceGlyph(r.status)}${r.label}</span>
       <p style="margin:var(--spacing-8) 0 0;">${r.note}</p>
       ${officialHtml}
       ${reportedHtml}
