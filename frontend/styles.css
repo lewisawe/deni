@@ -199,3 +199,46 @@ html, body {
   .deni-spinner { animation: none; }
   #hero-title { transition: none; }
 }
+
+/* ---------- Trust visuals: make provenance look trustworthy ---------- */
+/* A "sourced . dated" chip attached to a factual claim. The link glyph + date
+   signals traceability at a glance, for a challenge about information you can trust. */
+.deni-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border: 1px solid var(--color-ash);
+  border-radius: var(--radius-tags);
+  font-family: var(--font-geist-mono);
+  font-size: 12px;
+  color: var(--color-steel);
+  text-decoration: none;
+  line-height: 1.4;
+}
+.deni-chip:hover { border-color: var(--color-carbon-black); color: var(--color-carbon-black); }
+.deni-chip svg { flex-shrink: 0; }
+
+/* Record-type badges: an official regulator/court action reads differently from a
+   press/research concern, so a news report is never mistaken for a ruling. */
+.badge-record {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--radius-tags);
+  font-family: var(--font-geist-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+.badge-official {
+  background: var(--color-carbon-black);
+  color: var(--color-paper-white);
+}
+.badge-reported {
+  background: var(--color-paper-white);
+  color: var(--color-graphite);
+  border: 1px solid var(--color-ash);
+}

@@ -170,6 +170,15 @@ function bindLangButtons() {
 }
 bindLangButtons();
 
+/* A compact "sourced . dated" chip linking to the citation. Makes provenance visible
+   and clickable next to a claim, instead of a long raw URL. */
+function sourceChip(url, date) {
+  if (!url) return "";
+  const link = '<svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 9.5l3-3M7 4.5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11.5l-1 1A2.5 2.5 0 014.5 9l1-1" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
+  const label = t("source") + (date ? " · " + date : "");
+  return `<a class="deni-chip" href="${url}" target="_blank" rel="noopener">${link}${label}</a>`;
+}
+
 /* ---------- helpers ---------- */
 /* Inline status glyph per licence state, so meaning isn't carried by colour alone
    (accessibility) and the result is scannable at a glance. currentColor inherits the
@@ -550,7 +559,7 @@ function renderRecourse(r) {
       <p style="margin:0 0 var(--spacing-8);font-weight:600;">${r.title}</p>
       <p style="margin:0 0 var(--spacing-8);">${r.law_statement}</p>
       <p style="margin:0 0 var(--spacing-8);font-size:var(--text-caption);color:var(--color-graphite);"><em>${r.condition}</em></p>
-      ${r.citation ? `<p style="margin:0;font-size:var(--text-caption);font-family:var(--font-geist-mono);color:var(--color-steel);">${t("source")}: <a href="${r.citation}" target="_blank" rel="noopener">${r.citation}</a>${r.citation_date ? ` · ${r.citation_date}` : ""}</p>` : ""}
+      ${r.citation ? `<p style="margin:0;">${sourceChip(r.citation, r.citation_date)}</p>` : ""}
     </div>
     <div class="card-hard" style="margin-top:var(--spacing-16);">
       <p style="margin:0 0 var(--spacing-8);font-weight:600;">Where to take it${forums.length > 1 ? ` (${forums.length} bodies apply)` : ""}</p>
@@ -641,9 +650,7 @@ async function loadRights() {
         <p style="margin:var(--spacing-8) 0 0;">${r.law_statement}</p>
         ${r.condition ? `<p style="margin:var(--spacing-8) 0 0;font-size:var(--text-caption);color:var(--color-graphite);"><em>${r.condition}</em></p>` : ""}
         ${r.forum && r.forum.name ? `<p style="margin:var(--spacing-8) 0 0;"><strong>Where to go:</strong> ${r.forum.name}${r.forum.handles ? `: ${r.forum.handles}` : ""}</p>` : ""}
-        <p style="margin:var(--spacing-8) 0 0;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);">
-          ${t("source")}: <a href="${r.citation}" target="_blank" rel="noopener">${r.citation}</a>${r.citation_date ? ` · ${r.citation_date}` : ""}
-        </p>
+        <p style="margin:var(--spacing-8) 0 0;">${sourceChip(r.citation, r.citation_date)}</p>
         <button class="btn-primary" data-act-title="${(r.title || "").replace(/"/g, "&quot;")}" style="margin-top:var(--spacing-16);padding:6px 16px;">${t("wn_action")}</button>
       </details>`).join("") +
       `<p style="font-size:var(--text-caption);color:var(--color-graphite);">${data.disclaimer}${data.last_updated ? ` Last updated: ${data.last_updated}.` : ""}</p>`;
@@ -677,12 +684,14 @@ $("lender-btn").addEventListener("click", async () => {
     const [bg, fg] = map[r.status] || map.unknown;
     const renderRecords = (items, heading, isOfficial) => (items && items.length) ? `
       <div style="margin-top:var(--spacing-16);">
-        <p style="margin:0 0 8px;font-weight:600;font-size:var(--text-caption);text-transform:uppercase;font-family:var(--font-geist-mono);">${heading}</p>
+        <span class="badge-record ${isOfficial ? "badge-official" : "badge-reported"}">${heading}</span>
+        <div style="margin-top:8px;">
         ${items.map((f) => `<div style="border-left:3px solid ${isOfficial ? "var(--color-signal-orange)" : "var(--color-ash)"};padding-left:12px;margin-bottom:10px;">
           <p style="margin:0;font-size:var(--text-caption);"><strong>${f.body || ""}</strong>${f.date ? ` · ${f.date}` : ""}</p>
           <p style="margin:2px 0 0;font-size:var(--text-caption);">${f.summary || ""}</p>
-          ${f.citation ? `<a href="${f.citation}" target="_blank" rel="noopener" style="font-size:var(--text-caption);font-family:var(--font-geist-mono);color:var(--color-steel);word-break:break-all;">${f.citation}</a>` : ""}
+          ${f.citation ? sourceChip(f.citation, "") : ""}
         </div>`).join("")}
+        </div>
       </div>` : "";
     // Official regulator/court actions and press/context are shown SEPARATELY and
     // labelled, so a news report is never dressed up as a regulatory finding.
