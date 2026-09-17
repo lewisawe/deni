@@ -33,7 +33,16 @@ the whole loan lifecycle:
   recover). Deni tells you what the law says, names **every** public body that applies
   (a single problem often has more than one), gives an interactive evidence checklist
   and the exact filing channel, and drafts a **complaint or claim you can edit in place
-  and share** (copy, WhatsApp, image, or PDF) with a case reference.
+  and share** (copy, WhatsApp, image, or PDF) with a case reference. Your description is
+  **redacted on your device** (phone numbers, IDs, names stripped) before anything is
+  sent, and the text is never stored on the server.
+- **Stop the contact now**: alongside the slow regulator complaint, Deni drafts a
+  **cease-and-desist letter you send straight to the lender** demanding the abusive
+  contact stop, immediate and protective, backed by the Data Protection Act (Kenya) or
+  POPIA (South Africa).
+- **Helper workspace**: a chief, paralegal, or CSO worker helping several borrowers can
+  keep those cases in one place, **on their device only**, and run the same engine per
+  person.
 
 Covers app cash loans and asset financing: PAYG devices (M-KOPA-type), motorbike/car
 financing (Watu/Mogo-type), and secured microfinance (KWFT-type).
@@ -122,8 +131,39 @@ SUGGESTIONS.md   roadmap and ideas
 
 ## AI usage summary
 
-AWS Bedrock Amazon Nova (Nova 2 Lite for parsing/explanation, Nova Pro for scenario
-classification and complaint drafting), via the Converse API. The model extracts,
-translates, classifies, and fills fixed templates; it never computes a figure or states
-the law on its own. The capstone idea comes from the builder's lived experience of
-predatory lending in Kenya; AI supported the build only.
+Two separate things, kept separate on purpose.
+
+**AI in the running product (assists only).** AWS Bedrock Amazon Nova (Nova 2 Lite for
+parsing/explanation, Nova Pro for scenario classification and complaint drafting), via
+the Converse API. The model extracts, translates, classifies, and fills fixed
+templates; it never computes a figure or states the law on its own. The capstone idea
+comes from the builder's lived experience of predatory lending in Kenya; AI supported
+the build only.
+
+## How AI coding tools built Deni
+
+The idea is the builder's own. AI was the tool that turned it into working software,
+and the workflow was deliberate, not vibe-coding.
+
+- **Spec-first, in three frozen documents.** The build ran through `specs/`:
+  `requirements.md` (EARS-style acceptance criteria, one per constraint and track) ,
+  then `design.md` (architecture, the money-is-code / AI-assists-only boundary), then
+  `tasks.md` (an executable, demo-first plan where each task names its requirement refs
+  and a demo checkpoint). AI drafted and refined each document against the brief, and
+  every later change traces back to a requirement.
+- **The boundary was a design decision AI enforced, not a happy accident.** The rule
+  "the model never states a number or a law" is written into the specs and realized in
+  code: `cost_engine.py` computes, the data packs hold every legal statement and
+  citation, and the model only rephrases or fills slots. That is what makes the output
+  verifiable.
+- **Data packs were generated then human-checked.** AI helped assemble the per-country
+  packs (lenders, products, rules, forums, templates) into a fixed shape, each fact
+  carrying a source URL and a date. A human verified the sources; the code treats the
+  files as the source of truth.
+- **Tests came with the logic.** The parts that must be correct have tests
+  (`backend/test_cost_engine.py`, `backend/test_whatsapp.py`), so the deterministic core
+  is provably right and refactors (like making the licence check country-agnostic) were
+  safe.
+- **One engine, many surfaces.** AI helped factor the civic logic so the web app,
+  WhatsApp, and USSD all call the same functions, and so adding a country is adding a
+  `data/<cc>/` folder rather than changing code.
