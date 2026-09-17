@@ -23,11 +23,27 @@
           <button data-lang="sw" class="lang-btn" aria-pressed="false">Kiswahili</button>
           <button data-lang="sheng" class="lang-btn" aria-pressed="false">Sheng</button>
         </div>
+        <button id="helper-link" data-i18n="helper_link" style="background:none;border:none;text-decoration:underline;cursor:pointer;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);padding:0;">Helper? Manage several people's cases</button>
       </div>
     </div>
   </header>
 
   <main style="max-width:760px;margin:0 auto;padding:var(--spacing-40) var(--spacing-24);">
+    <!-- HELPER WORKSPACE: for a paralegal/chief/CSO handling several borrowers.
+         Cases live in localStorage only, never on a server. Hidden by default. -->
+    <section id="panel-helper" aria-label="Helper workspace" hidden>
+      <button id="helper-back" class="btn-primary" data-i18n="helper_back" style="padding:6px 16px;margin-bottom:var(--spacing-16);">← Back to the tool</button>
+      <h1 data-i18n="helper_title" style="font-weight:600;letter-spacing:-0.03em;margin:0 0 var(--spacing-8);">Helper workspace</h1>
+      <p data-i18n="helper_intro" style="margin:0 0 var(--spacing-24);color:var(--color-graphite);">For a chief, paralegal, or CSO worker helping several borrowers. Each case is saved on THIS device only, never on a server. Use initials, not full names.</p>
+      <div class="card-hard" style="margin-bottom:var(--spacing-24);">
+        <label for="helper-init" data-i18n="helper_label" style="display:block;font-weight:600;margin-bottom:var(--spacing-8);">Who you're helping (initials)</label>
+        <input id="helper-init" maxlength="12" placeholder="e.g. J.M." style="width:100%;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);" />
+        <textarea id="helper-note" rows="3" placeholder="e.g. Unlicensed lender calling her contacts. Boda at risk." style="width:100%;margin-top:8px;padding:12px;border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);font-size:var(--text-body);font-family:var(--font-geist);"></textarea>
+        <button id="helper-add" class="btn-primary" data-i18n="helper_add" style="margin-top:var(--spacing-8);">Add a case</button>
+      </div>
+      <div id="helper-cases" aria-live="polite"></div>
+    </section>
+
     <h1 id="hero-title" style="font-weight:600;letter-spacing:-0.03em;line-height:1.1;margin:0 0 var(--spacing-16);transition:font-size 0.2s ease,margin 0.2s ease;">
       <span data-i18n="hero_pre">Know your </span><span style="color:var(--color-signal-orange);" data-i18n="hero_hl">rights</span><span data-i18n="hero_post"> as a borrower.</span>
     </h1>

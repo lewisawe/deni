@@ -150,6 +150,10 @@ function bindLangButtons() {
       if (document.querySelector('.door-btn[data-panel="rights"]').getAttribute("aria-selected") === "true") {
         loadRights();
       }
+      // Re-render the helper workspace if it's open (its buttons use t()).
+      if (typeof helperRender === "function" && $("panel-helper") && !$("panel-helper").hidden) {
+        helperRender();
+      }
     });
   });
 }
@@ -671,6 +675,81 @@ $("country").addEventListener("change", (e) => {
   $("result").innerHTML = ""; $("confirm").innerHTML = "";
   $("lender-result").innerHTML = ""; $("recourse").innerHTML = "";
 });
+
+/* ---------- Helper / multi-case workspace (Track 1: coordination) ----------
+   A chief, paralegal, or CSO worker often helps several borrowers. This gives them
+   one place to keep those cases, on THIS device only (localStorage), never a server,
+   so it stays private and works offline. Opening a case drops its note into the
+   action box so the helper runs the same recourse engine per person. */
+const HELPER_KEY = "deni_helper_cases";
+
+function helperLoad() {
+  try { return JSON.parse(localStorage.getItem(HELPER_KEY) || "[]"); }
+  catch (_) { return []; }
+}
+function helperSave(cases) {
+  try { localStorage.setItem(HELPER_KEY, JSON.stringify(cases)); } catch (_) { /* full/blocked */ }
+}
+function helperRender() {
+  const box = $("helper-cases");
+  if (!box) return;
+  const cases = helperLoad();
+  if (!cases.length) {
+    box.innerHTML = `<p style="font-size:var(--text-caption);color:var(--color-graphite);">${t("helper_none")}</p>`;
+    return;
+  }
+  box.innerHTML = cases.map((c) => `
+    <div class="card-hard" style="margin-bottom:var(--spacing-16);display:flex;justify-content:space-between;gap:12px;align-items:flex-start;">
+      <div style="min-width:0;">
+        <p style="margin:0;font-weight:600;">${c.label || "—"}</p>
+        ${c.note ? `<p style="margin:4px 0 0;font-size:var(--text-caption);color:var(--color-graphite);word-break:break-word;">${c.note.replace(/</g, "&lt;")}</p>` : ""}
+        <p style="margin:6px 0 0;font-family:var(--font-geist-mono);font-size:var(--text-caption);color:var(--color-steel);">${t("helper_saved")} · ${c.createdAt || ""}</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+        <button class="btn-primary" data-open="${c.id}" style="padding:4px 12px;">${t("helper_open")}</button>
+        <button data-del="${c.id}" style="padding:4px 12px;background:none;border:1px solid var(--color-ash);border-radius:var(--radius-smallbuttons);cursor:pointer;font-family:var(--font-geist-mono);font-size:var(--text-caption);">${t("helper_del")}</button>
+      </div>
+    </div>`).join("");
+  box.querySelectorAll("[data-open]").forEach((b) => b.addEventListener("click", () => {
+    const c = helperLoad().find((x) => x.id === b.getAttribute("data-open"));
+    helperShow(false);
+    const p = $("problem");
+    p.value = c && c.note ? c.note : "";
+    p.scrollIntoView({ behavior: "smooth", block: "center" });
+    p.focus();
+  }));
+  box.querySelectorAll("[data-del]").forEach((b) => b.addEventListener("click", () => {
+    helperSave(helperLoad().filter((x) => x.id !== b.getAttribute("data-del")));
+    helperRender();
+  }));
+}
+function helperShow(show) {
+  const panel = $("panel-helper");
+  if (!panel) return;
+  panel.hidden = !show;
+  // Hide/show every OTHER direct child of <main> so the workspace stands alone.
+  const main = panel.parentElement;
+  Array.from(main.children).forEach((el) => {
+    if (el !== panel) el.style.display = show ? "none" : "";
+  });
+  if (show) helperRender();
+}
+(function initHelper() {
+  const link = $("helper-link"), back = $("helper-back"), add = $("helper-add");
+  if (link) link.addEventListener("click", () => helperShow(true));
+  if (back) back.addEventListener("click", () => helperShow(false));
+  if (add) add.addEventListener("click", () => {
+    const label = $("helper-init").value.trim();
+    const note = $("helper-note").value.trim();
+    if (!label && !note) return;
+    const cases = helperLoad();
+    cases.unshift({ id: "c" + Date.now().toString(36), label, note,
+                    createdAt: new Date().toISOString().slice(0, 10) });
+    helperSave(cases);
+    $("helper-init").value = ""; $("helper-note").value = "";
+    helperRender();
+  });
+})();
 
 /* ---------- init ---------- */
 applyCountryMeta().then(applyLang);   // fetch regulator names/currency, then render UI
