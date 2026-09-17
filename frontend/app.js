@@ -427,8 +427,10 @@ function redactProblem(text) {
   sweep(/\b\d{7,9}\b/g, "ID number", "[redacted ID]");
   // Email addresses.
   sweep(/\b[\w.+-]+@[\w-]+\.[\w.-]+\b/g, "email", "[redacted email]");
-  // "my name is X", "I am X Y", "this is X" -> drop the trailing capitalised name(s).
-  sweep(/\b(?:my name is|i am|i'm|this is|name[:]?)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/g, "name", (m => m).call ? "[redacted name]" : "[redacted name]");
+  // "My name is X", "I am X Y", "this is X" -> drop the trailing capitalised name(s).
+  // Case-insensitive on the lead-in phrase; the captured name keeps its own casing.
+  sweep(/\b(?:my name is|i am|i'm|this is|name)\s*[:]?\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/gi,
+        "name", "[redacted name]");
   return { text: out, redacted: [...new Set(hits)] };
 }
 

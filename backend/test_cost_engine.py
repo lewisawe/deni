@@ -66,6 +66,14 @@ def test_rejects_bad_input():
                                repay_total=Decimal("1100")))
 
 
+def test_rejects_repay_below_principal():
+    """A repay total below the amount received would yield a negative cost/APR.
+    Guard it so a bad paste never shows a nonsensical negative APR."""
+    with pytest.raises(ValueError):
+        compute_cost(LoanOffer(principal=Decimal("1000"), term_days=30,
+                               repay_total=Decimal("100")))
+
+
 def test_working_is_exposed():
     """R1: the arithmetic must be shown, not just the result."""
     r = compute_cost(LoanOffer(principal=Decimal("1000"), term_days=30,

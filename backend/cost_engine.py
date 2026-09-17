@@ -96,6 +96,11 @@ def compute_cost(offer: LoanOffer) -> CostBreakdown:
         steps.append("Total paid = " + " + ".join(parts) + f" = {_money(total_paid)}")
 
     total_cost = total_paid - principal
+    if total_cost < 0:
+        raise ValueError(
+            "total repaid is less than the amount received; check the figures "
+            "(amount received should be the cash/value, not the repayment)"
+        )
     steps.append(
         f"True cost of credit = total paid {_money(total_paid)} - "
         f"value received {_money(principal)} = {_money(total_cost)}"

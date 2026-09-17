@@ -19,8 +19,7 @@ _KEYWORDS = {
     "small_claims_recovery": ["refund", "recover my money", "get my money back", "overpaid", "overpayment", "owe me", "they owe", "claim my money", "sue for", "small claims"],
 }
 
-_CLASSIFY_SYSTEM = (
-    "Classify a Kenyan borrower's problem into exactly one key from this set: "
+_CLASSIFY_SYSTEM = (    "Classify a Kenyan borrower's problem into exactly one key from this set: "
     "harassment_contacts, repossession, misleading_terms, unlicensed_chasing, "
     "wrongful_crb, small_claims_recovery. Use small_claims_recovery when the person "
     "wants to recover a sum of money (a refund, an overpayment, or the value of a "
@@ -28,6 +27,33 @@ _CLASSIFY_SYSTEM = (
     "\"lender_name\": <string or null>, \"what_happened\": <short phrase>, "
     "\"dates\": <string or null>}}. Use null if nothing matches."
 )
+
+
+def redact(text: str) -> tuple[str, list[str]]:
+    """Strip identifying data from a free-text problem before it is classified or
+    logged. Defence in depth: the web app already redacts on-device, but WhatsApp and
+    any other channel send raw text, so we redact again here. Deterministic, over-
+    redacting on purpose (Track 3 anonymity + R10 privacy)."""
+    hits: list[str] = []
+    out = text or ""
+
+    def sweep(pattern: str, label: str, mask: str) -> None:
+        nonlocal out
+        new, n = re.subn(pattern, mask, out, flags=re.IGNORECASE)
+        if n:
+            hits.append(label)
+            out = new
+
+    sweep(r"(?:\+?254|\+?27|0)\d[\d\s-]{7,}\d", "phone number", "[redacted phone]")
+    sweep(r"\b(?:id|passport|national id)\s*(?:no\.?|number|#)?\s*[:.]?\s*[A-Z]?\d{6,9}\b", "ID number", "[redacted ID]")
+    sweep(r"\b\d{7,9}\b", "ID number", "[redacted ID]")
+    sweep(r"\b[\w.+-]+@[\w-]+\.[\w.-]+\b", "email", "[redacted email]")
+    sweep(r"\b(?:my name is|i am|i'm|this is|name)\s*[:]?\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})", "name", "[redacted name]")
+    # De-dup while keeping order.
+    seen: dict[str, None] = {}
+    for h in hits:
+        seen.setdefault(h, None)
+    return out, list(seen.keys())
 
 
 def _classify(text: str) -> tuple[str | None, dict]:
@@ -79,6 +105,7 @@ def _fill_template(country: str, template_id: str, facts: dict, case_ref: str) -
 
 def recourse(text: str, lang: str = "en", country: str = "ke") -> dict:
     """Full DURING/AFTER response: law + forum + prepared complaint + case ref."""
+    text, _redacted = redact(text)   # server-side safety net (covers WhatsApp/USSD too)
     key, facts = _classify(text)
     if not key:
         return {"matched": False,
@@ -136,6 +163,7 @@ def protect_letter(text: str, lang: str = "en", country: str = "ke") -> dict:
     abusive contact stop now. It is protective and immediate, not accountability.
     Uses the same fixed template + fact-slot fill; no legal conclusion is AI-made.
     """
+    text, _redacted = redact(text)
     _key, facts = _classify(text)
     case_ref = "DENI-" + uuid.uuid4().hex[:8].upper()
     body = _fill_template(country, "cease_contact_letter", facts, case_ref)
