@@ -30,7 +30,7 @@ const I18N = {
     whatnext_title: "What you can do next", wn_rights: "Know your rights",
     wn_report: "Report this lender to {authority}", wn_action: "Take action on a problem",
     computing: "Computing…", finding: "Finding your rights…", reading: "Reading…",
-    source: "Source", go_to: "Go to",
+    source: "Source", go_to: "Go to", where_to_go: "Where to go",
     official_findings: "Official findings (regulator or court)",
     reported_concerns: "Reported concerns (press / research)",
     enforced_by: "Enforced by",
@@ -76,7 +76,7 @@ const I18N = {
     whatnext_title: "Unachoweza kufanya sasa", wn_rights: "Fahamu haki zako",
     wn_report: "Ripoti mkopeshaji huyu kwa {authority}", wn_action: "Chukua hatua kuhusu tatizo",
     computing: "Inakokotoa…", finding: "Inatafuta haki zako…", reading: "Inasoma…",
-    source: "Chanzo", go_to: "Nenda",
+    source: "Chanzo", go_to: "Nenda", where_to_go: "Wapi pa kwenda",
     official_findings: "Matokeo rasmi (mdhibiti au mahakama)",
     reported_concerns: "Wasiwasi ulioripotiwa (habari / utafiti)",
     enforced_by: "Inasimamiwa na",
@@ -123,7 +123,7 @@ const I18N = {
     whatnext_title: "Vitu unaweza fanya sasa", wn_rights: "Jua haki zako",
     wn_report: "Report huyu lender kwa {authority}", wn_action: "Chukua hatua kuhusu shida",
     computing: "Inakalmap…", finding: "Inatafuta haki zako…", reading: "Inasoma…",
-    source: "Chanzo", go_to: "Nenda",
+    source: "Chanzo", go_to: "Nenda", where_to_go: "Wapi pa kwenda",
     official_findings: "Matokeo rasmi (regulator ama court)",
     reported_concerns: "Concerns zilizoripotiwa (press / research)",
     enforced_by: "Inasimamiwa na",
@@ -734,20 +734,20 @@ async function loadRights() {
   if (RIGHTS_LOADED) return;
   const box = $("rights-list");
   try {
-    const data = await (await fetch("/api/rights?country=" + COUNTRY)).json();
+    const data = await (await fetch("/api/rights?country=" + COUNTRY + "&lang=" + LANG)).json();
     box.innerHTML = data.rights.map((r) => `
       <details class="card-hard" style="margin-bottom:var(--spacing-16);">
         <summary style="cursor:pointer;font-weight:600;">${r.title}</summary>
         <p style="margin:var(--spacing-8) 0 0;">${r.law_statement}</p>
         ${r.condition ? `<p style="margin:var(--spacing-8) 0 0;font-size:var(--text-caption);color:var(--color-graphite);"><em>${r.condition}</em></p>` : ""}
-        ${r.forum && r.forum.name ? `<p style="margin:var(--spacing-8) 0 0;"><strong>Where to go:</strong> ${r.forum.name}${r.forum.handles ? `: ${r.forum.handles}` : ""}</p>` : ""}
+        ${r.forum && r.forum.name ? `<p style="margin:var(--spacing-8) 0 0;"><strong>${t("where_to_go")}:</strong> ${r.forum.name}${r.forum.handles ? `: ${r.forum.handles}` : ""}</p>` : ""}
         ${provenanceBlock(r.provenance, r.citation, r.citation_date)}
         <div class="chain-slot" data-key="${r.key}" style="margin-top:var(--spacing-8);">
           <button class="chain-btn" data-key="${r.key}" style="padding:4px 12px;font-size:var(--text-caption);font-family:var(--font-geist-mono);background:var(--color-paper-white);color:var(--color-carbon-black);border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);cursor:pointer;">${t("chain_show")}</button>
         </div>
         <button class="btn-primary" data-act-title="${(r.title || "").replace(/"/g, "&quot;")}" style="margin-top:var(--spacing-16);padding:6px 16px;">${t("wn_action")}</button>
       </details>`).join("") +
-      `<p style="font-size:var(--text-caption);color:var(--color-graphite);">${data.disclaimer}${data.last_updated ? ` Last updated: ${data.last_updated}.` : ""}</p>`;
+      `<p style="font-size:var(--text-caption);color:var(--color-graphite);">${data.disclaimer}${data.last_updated ? ` ${t("last_updated_label")}: ${data.last_updated}.` : ""}</p>`;
     // Cross-link: reading a right flows straight into acting on it.
     box.querySelectorAll("[data-act-title]").forEach((b) => b.addEventListener("click", () => {
       const p = $("problem");

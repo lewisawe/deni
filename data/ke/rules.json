@@ -1,8 +1,16 @@
 {
   "_meta": {
     "country": "KE",
-    "description": "Scenario -> legal statement, condition, forum, citation. The recourse router reads the LAW from here; AI only classifies the scenario and phrases the output. No legal conclusion is AI-generated. Not legal advice.",
+    "description": "Scenario -> legal statement, condition, forum, citation. The recourse router reads the LAW from here; AI only classifies the scenario and phrases the output. No legal conclusion is AI-generated. Not legal advice. Translations under `i18n` are human-authored fixed data (not AI-translated); missing fields fall back to English.",
     "disclaimer": "This information is not legal advice. Recourse depends on the specific facts. Statements are conditional.",
+    "i18n": {
+      "sw": {
+        "disclaimer": "Habari hii si ushauri wa kisheria. Njia za kudai hutegemea mazingira yako mahususi. Kauli hizi ni za masharti."
+      },
+      "sheng": {
+        "disclaimer": "Hii info si ushauri wa mawakili. Vile unaweza dai inategemea facts zako. Hizi statements ni za masharti."
+      }
+    },
     "last_updated": "2026-09-14",
     "safety_net": {
       "intro": "Deni couldn't match that to one of its known lending situations, but you are not out of options. Depending on what is happening, these public bodies can help:",
@@ -23,7 +31,19 @@
       "forum_key": "odpc",
       "citation": "https://www.odpc.go.ke/data-protection-laws-kenya/",
       "citation_date": "2019 Act; ODPC has audited digital lenders and admitted complaints (2022)",
-      "also": ["cbk"]
+      "also": ["cbk"],
+      "i18n": {
+        "sw": {
+          "title": "Mkopeshaji anakusumbua au anapigia watu kwenye simu yako / anakuaibisha",
+          "law_statement": "Kutumia data yako binafsi na anwani zako kukusumbua au kukuaibisha kunadhibitiwa na Sheria ya Ulinzi wa Data 2019 (inayotekeleza Ibara ya 31 ya Katiba). Kuchukua na kutumia mawasiliano yako, na ukusanyaji wa madeni wenye unyanyasaji, kunaweza kuwa kosa la ulinzi wa data.",
+          "condition": "Inatumika pale mkopeshaji alipofikia au kutumia anwani/data yako binafsi kwa ukusanyaji bila msingi halali, au alitumia vitisho/kukuaibisha."
+        },
+        "sheng": {
+          "title": "Lender anakusumbua ama anapigia watu kwa simu yako / anakushame",
+          "law_statement": "Kutumia data yako binafsi na contacts zako kukusumbua ama kukushame inadhibitiwa na Data Protection Act 2019 (inatekeleza Article 31 ya Katiba). Kuscrape na kutumia contacts zako, na collection ya kinyama, inaweza kuwa offence ya data protection.",
+          "condition": "Inatumika pale lender alifikia ama alitumia contacts/data yako binafsi kwa collection bila msingi halali, ama alitumia threats/kukushame."
+        }
+      }
     },
     {
       "key": "repossession",
@@ -32,7 +52,19 @@
       "condition": "Your repossession MAY be unlawful IF no proper default notice was served, or the seizure did not follow lawful process. This depends on your contract and the facts; verify before acting.",
       "forum_key": "court",
       "citation": "https://new.kenyalaw.org/akn/ke/judgment/kehc/2024/13055/eng@2024-10-22/source.pdf",
-      "citation_date": "2024 High Court rulings"
+      "citation_date": "2024 High Court rulings",
+      "i18n": {
+        "sw": {
+          "title": "Wanachukua / wanatishia kuchukua mali yako iliyofadhiliwa",
+          "law_statement": "Kwa kawaida mfadhili hawezi kunyakua mali iliyofadhiliwa kwa nguvu zake mwenyewe bila kufuata utaratibu halali (kutolipa kuthibitika, notisi ifaayo, na unyakuzi halali, mara nyingi kupitia wanamnada wenye leseni au mahakama). Mahakama za Kenya zimetangaza unyakuzi kuwa 'haramu, batili na usio na nguvu' pale ulipofanywa bila notisi au utaratibu ufaao.",
+          "condition": "Unyakuzi wako WAWEZA kuwa haramu IKIWA hakuna notisi ifaayo ya kutolipa iliyotolewa, au unyakuzi haukufuata utaratibu halali. Hii inategemea mkataba wako na hali halisi; thibitisha kabla ya kuchukua hatua."
+        },
+        "sheng": {
+          "title": "Wanachukua / wanatishia kuchukua mali yako ya finance",
+          "law_statement": "Kwa kawaida financier hawezi grab mali ya finance kwa nguvu zake bila kufuata process halali (default halali, notice ifaayo, na seizure halali, mara nyingi kupitia auctioneers wenye leseni ama court). Ma-court za Kenya zimesema repossession ni 'illegal, null and void' pale imefanywa bila notice ama process ifaayo.",
+          "condition": "Repossession yako INAWEZA kuwa illegal KAMA hakuna default notice ifaayo ilitolewa, ama seizure haikufuata process halali. Hii inategemea contract yako na facts; verify kabla ufanye kitu."
+        }
+      }
     },
     {
       "key": "misleading_terms",
@@ -42,7 +74,19 @@
       "forum_key": "cak",
       "citation": "https://www.dawan.africa/news/mogo-faces-fresh-scrutiny-as-parliament-turns-spotlight-on-kenyas-asset-financing-industry",
       "citation_primary_todo": "Cite CAK's own decision or notice (or the Kenya Gazette entry) for the Mogo finding; the news article is secondary.",
-      "citation_date": "2024-10"
+      "citation_date": "2024-10",
+      "i18n": {
+        "sw": {
+          "title": "Mkopeshaji alikudanganya au alificha gharama / masharti halisi",
+          "law_statement": "Maelezo ya uongo au ya kupotosha na mwenendo usio wa haki katika bidhaa ya mkopo yanaweza kukiuka masharti ya ulinzi wa mlaji ya Sheria ya Ushindani na haki ya mlaji ya kupata habari (Ibara 46). Mamlaka ya Ushindani ya Kenya (CAK) imempata mfadhili wa mali (Mogo) na hatia kwa misingi hii.",
+          "condition": "Inatumika pale gharama, majukumu, au masharti yalipopotoshwa au hayakuelezwa vya kutosha kwako kabla ya kutia saini."
+        },
+        "sheng": {
+          "title": "Lender alikudanganya ama alificha gharama / terms halisi",
+          "law_statement": "Maelezo ya uongo ama za kupotosha na mwenendo usio wa haki kwa loan product zinaweza kuvunja consumer-protection za Competition Act na haki ya consumer ya kupata info (Article 46). Competition Authority of Kenya (CAK) ilipata financier (Mogo) na hatia kwa hizi grounds.",
+          "condition": "Inatumika pale gharama, obligations, ama terms zilipotoshwa ama hazikudisclosewa vya kutosha kwako kabla ya kusign."
+        }
+      }
     },
     {
       "key": "unlicensed_chasing",
@@ -52,7 +96,19 @@
       "forum_key": "cbk",
       "citation": "https://weetracker.com/2026/07/27/kenyan-court-delivers-blow-to-unlicensed-loan-apps-seeking-debt-repayment/",
       "citation_primary_todo": "Cite the specific court judgment on kenyalaw.org (court, case number, date, and whether it binds generally or on its facts). The news article is secondary and should not be the sole basis for this high-stakes claim.",
-      "citation_date": "2026-07-27"
+      "citation_date": "2026-07-27",
+      "i18n": {
+        "sw": {
+          "title": "Mkopeshaji asiye na leseni anakufuatilia kwa malipo",
+          "law_statement": "Mkopeshaji wa kidijitali lazima awe na leseni ya CBK (Sheria ya CBK kifungu 33S / Kanuni za Watoa Mikopo wa Kidijitali 2022). Maamuzi ya mahakama za Kenya yamepunguza uwezo wa wakopeshaji wa kidijitali wasio na leseni kutekeleza malipo, hivyo mkopeshaji asiye na leseni anaweza asiwe na uwezo wa kisheria wa kukufuatilia. Hii inategemea hali halisi na haijatatuliwa kwa kila kesi.",
+          "condition": "Inatumika IKIWA mkopeshaji hayuko kwenye orodha ya DCP yenye leseni ya CBK. Thibitisha hali ya leseni kwanza (Deni inaangalia hili). Iwapo deni fulani haliwezi kutekelezwa inategemea hali halisi; chukua hii kama habari, si jibu lililotatuliwa."
+        },
+        "sheng": {
+          "title": "Lender asiye na leseni anakuchase kwa repayment",
+          "law_statement": "Digital lender lazima akuwe na leseni ya CBK (CBK Act s.33S / Digital Credit Providers Regulations 2022). Maamuzi ya ma-court za Kenya yamepunguza uwezo wa digital lenders wasio na leseni kuenforce repayment, kwa hivyo lender bila leseni anaweza asiwe na uwezo wa kisheria wa kukufuata. Hii inategemea facts na haijasettliwa kwa kila case.",
+          "condition": "Inatumika KAMA lender hayuko kwa list ya DCP yenye leseni ya CBK. Confirm licence status kwanza (Deni inacheki hii). Kama debt fulani haiwezi enforced inategemea facts; chukua hii kama info, si outcome iliyosettliwa."
+        }
+      }
     },
     {
       "key": "wrongful_crb",
@@ -61,7 +117,19 @@
       "condition": "Applies where the listing is wrong, based on a disputed/unlawful debt, or was made without proper notice.",
       "forum_key": "crb",
       "citation": "https://new.kenyalaw.org/akn/ke/act/ln/2020/55/eng@2020-04-17/source",
-      "citation_date": "2020 (LN 55/2020)"
+      "citation_date": "2020 (LN 55/2020)",
+      "i18n": {
+        "sw": {
+          "title": "Uliorodheshwa vibaya na ofisi ya rejea ya mikopo (CRB)",
+          "law_statement": "Unaweza kupinga uorodheshaji wa CRB na ofisi hiyo chini ya Kanuni za Benki (Ofisi ya Rejea ya Mikopo) 2020 (Ilani ya Kisheria 55 ya 2020). Iwapo deni linabishaniwa au mkopeshaji hakuwa na leseni, msingi wa kuorodhesha unaweza kupingwa.",
+          "condition": "Inatumika pale uorodheshaji ni wa makosa, unategemea deni linalobishaniwa/haramu, au ulifanywa bila notisi ifaayo."
+        },
+        "sheng": {
+          "title": "Ulilistiwa vibaya na credit bureau (CRB)",
+          "law_statement": "Unaweza dispute listing ya CRB na hiyo bureau chini ya Banking (Credit Reference Bureau) Regulations 2020 (Legal Notice 55 ya 2020). Kama debt inadisputiwa ama lender hakuwa na leseni, msingi wa kulist unaweza challengiwa.",
+          "condition": "Inatumika pale listing ni ya makosa, inategemea debt inayodisputiwa/haramu, ama ilifanywa bila notice ifaayo."
+        }
+      }
     },
     {
       "key": "small_claims_recovery",
@@ -70,7 +138,19 @@
       "condition": "Applies where your claim is for money (a refund, an overpayment, or the monetary value of a loss) and does not exceed KES 1,000,000. It is a civil money claim, not a criminal or regulatory complaint. Confirm the current pecuniary limit and filing fee with the court before filing.",
       "forum_key": "small_claims",
       "citation": "https://new.kenyalaw.org/akn/ke/act/2016/2/eng@2020-04-30/source",
-      "citation_date": "Act No. 2 of 2016 (Cap. 10A), amended by Act No. 5 of 2020 (limit raised to KES 1,000,000)"
+      "citation_date": "Act No. 2 of 2016 (Cap. 10A), amended by Act No. 5 of 2020 (limit raised to KES 1,000,000)",
+      "i18n": {
+        "sw": {
+          "title": "Unataka kurejesha pesa (malipo ya ziada, marejesho, au thamani ya mali iliyonyakuliwa vibaya)",
+          "law_statement": "Mahakama ya Madai Madogo (Sheria ya Mahakama ya Madai Madogo, 2016, Sura 10A) inasikiliza madai ya pesa hadi KES 1,000,000. Imeundwa kwa ajili ya watu wa kawaida: waweza kujiwakilisha bila wakili, utaratibu ni rahisi, na kesi zinapaswa kuamuliwa haraka (Sheria inalenga kumaliza ndani ya siku 60). Hii ni njia ya moja kwa moja, ya gharama nafuu ya kudai pesa ambazo mkopeshaji alichukua vibaya au anakudai.",
+          "condition": "Inatumika pale dai lako ni la pesa (marejesho, malipo ya ziada, au thamani ya hasara kwa pesa) na halizidi KES 1,000,000. Ni dai la madai ya kiraia, si malalamiko ya jinai au ya kidhibiti. Thibitisha kikomo cha sasa cha pesa na ada ya kufungua na mahakama kabla ya kufungua."
+        },
+        "sheng": {
+          "title": "Unataka kurudisha doo (overpayment, refund, ama thamani ya mali iliyograbiwa vibaya)",
+          "law_statement": "Small Claims Court (Small Claims Court Act, 2016, Cap. 10A) inasikiza madai ya doo hadi KES 1,000,000. Imeundwa kwa watu wa kawaida: unaweza jirepresent bila wakili, process ni rahisi, na ma-case zinafaa kuamuliwa haraka (Act inalenga kumaliza ndani ya siku 60). Hii ni njia ya direct, ya bei nafuu ya kudai doo ambayo lender alichukua vibaya ama anakudai.",
+          "condition": "Inatumika pale claim yako ni ya doo (refund, overpayment, ama thamani ya loss kwa pesa) na haizidi KES 1,000,000. Ni civil money claim, si complaint ya criminal ama regulatory. Confirm limit ya sasa na filing fee na court kabla ufile."
+        }
+      }
     }
   ]
 }

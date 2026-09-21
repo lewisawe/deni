@@ -1,7 +1,7 @@
 {
   "_meta": {
     "country": "KE",
-    "description": "Public bodies Deni routes citizens to. Each is a real institution with a documented mandate. Verify current contact details at demo/use time.",
+    "description": "Public bodies Deni routes citizens to. Each is a real institution with a documented mandate. Verify current contact details at demo/use time. Official body names are kept as-is across languages (proper nouns); the `handles` description is translated under `i18n` (human-authored, English fallback).",
     "last_updated": "2026-09-14"
   },
   "forums": [
@@ -12,7 +12,11 @@
       "channel": "Complaint to ODPC (odpc.go.ke). Data Protection (Complaints Handling) Regulations, LN 264/2021.",
       "what_to_include": ["Your name and contact", "Lender name", "What data was used and how (screenshots of messages to your contacts)", "Dates and times", "What you want stopped"],
       "template_id": "odpc_data_complaint",
-      "source": "https://www.odpc.go.ke/data-protection-laws-kenya/"
+      "source": "https://www.odpc.go.ke/data-protection-laws-kenya/",
+      "i18n": {
+        "sw": {"handles": "Matumizi mabaya ya data binafsi, kuchukua anwani, ukusanyaji wa madeni wenye unyanyasaji."},
+        "sheng": {"handles": "Matumizi mabaya ya data binafsi, kuscrape contacts, collection ya kinyama."}
+      }
     },
     {
       "key": "cbk",
@@ -21,7 +25,11 @@
       "channel": "Report to CBK (Digital Credit Providers supervision).",
       "what_to_include": ["Lender name and app", "Whether they are on the licensed DCP list", "The conduct (rates, collection, disclosure)", "Evidence"],
       "template_id": "cbk_conduct_complaint",
-      "source": "https://www.centralbank.go.ke/"
+      "source": "https://www.centralbank.go.ke/",
+      "i18n": {
+        "sw": {"handles": "Leseni na mwenendo wa Watoa Mikopo wa Kidijitali; wakopeshaji wasio na leseni."},
+        "sheng": {"handles": "Leseni na conduct ya Digital Credit Providers; ma-lender wasio na leseni."}
+      }
     },
     {
       "key": "cak",
@@ -30,7 +38,11 @@
       "channel": "Consumer complaint to CAK.",
       "what_to_include": ["Lender name", "What you were told vs the actual terms", "The loan agreement/offer", "How the cost was hidden or misrepresented"],
       "template_id": "cak_consumer_complaint",
-      "source": "https://www.dawan.africa/news/mogo-faces-fresh-scrutiny-as-parliament-turns-spotlight-on-kenyas-asset-financing-industry"
+      "source": "https://www.dawan.africa/news/mogo-faces-fresh-scrutiny-as-parliament-turns-spotlight-on-kenyas-asset-financing-industry",
+      "i18n": {
+        "sw": {"handles": "Maelezo ya uongo/ya kupotosha, mwenendo usio wa haki, kutoeleza masharti."},
+        "sheng": {"handles": "Maelezo ya uongo/za kupotosha, mwenendo usio wa haki, kutodisclose terms."}
+      }
     },
     {
       "key": "court",
@@ -39,7 +51,11 @@
       "channel": "A demand letter to the financier; if unresolved, a suit. Consider a lawyer or legal aid.",
       "what_to_include": ["Loan agreement", "Payment record", "Any default notice received (or proof none was served)", "How/when the asset was taken", "Photos"],
       "template_id": "repossession_demand",
-      "source": "https://new.kenyalaw.org/akn/ke/judgment/kehc/2024/13055/eng@2024-10-22/source.pdf"
+      "source": "https://new.kenyalaw.org/akn/ke/judgment/kehc/2024/13055/eng@2024-10-22/source.pdf",
+      "i18n": {
+        "sw": {"name": "Mahakama (kwa barua ya madai kwanza)", "handles": "Unyakuzi haramu, kurejeshwa kwa mali, fidia."},
+        "sheng": {"name": "Court (na demand letter kwanza)", "handles": "Repossession haramu, kurudishwa kwa mali, damages."}
+      }
     },
     {
       "key": "crb",
@@ -48,7 +64,11 @@
       "channel": "Dispute with the licensed bureau under CRB Regulations 2020 (LN 55/2020).",
       "what_to_include": ["Your name and ID", "The lender and listing", "Why it is wrong (paid / disputed / unlicensed lender)", "Evidence"],
       "template_id": "crb_dispute",
-      "source": "https://new.kenyalaw.org/akn/ke/act/ln/2020/55/eng@2020-04-17/source"
+      "source": "https://new.kenyalaw.org/akn/ke/act/ln/2020/55/eng@2020-04-17/source",
+      "i18n": {
+        "sw": {"handles": "Kupinga uorodheshaji mbaya wa mkopo."},
+        "sheng": {"handles": "Kudispute listing mbaya ya mkopo."}
+      }
     },
     {
       "key": "small_claims",
@@ -57,7 +77,11 @@
       "channel": "File a statement of claim at a Small Claims Court registry. Pay the prescribed filing fee, attach your evidence, and serve the other party. The court is designed for self-represented claimants and aims to decide within 60 days.",
       "what_to_include": ["Your name and contact", "The lender/other party's name and address", "The exact amount you are claiming and how you calculated it", "What happened and the dates", "Evidence (agreement, M-Pesa/payment records, messages, photos)", "What you want the court to order"],
       "template_id": "small_claims_statement",
-      "source": "https://new.kenyalaw.org/akn/ke/act/2016/2/eng@2020-04-30/source"
+      "source": "https://new.kenyalaw.org/akn/ke/act/2016/2/eng@2020-04-30/source",
+      "i18n": {
+        "sw": {"name": "Mahakama ya Madai Madogo", "handles": "Madai ya pesa hadi KES 1,000,000: marejesho, malipo ya ziada, thamani ya mali iliyonyakuliwa vibaya. Waweza kujiwakilisha; huhitaji wakili."},
+        "sheng": {"name": "Small Claims Court", "handles": "Madai ya doo hadi KES 1,000,000: refunds, overpayments, thamani ya mali iliyograbiwa vibaya. Unaweza jirepresent; hauhitaji wakili."}
+      }
     }
   ]
 }

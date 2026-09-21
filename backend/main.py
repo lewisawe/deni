@@ -47,14 +47,16 @@ def list_products(country: str = "ke") -> dict:
 
 
 @app.get("/api/rights")
-def list_rights(country: str = "ke") -> dict:
+def list_rights(country: str = "ke", lang: str = "en") -> dict:
     """Browsable know-your-rights library (access to information).
 
     Lets a citizen read what the law says and which public body handles it, before
-    they have a problem. Every entry is sourced and dated.
+    they have a problem. Every entry is sourced and dated. Translatable fields are
+    served in `lang` from human-authored pack translations (English fallback); the
+    citation and date are never translated.
     """
     from .data_pack import list_rights as _list_rights
-    return _list_rights(country)
+    return _list_rights(country, lang)
 
 
 @app.get("/api/check-lender")

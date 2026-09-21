@@ -120,40 +120,61 @@ def accountability_chain(country: str, scenario_key: str) -> dict | None:
     }
 
 
-def list_rights(country: str = "ke") -> dict:
+def localize(entry: dict, field: str, lang: str) -> str | None:
+    """Return a data-pack field in the requested language, falling back to English.
+
+    Translations are HUMAN-AUTHORED and stored in the pack under an `i18n` block, e.g.
+        {"title": "...", "i18n": {"sw": {"title": "..."}, "sheng": {"title": "..."}}}
+    exactly like the fixed UI-string dictionary in the frontend. The AI model is NOT
+    used to translate legal text: the law stays fixed, sourced data (R6/R14). A missing
+    translation falls back to the English field, so a partially-translated pack (or an
+    English-only pack like ZA) still renders.
+    """
+    if lang and lang != "en":
+        translated = (entry.get("i18n", {}) or {}).get(lang, {}) or {}
+        val = translated.get(field)
+        if val:
+            return val
+    return entry.get(field)
+
+
+def list_rights(country: str = "ke", lang: str = "en") -> dict:
     """Browsable know-your-rights view (Deni: access to information).
 
     Joins each scenario to its forum so a citizen can READ what the law says and
     where to go, before they ever have a problem. Pure read over the data pack;
-    every entry carries its source and date (R7 trust/verification).
+    every entry carries its source and date (R7 trust/verification). Translatable
+    fields resolve via `localize` (human-authored, English fallback); the citation,
+    date and source are language-independent facts and are never translated.
     """
     pack = load_pack(country)
     forums = {f["key"]: f for f in pack["forums"]["forums"]}
     rights = []
     for s in pack["rules"]["scenarios"]:
         forum = forums.get(s.get("forum_key", ""), {})
+        forum_name = localize(forum, "name", lang) if forum else None
         rights.append({
             "key": s["key"],
-            "title": s["title"],
-            "law_statement": s["law_statement"],
-            "condition": s.get("condition"),
+            "title": localize(s, "title", lang),
+            "law_statement": localize(s, "law_statement", lang),
+            "condition": localize(s, "condition", lang),
             "citation": s.get("citation"),
             "citation_date": s.get("citation_date"),
             "provenance": provenance(s.get("citation"), s.get("citation_date"),
-                                     forum.get("name")),
+                                     forum_name),
             "forum": {
-                "name": forum.get("name"),
-                "handles": forum.get("handles"),
-                "channel": forum.get("channel"),
+                "name": forum_name,
+                "handles": localize(forum, "handles", lang) if forum else None,
+                "channel": localize(forum, "channel", lang) if forum else None,
             },
         })
+    meta = pack["rules"].get("_meta", {})
+    disclaimer = localize(meta, "disclaimer", lang) or (
+        "This information is not legal advice. Recourse depends on the specific facts.")
     return {
         "rights": rights,
-        "last_updated": pack["rules"].get("_meta", {}).get("last_updated"),
-        "disclaimer": pack["rules"].get("_meta", {}).get(
-            "disclaimer",
-            "This information is not legal advice. Recourse depends on the specific facts.",
-        ),
+        "last_updated": meta.get("last_updated"),
+        "disclaimer": disclaimer,
     }
 
 

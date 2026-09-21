@@ -94,3 +94,31 @@ def test_valid_countries_ok():
     for cc in ("ke", "za"):
         assert _client.get("/api/rights", params={"country": cc}).status_code == 200
         assert _client.get("/api/sources", params={"country": cc}).status_code == 200
+
+
+
+def test_rights_translate_but_citations_do_not():
+    """The rights library must render in the selected language (sw/sheng), while the
+    citation and date, the sourced facts, stay identical across languages. Legal text
+    is human-authored data, never AI-translated."""
+    en = _client.get("/api/rights", params={"country": "ke", "lang": "en"}).json()
+    sw = _client.get("/api/rights", params={"country": "ke", "lang": "sw"}).json()
+    sheng = _client.get("/api/rights", params={"country": "ke", "lang": "sheng"}).json()
+    # Titles differ from English (translation actually happened).
+    assert sw["rights"][0]["title"] != en["rights"][0]["title"]
+    assert sheng["rights"][0]["title"] != en["rights"][0]["title"]
+    # Disclaimer is translated too.
+    assert sw["disclaimer"] != en["disclaimer"]
+    # Citations and dates are language-independent facts: identical across languages.
+    for i, right in enumerate(en["rights"]):
+        assert sw["rights"][i]["citation"] == right["citation"]
+        assert sw["rights"][i]["citation_date"] == right["citation_date"]
+
+
+def test_rights_fall_back_to_english_when_untranslated():
+    """A pack with no translations (ZA is English-only) must still render: a missing
+    translation falls back to the English field, never an empty string."""
+    za_sw = _client.get("/api/rights", params={"country": "za", "lang": "sw"}).json()
+    za_en = _client.get("/api/rights", params={"country": "za", "lang": "en"}).json()
+    assert za_sw["rights"][0]["title"] == za_en["rights"][0]["title"]
+    assert all(r["title"] for r in za_sw["rights"])
