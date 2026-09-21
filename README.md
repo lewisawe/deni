@@ -20,7 +20,11 @@ the whole loan lifecycle:
 - **Know your rights**: Browse, in plain language, what a lender can and can't legally
   do (call your contacts, seize an asset, list you with a bureau), each answer backed by
   the specific law and the public body that enforces it, with a source and date. Every
-  right links straight into taking action on it.
+  right can be opened into an **accountability chain**, the full map from the right to the
+  law to every public body with power over it to the exact filing channel, and every
+  right links straight into taking action on it. A **civic data-health panel** shows how
+  many sourced claims back the country pack and lets you **verify every source link live**,
+  so the sourcing is something you can watch prove itself, not just trust.
 - **Check a lender**: Look up whether a lender is on the licensing register (CBK in
   Kenya, the NCR in South Africa), and see the regulator and court findings on record
   against them, each sourced and dated. A public fact and a paper trail, made instant.
@@ -33,7 +37,10 @@ the whole loan lifecycle:
   recover). Deni tells you what the law says, names **every** public body that applies
   (a single problem often has more than one), gives an interactive evidence checklist
   and the exact filing channel, and drafts a **complaint or claim you can edit in place
-  and share** (copy, WhatsApp, image, or PDF) with a case reference. Your description is
+  and share** (copy, WhatsApp, image, or PDF) with a case reference. The complaint comes
+  with a **self-contained civic receipt**: what you are filing, under which law, to every
+  applicable public body, on what date, with the source citations embedded, so the paper
+  trail stands on its own offline. Your description is
   **redacted on your device** (phone numbers, IDs, names stripped) before anything is
   sent, and the text is never stored on the server.
 - **Stop the contact now**: alongside the slow regulator complaint, Deni drafts a
@@ -83,6 +90,10 @@ Adding a country is adding a folder, not changing code.
   citations are read from a data file; the money is code.
 - **Per-country data pack** holds lenders, products, legal rules, forums, and complaint
   templates, each fact sourced and dated.
+- **Sources are verifiable, live**: `backend/check_sources.py` walks every citation URL
+  in a pack and confirms it is reachable (a release gate). The same check is exposed at
+  `/api/sources`, so the app can show a civic data-health panel and verify every source
+  on demand, in front of the user.
 
 ## Run it (under a minute)
 

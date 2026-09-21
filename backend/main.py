@@ -21,6 +21,15 @@ app = FastAPI(title="Deni", version=__version__)
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 
 
+@app.exception_handler(FileNotFoundError)
+def _missing_pack_handler(_request, exc: FileNotFoundError):
+    """An unknown country code (e.g. ?country=zz) means load_pack can't find a data
+    pack. Return a clean 404 instead of a 500 stack trace, so a mistyped or probed
+    country is handled gracefully across every endpoint that loads a pack."""
+    from fastapi.responses import JSONResponse
+    return JSONResponse(status_code=404, content={"detail": str(exc) or "Unknown country pack"})
+
+
 @app.get("/health")
 def health() -> dict:
     """Liveness check."""
@@ -53,6 +62,36 @@ def check_lender(name: str = "", country: str = "ke") -> dict:
     """Check a lender against CBK's licensed Digital Credit Providers register."""
     from .data_pack import check_lender as _check_lender
     return _check_lender(country, name)
+
+
+@app.get("/api/sources")
+def sources(country: str = "ke", verify: bool = False) -> dict:
+    """Civic data-health: how many sourced claims back this country pack, when the
+    pack was last updated, and (with verify=true) whether every source URL is live.
+
+    Turns Deni's release-time source-integrity check into a trust signal the user can
+    see: the brief asks that trusted information be traceable to credible sources and
+    show when it was last updated. verify=true makes live network calls, so it is
+    opt-in and used sparingly (e.g. a 'verify now' button), not on every load.
+    """
+    from .check_sources import summarize
+    return summarize(country, verify=verify)
+
+
+@app.get("/api/accountability/{scenario_key}")
+def accountability(scenario_key: str, country: str = "ke") -> dict:
+    """The accountability chain for one right: right -> law -> every public body with
+    power over it -> the exact filing channel -> the document produced -> the source.
+
+    Makes Deni's Transparency-track logic visible as a map of which institutions are
+    accountable for a given right and how a citizen reaches each. Read from the data
+    pack; no step is AI-generated.
+    """
+    from .data_pack import accountability_chain
+    chain = accountability_chain(country, scenario_key)
+    if not chain:
+        raise HTTPException(status_code=404, detail=f"No right '{scenario_key}' in {country}")
+    return chain
 
 
 @app.get("/api/meta")

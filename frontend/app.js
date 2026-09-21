@@ -33,6 +33,17 @@ const I18N = {
     source: "Source", go_to: "Go to",
     official_findings: "Official findings (regulator or court)",
     reported_concerns: "Reported concerns (press / research)",
+    enforced_by: "Enforced by",
+    data_health: "Civic data health",
+    sourced_claims: "sourced claims back this pack",
+    last_updated_label: "last updated",
+    verify_live_sources: "Verify every source now",
+    verifying: "Checking sources…",
+    sources_live: "sources verified live",
+    live: "live", dead: "dead", unchecked_net: "unchecked (no network)",
+    verify_failed: "Could not verify now.",
+    chain_title: "Who is accountable",
+    chain_show: "See the accountability chain",
     verify_live: "Check the live {authority} register",
     last_checked: "we last checked",
     priv_title: "Private by default",    priv_body: "Your description is not saved on our server. It stays on this phone; only the kind of problem was sent to find the right law.",
@@ -68,6 +79,17 @@ const I18N = {
     source: "Chanzo", go_to: "Nenda",
     official_findings: "Matokeo rasmi (mdhibiti au mahakama)",
     reported_concerns: "Wasiwasi ulioripotiwa (habari / utafiti)",
+    enforced_by: "Inasimamiwa na",
+    data_health: "Afya ya data ya kiraia",
+    sourced_claims: "madai yenye chanzo yanaunga mkono pakiti hii",
+    last_updated_label: "ilisasishwa mwisho",
+    verify_live_sources: "Thibitisha kila chanzo sasa",
+    verifying: "Inaangalia vyanzo…",
+    sources_live: "vyanzo vimethibitishwa hai",
+    live: "hai", dead: "vimekufa", unchecked_net: "havijaangaliwa (hakuna mtandao)",
+    verify_failed: "Haikuweza kuthibitisha sasa.",
+    chain_title: "Nani anawajibika",
+    chain_show: "Ona mnyororo wa uwajibikaji",
     verify_live: "Angalia rejista hai ya {authority}",
     last_checked: "tuliangalia mwisho",
     priv_title: "Faragha kwa chaguo-msingi",
@@ -104,6 +126,17 @@ const I18N = {
     source: "Chanzo", go_to: "Nenda",
     official_findings: "Matokeo rasmi (regulator ama court)",
     reported_concerns: "Concerns zilizoripotiwa (press / research)",
+    enforced_by: "Inasimamiwa na",
+    data_health: "Afya ya data ya civic",
+    sourced_claims: "claims zenye chanzo zinaback hii pack",
+    last_updated_label: "ilisasishwa mwisho",
+    verify_live_sources: "Verify kila chanzo saa hii",
+    verifying: "Inacheki vyanzo…",
+    sources_live: "vyanzo zimeverifiwa live",
+    live: "live", dead: "zimekufa", unchecked_net: "hazijachekiwa (hakuna net)",
+    verify_failed: "Haikuweza verify saa hii.",
+    chain_title: "Nani ana-accountable",
+    chain_show: "Ona chain ya accountability",
     verify_live: "Cheki rejista hai ya {authority}",
     last_checked: "tulicheki mwisho",
     priv_title: "Faragha by default",
@@ -177,6 +210,59 @@ function sourceChip(url, date) {
   const link = '<svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 9.5l3-3M7 4.5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11.5l-1 1A2.5 2.5 0 014.5 9l1-1" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
   const label = t("source") + (date ? " · " + date : "");
   return `<a class="deni-chip" href="${url}" target="_blank" rel="noopener">${link}${label}</a>`;
+}
+
+/* A consistent provenance line rendered the SAME way under every civic claim:
+   the enforcing body, then a sourced+dated chip. Takes the unified `provenance`
+   object the backend now attaches to rights, recourse and the lender check. Falls
+   back to a bare citation+date if an older response shape is passed. */
+function provenanceBlock(prov, citation, date) {
+  const p = prov || {};
+  const url = p.source || citation;
+  const dt = p.verified || date;
+  if (!url && !p.enforcing_body) return "";
+  const body = p.enforcing_body
+    ? `<span style="font-size:var(--text-caption);color:var(--color-graphite);">${t("enforced_by")}: <strong>${p.enforcing_body}</strong></span>` : "";
+  const chip = url ? sourceChip(url, dt) : "";
+  const sep = body && chip ? ' &nbsp; ' : '';
+  return `<p class="deni-provenance" style="margin:var(--spacing-8) 0 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center;">${body}${sep}${chip}</p>`;
+}
+
+/* Civic data-health panel: how many sourced claims back this pack, when it was last
+   updated, and a button to verify every source URL live. Surfaces the release-time
+   source check as an in-product trust signal (brief: traceable + last updated). */
+async function loadSourceHealth() {
+  const box = document.getElementById("source-health");
+  if (!box) return;
+  try {
+    const s = await (await fetch("/api/sources?country=" + COUNTRY)).json();
+    if (s.error) { box.innerHTML = ""; return; }
+    const dates = Object.values(s.last_updated || {}).filter(Boolean);
+    const updated = dates.sort().slice(-1)[0] || "—";
+    box.innerHTML = `
+      <div class="card-hard" style="background:var(--color-chartreuse-highlight);">
+        <p style="margin:0;font-weight:600;">${t("data_health")}</p>
+        <p style="margin:4px 0 0;font-size:var(--text-caption);">
+          <span class="stat-inline" style="color:var(--color-carbon-black);">${s.total_sources}</span>
+          ${t("sourced_claims")} · ${t("last_updated_label")}: ${updated}
+        </p>
+        <button id="verify-sources" class="btn-primary" style="margin-top:var(--spacing-8);padding:4px 12px;font-size:var(--text-caption);">${t("verify_live_sources")}</button>
+        <span id="verify-out" style="margin-left:8px;font-size:var(--text-caption);" aria-live="polite"></span>
+      </div>`;
+    const vb = document.getElementById("verify-sources");
+    if (vb) vb.addEventListener("click", async () => {
+      const out = document.getElementById("verify-out");
+      out.textContent = t("verifying");
+      vb.disabled = true;
+      try {
+        const v = await (await fetch("/api/sources?country=" + COUNTRY + "&verify=true")).json();
+        out.innerHTML = v.all_reachable
+          ? `<strong>${v.ok}/${v.total_sources}</strong> ${t("sources_live")}`
+          : `${v.ok} ${t("live")}, ${v.dead} ${t("dead")}, ${v.unchecked} ${t("unchecked_net")}`;
+      } catch (_) { out.textContent = t("verify_failed"); }
+      vb.disabled = false;
+    });
+  } catch (_) { box.innerHTML = ""; }
 }
 
 /* ---------- helpers ---------- */
@@ -555,6 +641,7 @@ function renderRecourse(r) {
       ${(f.what_to_include && f.what_to_include.length) ? `
         <p style="margin:6px 0 4px;font-size:var(--text-caption);font-weight:600;">What to bring (tick what you have):</p>
         <div>${f.what_to_include.map((w, i) => `<label style="display:flex;gap:8px;align-items:flex-start;font-size:var(--text-caption);margin-bottom:3px;"><input type="checkbox"> <span>${w}</span></label>`).join("")}</div>` : ""}
+      ${f.provenance ? provenanceBlock(f.provenance) : ""}
     </div>`).join("");
   $("recourse").innerHTML = `
     ${privacyNote(r._redacted)}
@@ -562,7 +649,7 @@ function renderRecourse(r) {
       <p style="margin:0 0 var(--spacing-8);font-weight:600;">${r.title}</p>
       <p style="margin:0 0 var(--spacing-8);">${r.law_statement}</p>
       <p style="margin:0 0 var(--spacing-8);font-size:var(--text-caption);color:var(--color-graphite);"><em>${r.condition}</em></p>
-      ${r.citation ? `<p style="margin:0;">${sourceChip(r.citation, r.citation_date)}</p>` : ""}
+      ${provenanceBlock(r.provenance, r.citation, r.citation_date)}
     </div>
     <div class="card-hard" style="margin-top:var(--spacing-16);">
       <p style="margin:0 0 var(--spacing-8);font-weight:600;">Where to take it${forums.length > 1 ? ` (${forums.length} bodies apply)` : ""}</p>
@@ -643,6 +730,7 @@ document.querySelectorAll(".door-btn").forEach((b) =>
 /* ---------- Enhancement B: know-your-rights browse (access to information) ---------- */
 let RIGHTS_LOADED = false;
 async function loadRights() {
+  loadSourceHealth();
   if (RIGHTS_LOADED) return;
   const box = $("rights-list");
   try {
@@ -653,7 +741,10 @@ async function loadRights() {
         <p style="margin:var(--spacing-8) 0 0;">${r.law_statement}</p>
         ${r.condition ? `<p style="margin:var(--spacing-8) 0 0;font-size:var(--text-caption);color:var(--color-graphite);"><em>${r.condition}</em></p>` : ""}
         ${r.forum && r.forum.name ? `<p style="margin:var(--spacing-8) 0 0;"><strong>Where to go:</strong> ${r.forum.name}${r.forum.handles ? `: ${r.forum.handles}` : ""}</p>` : ""}
-        <p style="margin:var(--spacing-8) 0 0;">${sourceChip(r.citation, r.citation_date)}</p>
+        ${provenanceBlock(r.provenance, r.citation, r.citation_date)}
+        <div class="chain-slot" data-key="${r.key}" style="margin-top:var(--spacing-8);">
+          <button class="chain-btn" data-key="${r.key}" style="padding:4px 12px;font-size:var(--text-caption);font-family:var(--font-geist-mono);background:var(--color-paper-white);color:var(--color-carbon-black);border:1px solid var(--color-carbon-black);border-radius:var(--radius-smallbuttons);cursor:pointer;">${t("chain_show")}</button>
+        </div>
         <button class="btn-primary" data-act-title="${(r.title || "").replace(/"/g, "&quot;")}" style="margin-top:var(--spacing-16);padding:6px 16px;">${t("wn_action")}</button>
       </details>`).join("") +
       `<p style="font-size:var(--text-caption);color:var(--color-graphite);">${data.disclaimer}${data.last_updated ? ` Last updated: ${data.last_updated}.` : ""}</p>`;
@@ -664,10 +755,40 @@ async function loadRights() {
       p.scrollIntoView({ behavior: "smooth", block: "center" });
       $("recourse-btn").click();
     }));
+    // Accountability chain: right -> law -> every body -> channel -> document -> source.
+    box.querySelectorAll(".chain-btn").forEach((b) => b.addEventListener("click", async () => {
+      const key = b.dataset.key;
+      const slot = box.querySelector(`.chain-slot[data-key="${key}"]`);
+      b.disabled = true;
+      try {
+        const c = await (await fetch(`/api/accountability/${key}?country=${COUNTRY}`)).json();
+        slot.innerHTML = renderChain(c);
+      } catch (_) { b.disabled = false; }
+    }));
     RIGHTS_LOADED = true;
   } catch (_) {
     box.innerHTML = '<p>Could not load rights. Try refreshing.</p>';
   }
+}
+
+/* Draw the accountability chain as a numbered map of the public bodies with power
+   over a right, each with its filing channel and its source. This is Deni's
+   Transparency-track logic made visible: which institutions are accountable and how
+   a citizen reaches each one. */
+function renderChain(c) {
+  if (!c || !c.bodies) return "";
+  const bodies = c.bodies.map((b, i) => `
+    <div style="border-left:3px solid ${b.primary ? "var(--color-signal-orange)" : "var(--color-ash)"};padding-left:12px;margin-bottom:10px;">
+      <p style="margin:0;font-weight:600;font-size:var(--text-caption);">${i + 1}. ${b.name}${b.primary ? "" : ' <span style="font-weight:400;color:var(--color-graphite);">(also applies)</span>'}</p>
+      ${b.channel ? `<p style="margin:2px 0 0;font-size:var(--text-caption);"><strong>How to file:</strong> ${b.channel}</p>` : ""}
+      ${provenanceBlock(b.provenance)}
+    </div>`).join("");
+  return `
+    <div class="card-hard" style="margin-top:var(--spacing-8);background:var(--color-paper-white);">
+      <p style="margin:0 0 var(--spacing-8);font-weight:600;">${t("chain_title")} (${c.body_count})</p>
+      ${bodies}
+      ${provenanceBlock(c.provenance)}
+    </div>`;
 }
 
 /* ---------- Enhancement A: standalone lender check (accountability) ---------- */

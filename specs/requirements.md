@@ -2,8 +2,8 @@
 
 > Spec 1 of 3 (requirements → design → tasks). Frozen 14 Sep 2026.
 > OSF × Andela hackathon. Cross-track: Transparency (primary) + Safety + Stability.
-> Source docs: ../concept.md, ../lifecycle-and-recourse.md, ../scope-asset-financing.md,
-> ../pre-build-audit.md.
+> Source docs: ../brief.md, ../DESIGN.md, ../lending-direction.md, ../safety-track.md,
+> ../stability-track.md.
 
 ## Product summary
 

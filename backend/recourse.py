@@ -7,7 +7,7 @@ import re
 import uuid
 
 from . import ai
-from .data_pack import get_forum, get_scenario, load_pack
+from .data_pack import get_forum, get_scenario, load_pack, provenance
 
 # Keyword fallback so the router works even if Bedrock is down (graceful degradation).
 _KEYWORDS = {
@@ -131,7 +131,10 @@ def recourse(text: str, lang: str = "en", country: str = "ke") -> dict:
             return None
         return {"key": fk, "name": f.get("name"), "handles": f.get("handles"),
                 "channel": f.get("channel"),
-                "what_to_include": f.get("what_to_include", []), "primary": primary}
+                "what_to_include": f.get("what_to_include", []), "primary": primary,
+                # Per-body provenance so the receipt embeds each body's source and the
+                # UI renders it the same way as every other civic claim.
+                "provenance": provenance(f.get("source"), None, f.get("name"))}
     forums = []
     if scenario.get("forum_key"):
         pv = _forum_view(scenario["forum_key"], True)
@@ -150,6 +153,9 @@ def recourse(text: str, lang: str = "en", country: str = "ke") -> dict:
         "condition": scenario.get("condition"),
         "citation": scenario.get("citation"),
         "citation_date": scenario.get("citation_date"),
+        "provenance": provenance(scenario.get("citation"),
+                                 scenario.get("citation_date"),
+                                 forum.get("name")),
         "forum": {"name": forum.get("name"), "channel": forum.get("channel"),
                   "what_to_include": forum.get("what_to_include", [])},
         "forums": forums,

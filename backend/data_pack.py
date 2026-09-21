@@ -55,6 +55,71 @@ def get_scenario(country: str, scenario_key: str) -> dict | None:
     return None
 
 
+def provenance(citation: str | None, citation_date: str | None,
+               enforcing_body: str | None = None,
+               register_name: str | None = None) -> dict:
+    """One consistent 'where this came from' object attached to every civic claim.
+
+    The brief's trust constraint is "traceable to credible sources, show when it was
+    last updated". Deni already stores a citation + date on every scenario, forum and
+    lender; this shapes them into a single, uniform block so the UI renders provenance
+    the SAME way under every statement, instead of each surface inventing its own. It
+    adds no new claim: it only re-exposes fields already in the data pack.
+    """
+    return {
+        "source": citation,
+        "verified": citation_date,
+        "enforcing_body": enforcing_body,
+        "register": register_name,
+        "kind": "source",
+    }
+
+
+def accountability_chain(country: str, scenario_key: str) -> dict | None:
+    """The full civic chain for one right: right -> law -> every body with power over
+    it -> the exact filing channel -> the document produced -> the citation.
+
+    This is deni's Transparency-track core drawn as a map: it makes visible which
+    public institutions are accountable for a given right and how a citizen reaches
+    each one. It reads entirely from the data pack (scenario + its primary and 'also'
+    forums); no step is AI-generated.
+    """
+    scenario = get_scenario(country, scenario_key)
+    if not scenario:
+        return None
+    forum_keys: list[tuple[str, bool]] = []
+    if scenario.get("forum_key"):
+        forum_keys.append((scenario["forum_key"], True))
+    for fk in scenario.get("also", []):
+        forum_keys.append((fk, False))
+    bodies = []
+    for fk, primary in forum_keys:
+        f = get_forum(country, fk)
+        if not f:
+            continue
+        bodies.append({
+            "key": fk,
+            "name": f.get("name"),
+            "primary": primary,
+            "handles": f.get("handles"),
+            "channel": f.get("channel"),
+            "what_to_include": f.get("what_to_include", []),
+            "document": f.get("template_id"),
+            "provenance": provenance(f.get("source"), None, f.get("name")),
+        })
+    return {
+        "key": scenario_key,
+        "right": scenario.get("title"),
+        "law_statement": scenario.get("law_statement"),
+        "condition": scenario.get("condition"),
+        "bodies": bodies,
+        "body_count": len(bodies),
+        "provenance": provenance(scenario.get("citation"),
+                                 scenario.get("citation_date"),
+                                 bodies[0]["name"] if bodies else None),
+    }
+
+
 def list_rights(country: str = "ke") -> dict:
     """Browsable know-your-rights view (Deni: access to information).
 
@@ -74,6 +139,8 @@ def list_rights(country: str = "ke") -> dict:
             "condition": s.get("condition"),
             "citation": s.get("citation"),
             "citation_date": s.get("citation_date"),
+            "provenance": provenance(s.get("citation"), s.get("citation_date"),
+                                     forum.get("name")),
             "forum": {
                 "name": forum.get("name"),
                 "handles": forum.get("handles"),
@@ -142,6 +209,10 @@ def check_lender(country: str, name: str) -> dict:
                 # Back-compat: keep a combined `findings` for any caller not yet updated.
                 "findings": (official or []) + (reported or []),
                 "regime": ld.get("regime"),
+                # Register provenance: the licence status is a public fact; say where it
+                # came from and when it was verified, in the same shape as every claim.
+                "provenance": provenance(la.get("register_url"), register_updated,
+                                         la.get("authority_name"), la.get("register_name")),
             }
             if lic is True:
                 return {**base, "status": "licensed", "label": la["registered_label"],

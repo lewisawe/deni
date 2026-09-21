@@ -47,22 +47,58 @@ def cost_receipt(evaluation: dict, lang: str = "en") -> dict:
 
 
 def recourse_receipt(recourse: dict) -> dict:
-    """Receipt for a DURING/AFTER recourse action (includes the complaint)."""
+    """Receipt for a DURING/AFTER recourse action: a self-contained civic record the
+    borrower keeps. It names what was claimed, under which law, to which body, on what
+    date, embeds the source citations, and includes the prepared document, so the paper
+    trail stands on its own offline, on a basic phone, after the session is gone."""
     ref = recourse.get("case_ref") or ("DENI-" + uuid.uuid4().hex[:8].upper())
+    # All applicable bodies, not just the primary: a single problem often has more.
+    forums = recourse.get("forums") or (
+        [recourse["forum"]] if recourse.get("forum") else [])
     lines = [
-        "DENI: YOUR RIGHTS & COMPLAINT",
+        "DENI: CIVIC ACTION RECEIPT",
         f"Case ref: {ref}   Date: {_today()}",
+        "Keep this. It records what you are filing, under which law, and with whom.",
         "",
         f"Situation: {recourse.get('title', '')}",
         f"The law: {recourse.get('law_statement', '')}",
         f"Applies if: {recourse.get('condition', '')}",
-        f"Go to: {recourse.get('forum', {}).get('name', '')}",
-        f"Basis: {recourse.get('citation', '')} ({recourse.get('citation_date', '')})",
+        f"Legal basis: {recourse.get('citation', '')} ({recourse.get('citation_date', '')})",
         "",
-        "--- PREPARED COMPLAINT ---",
+        "PUBLIC BODIES THAT APPLY:",
+    ]
+    sources: list[str] = []
+    if recourse.get("citation"):
+        sources.append(recourse["citation"])
+    if forums:
+        for f in forums:
+            tag = "" if f.get("primary", True) else " (also applies)"
+            lines.append(f"  - {f.get('name', '')}{tag}")
+            if f.get("channel"):
+                lines.append(f"    How to file: {f['channel']}")
+            prov = f.get("provenance") or {}
+            src = prov.get("source")
+            if src:
+                lines.append(f"    Source: {src}")
+                sources.append(src)
+    else:
+        lines.append("  - (see the app for the body to contact)")
+    lines += [
+        "",
+        "--- PREPARED DOCUMENT ---",
         recourse.get("complaint", ""),
         "",
-        "Prepared by Deni. Not legal advice. Verify before filing.",
+        f"Sources (verify these yourself):",
+    ]
+    # De-dup sources, keep order.
+    seen: dict[str, None] = {}
+    for s in sources:
+        seen.setdefault(s, None)
+    lines += [f"  [{i+1}] {u}" for i, u in enumerate(seen)] or ["  (none recorded)"]
+    lines += [
+        "",
+        "Prepared by Deni. Information and a self-prepared document, not legal advice.",
+        "Verify the law and the body's current details before filing.",
     ]
     return {"ref": ref, "kind": "recourse", "text": "\n".join(lines),
-            "sources": [recourse.get("citation")] if recourse.get("citation") else []}
+            "sources": list(seen)}

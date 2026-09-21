@@ -69,6 +69,49 @@ def _check(url: str, timeout: float = 8.0) -> tuple[str, str]:
         return ("unchecked", type(e).__name__)
 
 
+def summarize(country: str, verify: bool = False) -> dict:
+    """A civic 'data health' summary for one country pack, for the product to show.
+
+    The brief asks that trusted information be "traceable to credible sources" and
+    show "when it was last updated". check_sources already proves every civic URL is
+    reachable; this exposes that proof to the user instead of leaving it in a terminal.
+
+    Counts every sourced civic claim (rule citations, forum sources, lender findings,
+    the register URL) and reports the pack's declared 'last updated' date. With
+    verify=True it live-checks each URL (used sparingly: it makes network calls); by
+    default it only counts + dates, which is instant and offline-safe.
+    """
+    # load_pack raises FileNotFoundError for an unknown country; the API layer turns
+    # that into a clean 404, so behaviour is consistent with every other endpoint.
+    pack = load_pack(country)
+    urls = _collect_urls(country)
+    last_updated = {
+        name: pack[name].get("_meta", {}).get("last_updated")
+        for name in ("lenders", "forums", "rules")
+    }
+    out = {
+        "country": country,
+        "total_sources": len(urls),
+        "last_updated": last_updated,
+        "verified": bool(verify),
+    }
+    if verify:
+        ok = dead = unchecked = 0
+        dead_list: list[str] = []
+        for _where, url in urls:
+            status, _detail = _check(url)
+            if status == "ok":
+                ok += 1
+            elif status == "dead":
+                dead += 1
+                dead_list.append(url)
+            else:
+                unchecked += 1
+        out.update({"ok": ok, "dead": dead, "unchecked": unchecked,
+                    "all_reachable": dead == 0, "dead_urls": dead_list})
+    return out
+
+
 def main(argv: list[str]) -> int:
     countries = [c for c in argv[1:] if not c.startswith("-")]
     if not countries:

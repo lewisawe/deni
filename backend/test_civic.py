@@ -3,6 +3,11 @@ and the recourse no-match safety floor. These protect the trust claims that a ju
 or a named lender would probe hardest."""
 from backend import data_pack as d
 from backend import recourse as r
+from backend import receipt
+from fastapi.testclient import TestClient
+from backend.main import app
+
+_client = TestClient(app)
 
 
 def test_findings_split_official_vs_reported():
@@ -44,3 +49,48 @@ def test_matched_scenario_has_no_safety_net_noise():
     res = r.recourse("they are calling my contacts to shame me", "en", "ke")
     assert res["matched"] is True
     assert "law_statement" in res
+
+
+def test_multi_body_scenario_forums_carry_provenance():
+    """A multi-body scenario (harassment: ODPC + CBK) must return every body, and each
+    must carry its own source provenance, so the accountability trail is complete."""
+    res = r.recourse("they call my contacts to shame me and threaten me", "en", "ke")
+    assert len(res["forums"]) >= 2
+    assert all(f.get("provenance", {}).get("source") for f in res["forums"])
+
+
+def test_recourse_receipt_embeds_every_body_source():
+    """The keepable receipt must embed the law citation AND each applicable body's
+    source, not just the primary citation, so the paper trail stands on its own."""
+    res = r.recourse("they call my contacts to shame me and threaten me", "en", "ke")
+    rec = receipt.recourse_receipt(res)
+    assert "CIVIC ACTION RECEIPT" in rec["text"]
+    assert "PUBLIC BODIES" in rec["text"]
+    # De-duplicated, but ODPC + CBK sources should both be present.
+    assert len(rec["sources"]) >= 2
+
+
+def test_accountability_chain_matches_recourse_bodies():
+    """The accountability-chain view and the recourse router must agree on which
+    bodies apply to a right (same data, drawn two ways)."""
+    chain = d.accountability_chain("ke", "harassment_contacts")
+    res = r.recourse("they call my contacts to shame me", "en", "ke")
+    chain_names = {b["name"] for b in chain["bodies"]}
+    recourse_names = {f["name"] for f in res["forums"]}
+    assert chain_names == recourse_names
+
+
+def test_unknown_country_returns_404_not_500():
+    """A mistyped or probed country code must not crash the server. Every pack-loading
+    endpoint should return a clean 404, never a 500."""
+    for path in ("/api/rights", "/api/meta", "/api/sources", "/api/products",
+                 "/api/accountability/harassment_contacts"):
+        resp = _client.get(path, params={"country": "zz"})
+        assert resp.status_code == 404, f"{path} returned {resp.status_code} for bad country"
+
+
+def test_valid_countries_ok():
+    """Both shipped country packs serve their civic endpoints."""
+    for cc in ("ke", "za"):
+        assert _client.get("/api/rights", params={"country": cc}).status_code == 200
+        assert _client.get("/api/sources", params={"country": cc}).status_code == 200
